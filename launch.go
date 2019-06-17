@@ -5,29 +5,29 @@ import (
 
 	"html/template"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"path/filepath"
-	"math/rand"
 
 	"html"
 
 	"github.com/ONSdigital/eq-questionnaire-launcher/authentication"
 	"github.com/ONSdigital/eq-questionnaire-launcher/settings"
 	"github.com/ONSdigital/eq-questionnaire-launcher/surveys"
+	"github.com/gofrs/uuid"
 	"github.com/gorilla/mux"
-	"github.com/satori/go.uuid"
 	"gopkg.in/square/go-jose.v2/json"
 )
 
 func randomNumericString(n int) string {
-    var letter = []rune("0123456789")
+	var letter = []rune("0123456789")
 
-    output := make([]rune, n)
-    for i := range output {
-        output[i] = letter[rand.Intn(len(letter))]
-    }
-    return string(output)
+	output := make([]rune, n)
+	for i := range output {
+		output[i] = letter[rand.Intn(len(letter))]
+	}
+	return string(output)
 }
 
 func serveTemplate(templateName string, data interface{}, w http.ResponseWriter, r *http.Request) {
@@ -84,7 +84,10 @@ func postLaunchHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getMetadataHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Handling metadata request")
 	schema := r.URL.Query().Get("schema")
+	log.Println("Searching for schema: " + schema)
+
 	launcherSchema := surveys.FindSurveyByName(schema)
 
 	metadata, err := authentication.GetRequiredMetadata(launcherSchema)
@@ -143,13 +146,17 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	AccountServiceLogOutURL := getAccountServiceURL(r)
 	urlValues := r.URL.Query()
 	surveyURL := urlValues.Get("url")
+	defaultValues := authentication.GetDefaultValues()
 	log.Println("Quick launch request received", surveyURL)
 
-	urlValues.Add("ru_ref", authentication.GetDefaultValues()["ru_ref"])
-	urlValues.Add("collection_exercise_sid", uuid.NewV4().String())
-	urlValues.Add("case_id", uuid.NewV4().String())
+	urlValues.Add("ru_ref", defaultValues["ru_ref"])
+	collection_exercise_sid, _ := uuid.NewV4()
+	case_id, _ := uuid.NewV4()
+	urlValues.Add("collection_exercise_sid", collection_exercise_sid.String())
+	urlValues.Add("case_id", case_id.String())
 	urlValues.Add("questionnaire_id", randomNumericString(16))
 	urlValues.Add("response_id", randomNumericString(16))
+	urlValues.Add("language_code", defaultValues["language_code"])
 
 	token, err := authentication.GenerateTokenFromDefaults(surveyURL, accountServiceURL, AccountServiceLogOutURL, urlValues)
 	if err != "" {

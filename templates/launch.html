@@ -7,8 +7,8 @@
 <form action="" method="POST" xmlns="http://www.w3.org/1999/html">
 
     <div class="field-container">
-        <label for="schema">Schemas</label>
-        <select id="schema" name="schema" class="qa-select-schema" onchange="loadMetadata()">
+        <label for="schema_name">Schemas</label>
+        <select id="schema_name" name="schema_name" class="qa-select-schema" onchange="loadMetadata()">
             <option selected disabled>Select Schema</option>
             <optgroup label="Business Surveys">
                 {{range .Schemas.Business}}
@@ -38,6 +38,9 @@
         </select>
     </div>
 
+    <div id="census_claims">
+    </div>
+    
     <h3>Survey Metadata</h3>
     <div id="survey_metadata">
         <p>--- Metadata fields will be loaded when you select a schema ---</p>
@@ -107,7 +110,7 @@
             <option name="dumper" value="dumper" selected="selected">dumper</option>
         </select>
     </div>
-
+    
     <div class="field-container">
         <label for="account_service_url">Account Service URL</label>
         <input id="account_service_url" name="account_service_url" type="text" value="{{.AccountServiceURL}}" class="qa-account_service_url">
@@ -119,8 +122,8 @@
     </div>
 
     <div class="field-container">
-        <input type="submit" name="action_launch" value="Open Survey" class="qa-btn-submit-dev btn" id="submit-btn" disabled="disabled" />
-        <input type="submit" name="action_flush" value="Flush Survey Data" class="qa-btn-submit-dev btn" id="flush-btn" disabled="disabled" />
+        <input type="submit" name="action_launch" value="Open Survey" class="qa-btn-submit-dev btn" id="submit-btn" />
+        <input type="submit" name="action_flush" value="Flush Survey Data" class="qa-btn-submit-dev btn" id="flush-btn" />
     </div>
 
 </form>
@@ -130,9 +133,50 @@
     // uuidv4: from https://github.com/kelektiv/node-uuid
     !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var n;n="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this,n.uuidv4=e()}}(function(){return function e(n,r,o){function t(f,u){if(!r[f]){if(!n[f]){var a="function"==typeof require&&require;if(!u&&a)return a(f,!0);if(i)return i(f,!0);var d=new Error("Cannot find module '"+f+"'");throw d.code="MODULE_NOT_FOUND",d}var p=r[f]={exports:{}};n[f][0].call(p.exports,function(e){var r=n[f][1][e];return t(r?r:e)},p,p.exports,e,n,r,o)}return r[f].exports}for(var i="function"==typeof require&&require,f=0;f<o.length;f++)t(o[f]);return t}({1:[function(e,n,r){function o(e,n){var r=n||0,o=t;return[o[e[r++]],o[e[r++]],o[e[r++]],o[e[r++]],"-",o[e[r++]],o[e[r++]],"-",o[e[r++]],o[e[r++]],"-",o[e[r++]],o[e[r++]],"-",o[e[r++]],o[e[r++]],o[e[r++]],o[e[r++]],o[e[r++]],o[e[r++]]].join("")}for(var t=[],i=0;i<256;++i)t[i]=(i+256).toString(16).substr(1);n.exports=o},{}],2:[function(e,n,r){var o="undefined"!=typeof crypto&&crypto.getRandomValues&&crypto.getRandomValues.bind(crypto)||"undefined"!=typeof msCrypto&&"function"==typeof window.msCrypto.getRandomValues&&msCrypto.getRandomValues.bind(msCrypto);if(o){var t=new Uint8Array(16);n.exports=function(){return o(t),t}}else{var i=new Array(16);n.exports=function(){for(var e,n=0;n<16;n++)0===(3&n)&&(e=4294967296*Math.random()),i[n]=e>>>((3&n)<<3)&255;return i}}},{}],3:[function(e,n,r){function o(e,n,r){var o=n&&r||0;"string"==typeof e&&(n="binary"===e?new Array(16):null,e=null),e=e||{};var f=e.random||(e.rng||t)();if(f[6]=15&f[6]|64,f[8]=63&f[8]|128,n)for(var u=0;u<16;++u)n[o+u]=f[u];return n||i(f)}var t=e("./lib/rng"),i=e("./lib/bytesToUuid");n.exports=o},{"./lib/bytesToUuid":1,"./lib/rng":2}]},{},[3])(3)});
 
+    const schema_name_census_regex = /^(census|ccs)_(household|individual|communal_establishment|communal_individual)_(gb_[a-z]{3})\s*$/
+    const case_types = {
+        'household': 'HH',
+        'individual': 'HI',
+        'communal_establishment': 'CE',
+        'communal_individual': 'CI'
+    }
+
+    function clearCensusClaims() {
+        document.getElementById('census_claims').innerHTML = ""
+    }
+
+    function includeCensusClaims() {
+        let schema_name = document.getElementById('schema_name').value
+        let matches = schema_name_census_regex.exec(schema_name)
+
+        let surveyValue = matches[1].toUpperCase()
+        let caseTypeValue = case_types[matches[2]]
+        let regionCodeValue = matches[3].toUpperCase().replace('_', '-')
+
+        var CensusClaimsHtml = "<div class=\"field-container\">" +
+                "<label for=\"survey\">Survey</label>" +
+                "<input id=\"survey\" name=\"survey\" type=\"text\" value=\"" + surveyValue + "\" class=\"qa-survey\">" +
+                "</div>" + 
+                "<div class=\"field-container\">" +
+                "<label for=\"case_type\">Case Type</label>" +
+                "<input id=\"case_type\" name=\"case_type\" type=\"text\" value=\"" + caseTypeValue + "\" class=\"qa-case_type\">" +
+                "</div>" + 
+                "<div class=\"field-container\">" +
+                "<label for=\"region_code\">Region Code</label>" +
+                "<input id=\"region_code\" name=\"region_code\" type=\"text\" value=\"" + regionCodeValue+ "\" class=\"qa-region_code\">" +
+                "</div>" 
+
+        document.getElementById('census_claims').innerHTML = CensusClaimsHtml
+    }
+
     function loadMetadata() {
-        document.getElementById("submit-btn").disabled = true;
-        document.getElementById("flush-btn").disabled = true;
+        let schema_name = document.getElementById("schema_name").value
+        if (schema_name.startsWith('census') || schema_name.startsWith('ccs')) {
+            includeCensusClaims()
+        } else {
+            clearCensusClaims()
+        }
+
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4) {
@@ -187,16 +231,12 @@
                         document.getElementById("survey_metadata").innerHTML = "No metadata required for this survey"
                     }
 
-                    document.getElementById("submit-btn").disabled = false;
-                    document.getElementById("flush-btn").disabled = false;
-
-
                 } else {
                     document.getElementById("survey_metadata").innerHTML = "Failed to load Schema Metadata"
                 }
             }
         };
-        xhttp.open("GET", "/metadata?schema=" + document.getElementById('schema').value , true);
+        xhttp.open("GET", "/metadata?schema=" + document.getElementById('schema_name').value , true);
         xhttp.send();
     }
 

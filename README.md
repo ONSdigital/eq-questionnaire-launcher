@@ -49,7 +49,8 @@ docker run -it -p 8080:8080 onsdigital/eq-survey-register:simple-rest-api
 ```
 
 ### Run Quick-Launch
-For this to work ensure the JSON you are passing has an eq_id and form_type.
+If the schema specifies a `schema_name` field, that will be used as the schema_name claim. If not, the filename from the URL (before `.`) will be used.
+
 Run Survey Launcher
 ```
 scripts/run_app.sh

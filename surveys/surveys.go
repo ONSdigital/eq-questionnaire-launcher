@@ -3,23 +3,22 @@ package surveys
 import (
 	"encoding/json"
 	"log"
-		"regexp"
+	"regexp"
 
-	"github.com/AreaHQ/jsonhal"
-	"github.com/ONSdigital/eq-questionnaire-launcher/settings"
 	"fmt"
 	"io/ioutil"
-	"strings"
 	"sort"
+	"strings"
+
+	"github.com/AreaHQ/jsonhal"
 	"github.com/ONSdigital/eq-questionnaire-launcher/clients"
+	"github.com/ONSdigital/eq-questionnaire-launcher/settings"
 )
 
 // LauncherSchema is a representation of a schema in the Launcher
 type LauncherSchema struct {
-	Name     string
-	EqID     string
-	FormType string
-	URL      string
+	Name string
+	URL  string
 }
 
 // LauncherSchemas is a separation of Test and Live schemas
@@ -47,22 +46,10 @@ type Schema struct {
 
 var eqIDFormTypeRegex = regexp.MustCompile(`^(?P<eq_id>[a-z0-9]+)_(?P<form_type>\w+)`)
 
-func extractEqIDFormType(schema string) (EqID, formType string) {
-	match := eqIDFormTypeRegex.FindStringSubmatch(schema)
-	if match != nil {
-		EqID = match[1]
-		formType = match[2]
-	}
-	return
-}
-
 // LauncherSchemaFromFilename creates a LauncherSchema record from a schema filename
 func LauncherSchemaFromFilename(filename string) LauncherSchema {
-	EqID, formType := extractEqIDFormType(filename)
 	return LauncherSchema{
-		Name:     filename,
-		EqID:     EqID,
-		FormType: formType,
+		Name: filename,
 	}
 }
 
@@ -134,12 +121,9 @@ func getAvailableSchemasFromRegister() []LauncherSchema {
 
 		for _, schema := range schemas {
 			url := schema.Links["self"]
-			EqID, formType := extractEqIDFormType(schema.Name)
 			schemaList = append(schemaList, LauncherSchema{
-				Name:     schema.Name,
-				URL:      url.Href,
-				EqID:     EqID,
-				FormType: formType,
+				Name: schema.Name,
+				URL:  url.Href,
 			})
 		}
 	}

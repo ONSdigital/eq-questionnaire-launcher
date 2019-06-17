@@ -14,7 +14,7 @@ import (
 	"github.com/ONSdigital/eq-questionnaire-launcher/clients"
 	"github.com/ONSdigital/eq-questionnaire-launcher/settings"
 	"github.com/ONSdigital/eq-questionnaire-launcher/surveys"
-	"github.com/satori/go.uuid"
+	"github.com/gofrs/uuid"
 	"gopkg.in/square/go-jose.v2"
 	"gopkg.in/square/go-jose.v2/json"
 	"gopkg.in/square/go-jose.v2/jwt"
@@ -106,11 +106,10 @@ func loadSigningKey() (*PrivateKeyResult, *KeyLoadError) {
 	return &PrivateKeyResult{privateKey, kid}, nil
 }
 
-// QuestionnaireSchema is a minimal representation of a questionnaire schema used for extracting the eq_id and form_type
+// QuestionnaireSchema is a minimal representation of a questionnaire schema used for extracting the metadata and questionnaire identifiers
 type QuestionnaireSchema struct {
-	EqID     string     `json:"eq_id"`
-	FormType string     `json:"form_type"`
-	Metadata []Metadata `json:"metadata"`
+	Metadata   []Metadata `json:"metadata"`
+	SchemaName string     `json:"schema_name"`
 }
 
 // Metadata is a representation of the metadata within the schema with an additional `Default` value
@@ -120,7 +119,7 @@ type Metadata struct {
 	Default   string `json:"default"`
 }
 
-func generateClaims(claimValues map[string][]string) (claims map[string]interface{}) {
+func generateClaims(claimValues map[string][]string, launcherSchema surveys.LauncherSchema) (claims map[string]interface{}) {
 
 	var roles []string
 	if rolesValues, ok := claimValues["roles"]; ok {
@@ -132,7 +131,8 @@ func generateClaims(claimValues map[string][]string) (claims map[string]interfac
 	claims = make(map[string]interface{})
 
 	claims["roles"] = roles
-	claims["tx_id"] = uuid.NewV4().String()
+	tx_id, _ := uuid.NewV4()
+	claims["tx_id"] = tx_id.String()
 
 	for key, value := range claimValues {
 		if key != "roles" {
@@ -142,7 +142,17 @@ func generateClaims(claimValues map[string][]string) (claims map[string]interfac
 		}
 	}
 
-	log.Printf("Claims: %s", claims)
+	if len(claimValues["survey"]) > 0 || len(claimValues["case_type"]) > 0 || len(claimValues["region_code"]) > 0 {
+		log.Println("Deleting schema name from claims")
+		delete(claims, "schema_name")
+	} else {
+		// When quicklaunching, schema_name will not be set, but launcherSchema will have the schema_name.
+		if len(claimValues["schema_name"]) == 0 && launcherSchema.Name != "" {
+			claims["schema_name"] = launcherSchema.Name
+		}
+	}
+
+	log.Printf("Using claims: %s", claims)
 
 	return claims
 }
@@ -156,7 +166,8 @@ func GenerateJwtClaims() (jwtClaims map[string]interface{}) {
 
 	jwtClaims["iat"] = jwt.NewNumericDate(issued)
 	jwtClaims["exp"] = jwt.NewNumericDate(expires)
-	jwtClaims["jti"] = uuid.NewV4().String()
+	jti, _ := uuid.NewV4()
+	jwtClaims["jti"] = jti.String()
 
 	return jwtClaims
 }
@@ -192,10 +203,24 @@ func launcherSchemaFromURL(url string) (launcherSchema surveys.LauncherSchema, e
 		cacheBust = "?bust=" + time.Now().Format("20060102150405")
 	}
 
+	schemaName := ""
+
+	if schema.SchemaName == "" {
+		lastSlash := strings.LastIndex(url, "/")
+		if lastSlash != -1 {
+			lastDot := strings.LastIndex(url, ".")
+			if lastDot == -1 {
+				lastDot = len(url)
+			}
+			schemaName = url[lastSlash+1 : lastDot]
+		}
+	}
+
+	log.Println("Quicklaunch schema_name set to: ", schemaName)
+
 	launcherSchema = surveys.LauncherSchema{
-		EqID:     schema.EqID,
-		FormType: schema.FormType,
-		URL:      url + cacheBust,
+		URL:  url + cacheBust,
+		Name: schemaName,
 	}
 
 	return launcherSchema, ""
@@ -232,11 +257,9 @@ func validateSchema(payload []byte) (error string) {
 func getSchemaClaims(LauncherSchema surveys.LauncherSchema) map[string]interface{} {
 
 	schemaClaims := make(map[string]interface{})
-	schemaClaims["eq_id"] = LauncherSchema.EqID
-	schemaClaims["form_type"] = LauncherSchema.FormType
 	if LauncherSchema.URL != "" {
-        schemaClaims["survey_url"] = LauncherSchema.URL
-    }
+		schemaClaims["survey_url"] = LauncherSchema.URL
+	}
 
 	return schemaClaims
 }
@@ -321,15 +344,15 @@ func getStringOrDefault(key string, values map[string][]string, defaultValue str
 
 // GenerateTokenFromDefaults coverts a set of DEFAULT values into a JWT
 func GenerateTokenFromDefaults(surveyURL string, accountServiceURL string, accountServiceLogOutURL string, urlValues url.Values) (token string, error string) {
-	claims := make(map[string]interface{})
-	urlValues["account_service_url"] = []string{accountServiceURL}
-	urlValues["account_service_log_out_url"] = []string{accountServiceLogOutURL}
-	claims = generateClaims(urlValues)
-
 	launcherSchema, validationError := launcherSchemaFromURL(surveyURL)
 	if validationError != "" {
 		return "", validationError
 	}
+
+	claims := make(map[string]interface{})
+	urlValues["account_service_url"] = []string{accountServiceURL}
+	urlValues["account_service_log_out_url"] = []string{accountServiceLogOutURL}
+	claims = generateClaims(urlValues, launcherSchema)
 
 	requiredMetadata, error := GetRequiredMetadata(launcherSchema)
 	if error != "" {
@@ -362,14 +385,39 @@ func GenerateTokenFromDefaults(surveyURL string, accountServiceURL string, accou
 	return token, ""
 }
 
-// GenerateTokenFromPost coverts a set of POST values into a JWT
+// TransformSchemaParamsToName Returns a schema name from census schema parameters
+// This function can be removed after census claims are removed.
+func TransformSchemaParamsToName(postValues url.Values) string {
+	if postValues.Get("schema_name") != "" {
+		return postValues["schema_name"][0]
+	}
+
+	case_type_map := map[string]string{
+		"HH": "household",
+		"HI": "individual",
+		"CE": "communical_establishment",
+		"CI": "communal_individual",
+	}
+
+	region_code := strings.Replace(postValues.Get("region_code"), "-", "_", -1)
+	region_code = strings.ToLower(region_code)
+
+	survey := postValues.Get("survey")
+	case_type := case_type_map[postValues.Get("case_type")]
+	schema_name := fmt.Sprintf("%s_%s_%s", survey, case_type, region_code)
+
+	return schema_name
+}
+
+// GenerateTokenFromPost converts a set of POST values into a JWT
 func GenerateTokenFromPost(postValues url.Values) (string, string) {
 	log.Println("POST received: ", postValues)
 
-	schema := postValues.Get("schema")
+	schema := TransformSchemaParamsToName(postValues)
+
 	launcherSchema := surveys.FindSurveyByName(schema)
 
-	claims := generateClaims(postValues)
+	claims := generateClaims(postValues, launcherSchema)
 
 	jwtClaims := GenerateJwtClaims()
 	for key, v := range jwtClaims {
@@ -393,6 +441,10 @@ func GenerateTokenFromPost(postValues url.Values) (string, string) {
 		}
 	}
 
+	if launcherSchema.Name != "" && claims["schema_name"] == "" {
+		claims["schema_name"] = launcherSchema.Name
+	}
+
 	token, tokenError := generateTokenFromClaims(claims)
 	if tokenError != nil {
 		return token, fmt.Sprintf("GenerateTokenFromPost failed err: %v", tokenError)
@@ -403,7 +455,6 @@ func GenerateTokenFromPost(postValues url.Values) (string, string) {
 
 // GetRequiredMetadata Gets the required metadata from a schema
 func GetRequiredMetadata(launcherSchema surveys.LauncherSchema) ([]Metadata, string) {
-
 	var url string
 
 	if launcherSchema.URL != "" {
@@ -411,23 +462,27 @@ func GetRequiredMetadata(launcherSchema surveys.LauncherSchema) ([]Metadata, str
 	} else {
 		hostURL := settings.Get("SURVEY_RUNNER_SCHEMA_URL")
 
-		url = fmt.Sprintf("%s/schemas/%s/%s", hostURL, launcherSchema.EqID, launcherSchema.FormType)
+		log.Println("Name: ", launcherSchema.Name)
+		url = fmt.Sprintf("%s/schemas/%s", hostURL, launcherSchema.Name)
 	}
 
 	log.Println("Loading metadata from schema:", url)
 
 	resp, err := clients.GetHTTPClient().Get(url)
 	if err != nil {
+		log.Println("Failed to load schema from:", url)
 		return nil, fmt.Sprintf("Failed to load Schema from %s", url)
 	}
 
 	if resp.StatusCode != 200 {
+		log.Print("Invalid response code for schema from: ", url)
 		return nil, fmt.Sprintf("Failed to load Schema from %s", url)
 	}
 
 	responseBody, err := ioutil.ReadAll(resp.Body)
 	resp.Body.Close()
 	if err != nil {
+		log.Print(err)
 		return nil, fmt.Sprintf("Failed to load Schema from %s", url)
 	}
 
@@ -455,10 +510,12 @@ func GetDefaultValues() map[string]string {
 
 	defaults := make(map[string]string)
 
+	collection_exercise_sid, _ := uuid.NewV4()
+
 	defaults["user_id"] = "UNKNOWN"
 	defaults["period_id"] = "201605"
 	defaults["period_str"] = "May 2017"
-	defaults["collection_exercise_sid"] = uuid.NewV4().String()
+	defaults["collection_exercise_sid"] = collection_exercise_sid.String()
 	defaults["ru_ref"] = "12346789012A"
 	defaults["ru_name"] = "ESSENTIAL ENTERPRISE LTD."
 	defaults["ref_p_start_date"] = "2016-05-01"
