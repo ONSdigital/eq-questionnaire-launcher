@@ -406,7 +406,7 @@ func TransformSchemaParamsToName(postValues url.Values) string {
 	caseType := caseTypeMap[postValues.Get("case_type")]
 	schemaName := fmt.Sprintf("%s_%s_%s", survey, caseType, regionCode)
 
-	return schema_name
+	return schemaName
 }
 
 // GenerateTokenFromPost converts a set of POST values into a JWT
