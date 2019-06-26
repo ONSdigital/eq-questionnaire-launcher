@@ -131,8 +131,8 @@ func generateClaims(claimValues map[string][]string, launcherSchema surveys.Laun
 	claims = make(map[string]interface{})
 
 	claims["roles"] = roles
-	tx_id, _ := uuid.NewV4()
-	claims["tx_id"] = tx_id.String()
+	TxID, _ := uuid.NewV4()
+	claims["tx_id"] = TxID.String()
 
 	for key, value := range claimValues {
 		if key != "roles" {
@@ -392,19 +392,19 @@ func TransformSchemaParamsToName(postValues url.Values) string {
 		return postValues["schema_name"][0]
 	}
 
-	case_type_map := map[string]string{
+	caseTypeMap := map[string]string{
 		"HH": "household",
 		"HI": "individual",
 		"CE": "communical_establishment",
 		"CI": "communal_individual",
 	}
 
-	region_code := strings.Replace(postValues.Get("region_code"), "-", "_", -1)
-	region_code = strings.ToLower(region_code)
+	regionCode := strings.Replace(postValues.Get("region_code"), "-", "_", -1)
+	regionCode = strings.ToLower(regionCode)
 
 	survey := postValues.Get("survey")
-	case_type := case_type_map[postValues.Get("case_type")]
-	schema_name := fmt.Sprintf("%s_%s_%s", survey, case_type, region_code)
+	caseType := caseTypeMap[postValues.Get("case_type")]
+	schemaName := fmt.Sprintf("%s_%s_%s", survey, caseType, regionCode)
 
 	return schema_name
 }
@@ -510,12 +510,12 @@ func GetDefaultValues() map[string]string {
 
 	defaults := make(map[string]string)
 
-	collection_exercise_sid, _ := uuid.NewV4()
+	collectionExerciseSid, _ := uuid.NewV4()
 
 	defaults["user_id"] = "UNKNOWN"
 	defaults["period_id"] = "201605"
 	defaults["period_str"] = "May 2017"
-	defaults["collection_exercise_sid"] = collection_exercise_sid.String()
+	defaults["collection_exercise_sid"] = collectionExerciseSid.String()
 	defaults["ru_ref"] = "12346789012A"
 	defaults["ru_name"] = "ESSENTIAL ENTERPRISE LTD."
 	defaults["ref_p_start_date"] = "2016-05-01"

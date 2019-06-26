@@ -84,7 +84,6 @@ func postLaunchHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getMetadataHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println("Handling metadata request")
 	schema := r.URL.Query().Get("schema")
 	log.Println("Searching for schema: " + schema)
 
@@ -150,10 +149,10 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Quick launch request received", surveyURL)
 
 	urlValues.Add("ru_ref", defaultValues["ru_ref"])
-	collection_exercise_sid, _ := uuid.NewV4()
-	case_id, _ := uuid.NewV4()
-	urlValues.Add("collection_exercise_sid", collection_exercise_sid.String())
-	urlValues.Add("case_id", case_id.String())
+	collectionExerciseSid, _ := uuid.NewV4()
+	caseID, _ := uuid.NewV4()
+	urlValues.Add("collection_exercise_sid", collectionExerciseSid.String())
+	urlValues.Add("case_id", caseID.String())
 	urlValues.Add("questionnaire_id", randomNumericString(16))
 	urlValues.Add("response_id", randomNumericString(16))
 	urlValues.Add("language_code", defaultValues["language_code"])
