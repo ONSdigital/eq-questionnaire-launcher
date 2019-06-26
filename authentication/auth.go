@@ -395,7 +395,7 @@ func TransformSchemaParamsToName(postValues url.Values) string {
 	caseTypeMap := map[string]string{
 		"HH": "household",
 		"HI": "individual",
-		"CE": "communical_establishment",
+		"CE": "communal_establishment",
 		"CI": "communal_individual",
 	}
 
