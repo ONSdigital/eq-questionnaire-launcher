@@ -27,4 +27,4 @@ _testmain.go
 vendor/
 
 # binaries
-go-launch-a-survey
+eq-questionnaire-launcher
