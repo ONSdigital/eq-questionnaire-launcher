@@ -214,6 +214,8 @@ func launcherSchemaFromURL(url string) (launcherSchema surveys.LauncherSchema, e
 			}
 			schemaName = url[lastSlash+1 : lastDot]
 		}
+	} else {
+		schemaName = schema.SchemaName
 	}
 
 	log.Println("Quicklaunch schema_name set to: ", schemaName)
