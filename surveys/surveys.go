@@ -24,6 +24,7 @@ type LauncherSchema struct {
 // LauncherSchemas is a separation of Test and Live schemas
 type LauncherSchemas struct {
 	Business []LauncherSchema
+	CCS      []LauncherSchema
 	Census   []LauncherSchema
 	Social   []LauncherSchema
 	Test     []LauncherSchema
@@ -66,6 +67,8 @@ func GetAvailableSchemas() LauncherSchemas {
 			schemaList.Census = append(schemaList.Census, launcherSchema)
 		} else if strings.HasPrefix(launcherSchema.Name, "lms_") {
 			schemaList.Social = append(schemaList.Social, launcherSchema)
+		} else if strings.HasPrefix(launcherSchema.Name, "ccs_") {
+			schemaList.CCS = append(schemaList.CCS, launcherSchema)
 		} else {
 			schemaList.Business = append(schemaList.Business, launcherSchema)
 		}
@@ -77,6 +80,7 @@ func GetAvailableSchemas() LauncherSchemas {
 	sort.Sort(ByFilename(schemaList.Census))
 	sort.Sort(ByFilename(schemaList.Social))
 	sort.Sort(ByFilename(schemaList.Test))
+	sort.Sort(ByFilename(schemaList.CCS))
 
 	return schemaList
 }
@@ -185,6 +189,11 @@ func FindSurveyByName(name string) LauncherSchema {
 		}
 	}
 	for _, survey := range availableSchemas.Social {
+		if survey.Name == name {
+			return survey
+		}
+	}
+	for _, survey := range availableSchemas.Test {
 		if survey.Name == name {
 			return survey
 		}

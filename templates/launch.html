@@ -15,6 +15,11 @@
                     <option name="{{.Name}}" value="{{.Name}}">{{.Name}}</option>
                 {{end}}
             </optgroup>
+            <optgroup label="CCS Surveys">
+                {{range .Schemas.CCS}}
+                    <option name="{{.Name}}" value="{{.Name}}">{{.Name}}</option>
+                {{end}}
+            </optgroup>
             <optgroup label="Census Surveys">
                 {{range .Schemas.Census}}
                     <option name="{{.Name}}" value="{{.Name}}">{{.Name}}</option>
