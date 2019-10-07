@@ -183,17 +183,17 @@ func FindSurveyByName(name string) LauncherSchema {
 			return survey
 		}
 	}
+	for _, survey := range availableSchemas.CCS {
+		if survey.Name == name {
+			return survey
+		}
+	}
 	for _, survey := range availableSchemas.Census {
 		if survey.Name == name {
 			return survey
 		}
 	}
 	for _, survey := range availableSchemas.Social {
-		if survey.Name == name {
-			return survey
-		}
-	}
-	for _, survey := range availableSchemas.Test {
 		if survey.Name == name {
 			return survey
 		}
