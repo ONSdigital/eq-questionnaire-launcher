@@ -136,7 +136,9 @@ func generateClaims(claimValues map[string][]string, launcherSchema surveys.Laun
 
 	for key, value := range claimValues {
 		if key != "roles" {
-			claims[key] = value[0]
+			if value[0] != "" {
+				claims[key] = value[0]
+			}
 		} else {
 			claims[key] = value
 		}
