@@ -143,8 +143,8 @@ func generateClaims(claimValues map[string][]string, launcherSchema surveys.Laun
 			claims[key] = value
 		}
 	}
-
-	if len(claimValues["survey"]) > 0 || len(claimValues["form_type"]) > 0 || len(claimValues["region_code"]) > 0 {
+    var isCensusTestSchema = claimValues["schema_name"][0] == "test_individual_response"
+	if !isCensusTestSchema && (len(claimValues["survey"]) > 0 || len(claimValues["form_type"]) > 0 || len(claimValues["region_code"]) > 0) {
 		log.Println("Deleting schema name from claims")
 		delete(claims, "schema_name")
 	} else {

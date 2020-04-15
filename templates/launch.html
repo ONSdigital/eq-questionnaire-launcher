@@ -151,41 +151,46 @@
         document.getElementById('census_claims').innerHTML = ""
     }
 
-    function includeCensusClaims() {
-        let schema_name = document.getElementById('schema_name').value
-        let matches = schema_name_census_regex.exec(schema_name)
+    function includeCensusClaims(schema_name, is_census_test_schema=false) {
+        let surveyValue = "CENSUS"
+        let formTypeValue = "C"
+        let regionCodeValue = "GB-ENG"
 
-        let surveyValue = matches[1].toUpperCase()
-        let formTypeValue = form_types[matches[2]]
-        let regionCodeValue = matches[3].toUpperCase().replace('_', '-')
+        if (!is_census_test_schema) {
+            const matches = schema_name_census_regex.exec(schema_name)
+            surveyValue = matches[1].toUpperCase()
+            formTypeValue = form_types[matches[2]]
+            regionCodeValue = matches[3].toUpperCase().replace('_', '-')
+        }
 
-        var CensusClaimsHtml = "<div class=\"field-container\">" +
-                "<label for=\"survey\">Survey</label>" +
-                "<input id=\"survey\" name=\"survey\" type=\"text\" value=\"" + surveyValue + "\" class=\"qa-survey\">" +
-                "</div>" + 
-                "<div class=\"field-container\">" +
-                "<label for=\"form_type\">Form Type</label>" +
-                "<input id=\"form_type\" name=\"form_type\" type=\"text\" value=\"" + formTypeValue + "\" class=\"qa-form_type\">" +
-                "</div>" + 
-                "<div class=\"field-container\">" +
-                "<label for=\"region_code\">Region Code</label>" +
-                "<input id=\"region_code\" name=\"region_code\" type=\"text\" value=\"" + regionCodeValue+ "\" class=\"qa-region_code\">" +
-                "</div>" +
-                "<div class=\"field-container\">" +
-                "<label for=\"channel\">Channel</label>" +
-                "<input id=\"channel\" name=\"channel\" type=\"text\" value=\"RH\" class=\"qa-channel\">" +
-                "</div>" 
-
-        document.getElementById('census_claims').innerHTML = CensusClaimsHtml
-    }
+        document.getElementById('census_claims').innerHTML = `
+            <div class="field-container">
+                <label for="survey">Survey</label>
+                <input id="survey" name="survey" type="text" value="${surveyValue}" class="qa-survey">
+            </div>
+            <div class="field-container">
+                <label for="form_type">Form Type</label>
+                <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="qa-form_type">
+            </div>
+            <div class="field-container">
+                <label for="region_code">Region Code</label>
+                <input id="region_code" name="region_code" type="text" value="${regionCodeValue}" class="qa-region_code">
+            </div>
+            <div class="field-container">
+                <label for="channel">Channel</label>
+                <input id="channel" name="channel" type="text" value="RH" class="qa-channel">
+            </div>
+		`
+     }
 
     function loadMetadata() {
         document.getElementById("submit-btn").disabled = true;
         document.getElementById("flush-btn").disabled = true;
 
-        let schema_name = document.getElementById("schema_name").value
-        if (schema_name.startsWith('census') || schema_name.startsWith('ccs')) {
-            includeCensusClaims()
+        const schema_name = document.getElementById("schema_name").value
+        const is_census_test_schema = schema_name === "test_individual_response"
+        if (is_census_test_schema || schema_name.startsWith('census') || schema_name.startsWith('ccs')) {
+            includeCensusClaims(schema_name, is_census_test_schema)
         } else {
             clearCensusClaims()
         }
