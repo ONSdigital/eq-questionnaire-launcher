@@ -16,7 +16,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /go/bin/eq-questi
 FROM alpine:latest  
 
 RUN apk --no-cache update && \
-    apk --no-cache add python py-pip py-setuptools ca-certificates && \
+    apk --no-cache add python3 py-pip py-setuptools ca-certificates && \
     pip --no-cache-dir install awscli && \
     rm -rf /var/cache/apk/*
 
