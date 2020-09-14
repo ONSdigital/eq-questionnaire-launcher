@@ -151,7 +151,7 @@
         document.getElementById('census_claims').innerHTML = ""
     }
 
-    function includeCensusClaims(schema_name, is_census_test_schema=false) {
+    function includeCensusClaims(schema_name, is_census_test_schema = false) {
         let surveyValue = "CENSUS"
         let formTypeValue = "C"
         let regionCodeValue = "GB-ENG"
@@ -181,7 +181,7 @@
                 <input id="channel" name="channel" type="text" value="RH" class="qa-channel">
             </div>
         `
-     }
+    }
 
     function loadMetadata() {
         document.getElementById("submit-btn").disabled = true;
@@ -222,25 +222,25 @@
                             if (metadataField['type'] == "boolean") {
 
                                 metadataFieldHtml = "<div class=\"field-container\">" +
-                                        "<label for=\"" + metadataField['name'] + "\">" + metadataField['name'] + "</label>" +
-                                        "<input id=\"" + metadataField['name'] + "\" name=\"" + metadataField['name'] + "\" type=\"checkbox\" name=\"" + metadataField['name'] + "\" class=\"qa-" + metadataField['name'] + "\">" +
-                                        "</div>"
+                                    "<label for=\"" + metadataField['name'] + "\">" + metadataField['name'] + "</label>" +
+                                    "<input id=\"" + metadataField['name'] + "\" name=\"" + metadataField['name'] + "\" type=\"checkbox\" name=\"" + metadataField['name'] + "\" class=\"qa-" + metadataField['name'] + "\">" +
+                                    "</div>"
 
                             } else if (metadataField['type'] == "uuid") {
 
                                 metadataFieldHtml = "<div class=\"field-container\">" +
-                                        "<label for=\"" + metadataField['name'] + "\">" + metadataField['name'] + "</label>" +
-                                        "<span>" +
-                                        "<input id=\"" + metadataField['name'] + "\" name=\"" + metadataField['name'] + "\" type=\"text\" value=\"" + uuidv4() + "\" class=\"" + metadataField['name'] + "\">" +
-                                        "<img onclick=\"uuid('" + metadataField['name'] + "')\" src=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg==\">" +
-                                        "</span>" +
-                                        "</div>"
+                                    "<label for=\"" + metadataField['name'] + "\">" + metadataField['name'] + "</label>" +
+                                    "<span>" +
+                                    "<input id=\"" + metadataField['name'] + "\" name=\"" + metadataField['name'] + "\" type=\"text\" value=\"" + uuidv4() + "\" class=\"" + metadataField['name'] + "\">" +
+                                    "<img onclick=\"uuid('" + metadataField['name'] + "')\" src=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg==\">" +
+                                    "</span>" +
+                                    "</div>"
 
                             } else {
                                 metadataFieldHtml = "<div class=\"field-container\">" +
-                                        "<label for=\"" + metadataField['name'] + "\">" + metadataField['name'] + "</label>" +
-                                        "<input id=\"" + metadataField['name'] + "\" name=\"" + metadataField['name'] + "\" type=\"text\" value=\"" + defaultValue + "\" class=\"qa-" + metadataField['name'] + "\">" +
-                                        "</div>"
+                                    "<label for=\"" + metadataField['name'] + "\">" + metadataField['name'] + "</label>" +
+                                    "<input id=\"" + metadataField['name'] + "\" name=\"" + metadataField['name'] + "\" type=\"text\" value=\"" + defaultValue + "\" class=\"qa-" + metadataField['name'] + "\">" +
+                                    "</div>"
                             }
 
                             document.getElementById("survey_metadata").innerHTML = document.getElementById("survey_metadata").innerHTML + metadataFieldHtml;
@@ -257,12 +257,12 @@
                 }
             }
         };
-        xhttp.open("GET", "/metadata?schema=" + document.getElementById('schema_name').value , true);
+        xhttp.open("GET", "/metadata?schema=" + document.getElementById('schema_name').value, true);
         xhttp.send();
     }
 
     function uuid(el_id) {
-      document.getElementById(el_id).value = uuidv4();
+        document.getElementById(el_id).value = uuidv4();
     }
 
     function numericId(el_id) {
@@ -275,12 +275,12 @@
     }
 
     function ruref(el_id) {
-      var result = '';
-      var chars = '0123456789';
-      for (var i = 11; i > 0; --i) result += chars[Math.round(Math.random() * (chars.length - 1))];
-      var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-      result += chars[Math.round(Math.random() * (chars.length - 1))];
-      document.getElementById(el_id).value = result;
+        var result = '';
+        var chars = '0123456789';
+        for (var i = 11; i > 0; --i) result += chars[Math.round(Math.random() * (chars.length - 1))];
+        var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        result += chars[Math.round(Math.random() * (chars.length - 1))];
+        document.getElementById(el_id).value = result;
     }
 
     uuid('collection_exercise_sid');
