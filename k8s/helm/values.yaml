@@ -17,3 +17,5 @@ service:
 
 ingress:
   enabled: true
+
+targetNodePool: "main-node-pool"
