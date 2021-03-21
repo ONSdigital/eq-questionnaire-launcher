@@ -1,7 +1,7 @@
 language: go
 
 go:
-  - 1.12.x
+  - 1.16.x
 
 services:
   - docker
@@ -10,9 +10,7 @@ install:
   - ./lint.sh
 
 script:
-  - go get -u github.com/golang/dep/cmd/dep
-  - dep ensure
-  - go get -t ./...
+  - go get
   - CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo
   - export TAG="${TRAVIS_PULL_REQUEST_BRANCH:-latest}"
   - docker build -t ${DOCKER_REGISTRY}/eq-questionnaire-launcher:"$TAG" -t onsdigital/eq-questionnaire-launcher:"$TAG" .
