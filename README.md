@@ -5,18 +5,12 @@ This project was copied from https://github.com/ONSdigital/go-launch-a-survey an
 ### Building and Running
 Install Go and ensure that your `GOPATH` env variable is set (usually it's `~/go`).
 
-Note this app uses govendor (https://github.com/kardianos/govendor) to manage its dependencies.
-
 ```
-go get -d github.com/ONSdigital/eq-questionnaire-launcher/
-cd $GOPATH/src/github.com/ONSdigital/eq-questionnaire-launcher/
-go get -u github.com/golang/dep/cmd/dep
-$GOPATH/bin/dep ensure
+go get
 go build
 ./eq-questionnaire-launcher
 
 go run launch.go (Does both the build and run cmd above)
-
 ```
 
 Open http://localhost:8000/
@@ -37,7 +31,7 @@ docker run -e SURVEY_RUNNER_SCHEMA_URL=http://localhost:5000 -it -p 8000:8000 on
 The syntax for this will be slightly different on Mac
 
 ```
-docker run -e SURVEY_RUNNER_SCHEMA_URL=http://docker.for.mac.host.internal:5000 -it -p 8000:8000 onsdigital/eq-questionnaire-launcher:latest
+docker run -e SURVEY_RUNNER_SCHEMA_URL=http://host.docker.internal:5000 -it -p 8000:8000 onsdigital/eq-questionnaire-launcher:latest
 ```
 
 You should then be able to access go launcher at `localhost:8000`
