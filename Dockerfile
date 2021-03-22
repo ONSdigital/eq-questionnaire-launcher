@@ -9,7 +9,7 @@ COPY . .
 RUN go get
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /go/bin/eq-questionnaire-launcher .
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -mod mod -o /go/bin/eq-questionnaire-launcher .
 
 ######## Start a new stage from scratch #######
 FROM alpine:latest  
