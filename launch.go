@@ -153,7 +153,6 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	caseID, _ := uuid.NewV4()
 	urlValues.Add("collection_exercise_sid", collectionExerciseSid.String())
 	urlValues.Add("case_id", caseID.String())
-	urlValues.Add("questionnaire_id", randomNumericString(16))
 	urlValues.Add("response_id", randomNumericString(16))
 	urlValues.Add("language_code", defaultValues["language_code"])
 
