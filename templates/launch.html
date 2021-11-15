@@ -255,7 +255,7 @@
     function setResponseExpiry(days_offset=7) {
         var dt = new Date();
         dt.setDate(dt.getDate()+days_offset)
-        document.getElementById('response_expires_at').value=dt.toISOString().replace(/(\.\d*)/, '');
+        document.getElementById('response_expires_at').value=dt.toISOString().replace(/(\.\d*)/, '').replace(/Z/, '+00:00');
     }
 
     function validateForm() {
