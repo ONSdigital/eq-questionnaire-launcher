@@ -259,6 +259,10 @@
     }
 
     function validateForm() {
+        validateResponseExpiresAt();
+    }
+
+    function validateResponseExpiresAt() {
         response_expires_at = Date.parse(document.getElementById('response_expires_at').value)
         if (isNaN(response_expires_at)) {
             document.getElementById('response_expires_at').remove()
