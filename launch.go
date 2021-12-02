@@ -57,7 +57,7 @@ func serveTemplate(templateName string, data interface{}, w http.ResponseWriter,
 }
 
 type page struct {
-	Schemas                 surveys.LauncherSchemas
+	Schemas                 map[string][]surveys.LauncherSchema
 	AccountServiceURL       string
 	AccountServiceLogOutURL string
 }

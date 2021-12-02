@@ -10,26 +10,14 @@
         <label for="schema_name">Schemas</label>
         <select id="schema_name" name="schema_name" class="qa-select-schema" onchange="loadMetadata()">
             <option selected disabled>Select Schema</option>
-            <optgroup label="Business Surveys">
-                {{range .Schemas.Business}}
-                    <option name="{{.Name}}" value="{{.Name}}">{{.Name}}</option>
-                {{end}}
-            </optgroup>
-            <optgroup label="Social Surveys">
-                {{range .Schemas.Social}}
-                    <option name="{{.Name}}" value="{{.Name}}">{{.Name}}</option>
-                {{end}}
-            </optgroup>
-            <optgroup label="Test Surveys">
-                {{range .Schemas.Test}}
-                    <option name="{{.Name}}" value="{{.Name}}">{{.Name}}</option>
-                {{end}}
-            </optgroup>
-            <optgroup label="Other Surveys">
-                {{range .Schemas.Other}}
-                    <option name="{{.Name}}" value="{{.Name}}">{{.Name}}</option>
-                {{end}}
-            </optgroup>
+
+            {{ range $surveyType, $schemasList := .Schemas }}
+                <optgroup label="{{ $surveyType }} Surveys">
+                    {{ range $schema := $schemasList }}
+                        <option name="{{ $schema.Name }}" value="{{ $schema.Name }}" data-survey-type="{{ $surveyType }}">{{ $schema.Name }}</option>
+                    {{ end }}
+                </optgroup>
+            {{ end }}
         </select>
     </div>
 
@@ -157,8 +145,9 @@
         document.getElementById("flush-btn").disabled = true;
 
         const schema_name = document.getElementById("schema_name").value
+        const survey_type = document.querySelector(`#schema_name option[value=${schema_name}]`).dataset.surveyType
 
-        if (schema_name.startsWith('test_')) {
+        if (survey_type.toLowerCase() === "test") {
             clearBusinessClaims()
         } else {
             includeBusinessClaims(schema_name)
@@ -226,7 +215,7 @@
                 }
             }
         };
-        xhttp.open("GET", "/metadata?schema=" + document.getElementById('schema_name').value, true);
+        xhttp.open("GET", "/metadata?schema=" + document.getElementById("schema_name").value, true);
         xhttp.send();
     }
 

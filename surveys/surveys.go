@@ -17,16 +17,9 @@ import (
 
 // LauncherSchema is a representation of a schema in the Launcher
 type LauncherSchema struct {
-	Name string
-	URL  string
-}
-
-// LauncherSchemas is a separation of Test and Live schemas
-type LauncherSchemas struct {
-	Business []LauncherSchema
-	Social   []LauncherSchema
-	Test     []LauncherSchema
-	Other    []LauncherSchema
+	Name       string
+	SurveyType string
+	URL        string
 }
 
 // RegisterResponse is the response from the eq-survey-register request
@@ -46,35 +39,29 @@ type Schema struct {
 var eqIDFormTypeRegex = regexp.MustCompile(`^(?P<eq_id>[a-z0-9]+)_(?P<form_type>\w+)`)
 
 // LauncherSchemaFromFilename creates a LauncherSchema record from a schema filename
-func LauncherSchemaFromFilename(filename string) LauncherSchema {
+func LauncherSchemaFromFilename(filename string, surveyType string) LauncherSchema {
 	return LauncherSchema{
-		Name: filename,
+		Name:       filename,
+		SurveyType: surveyType,
 	}
 }
 
 // GetAvailableSchemas Gets the list of static schemas an joins them with any schemas from the eq-survey-register if defined
-func GetAvailableSchemas() LauncherSchemas {
-	schemaList := LauncherSchemas{}
-
+func GetAvailableSchemas() map[string][]LauncherSchema {
 	runnerSchemas := getAvailableSchemasFromRunner()
+	registerSchemas := getAvailableSchemasFromRegister()
 
-	for _, launcherSchema := range runnerSchemas {
-		if strings.HasPrefix(launcherSchema.Name, "test_") {
-			schemaList.Test = append(schemaList.Test, launcherSchema)
-		}  else if strings.HasPrefix(launcherSchema.Name, "lms_") {
-			schemaList.Social = append(schemaList.Social, launcherSchema)
-		}  else {
-			schemaList.Business = append(schemaList.Business, launcherSchema)
-		}
+	allSchemas := []LauncherSchema{}
+	allSchemas = append(runnerSchemas, registerSchemas...)
+
+	sort.Sort(ByFilename(allSchemas))
+
+	schemasBySurveyType := map[string][]LauncherSchema{}
+	for _, schema := range allSchemas {
+		schemasBySurveyType[strings.Title(schema.SurveyType)] = append(schemasBySurveyType[strings.Title(schema.SurveyType)], schema)
 	}
 
-	schemaList.Other = getAvailableSchemasFromRegister()
-
-	sort.Sort(ByFilename(schemaList.Business))
-	sort.Sort(ByFilename(schemaList.Social))
-	sort.Sort(ByFilename(schemaList.Test))
-
-	return schemaList
+	return schemasBySurveyType
 }
 
 // ByFilename implements sort.Interface based on the Name field.
@@ -118,8 +105,9 @@ func getAvailableSchemasFromRegister() []LauncherSchema {
 		for _, schema := range schemas {
 			url := schema.Links["self"]
 			schemaList = append(schemaList, LauncherSchema{
-				Name: schema.Name,
-				URL:  url.Href,
+				Name:       schema.Name,
+				URL:        url.Href,
+				SurveyType: "Other",
 			})
 		}
 	}
@@ -138,6 +126,7 @@ func getAvailableSchemasFromRunner() []LauncherSchema {
 	url := fmt.Sprintf("%s/schemas", hostURL)
 
 	resp, err := clients.GetHTTPClient().Get(url)
+
 	if err != nil {
 		return []LauncherSchema{}
 	}
@@ -152,15 +141,17 @@ func getAvailableSchemasFromRunner() []LauncherSchema {
 		return []LauncherSchema{}
 	}
 
-	var schemaListResponse []string
+	var schemaMapResponse = map[string][]string{}
 
-	if err := json.Unmarshal(responseBody, &schemaListResponse); err != nil {
+	if err := json.Unmarshal(responseBody, &schemaMapResponse); err != nil {
 		log.Print(err)
 		return []LauncherSchema{}
 	}
 
-	for _, schema := range schemaListResponse {
-		schemaList = append(schemaList, LauncherSchemaFromFilename(schema))
+	for surveyType, schemas := range schemaMapResponse {
+		for _, schemaName := range schemas {
+			schemaList = append(schemaList, LauncherSchemaFromFilename(schemaName, surveyType))
+		}
 	}
 
 	return schemaList
@@ -170,25 +161,15 @@ func getAvailableSchemasFromRunner() []LauncherSchema {
 func FindSurveyByName(name string) LauncherSchema {
 	availableSchemas := GetAvailableSchemas()
 
-	for _, survey := range availableSchemas.Business {
-		if survey.Name == name {
-			return survey
+	for _, schemasBySurveyType := range availableSchemas {
+		for _, schema := range schemasBySurveyType {
+			log.Print(schema.Name)
+			log.Print(name)
+			if schema.Name == name {
+				return schema
+			}
 		}
 	}
-	for _, survey := range availableSchemas.Social {
-		if survey.Name == name {
-			return survey
-		}
-	}
-	for _, survey := range availableSchemas.Test {
-		if survey.Name == name {
-			return survey
-		}
-	}
-	for _, survey := range availableSchemas.Other {
-		if survey.Name == name {
-			return survey
-		}
-	}
-	panic("Survey not found")
+
+	panic("Schema not found")
 }
