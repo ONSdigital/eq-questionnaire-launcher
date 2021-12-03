@@ -148,7 +148,7 @@
         const survey_type = document.querySelector(`#schema_name option[value=${schema_name}]`).dataset.surveyType
 
         if (survey_type.toLowerCase() === "test") {
-            clearBusinessClaims()
+            clearSurveyMetadataFields()
         } else {
             includeSurveyMetadataFields(schema_name, survey_type)
         }
