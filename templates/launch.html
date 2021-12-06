@@ -120,14 +120,14 @@
     !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var n;n="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this,n.uuidv4=e()}}(function(){return function e(n,r,o){function t(f,u){if(!r[f]){if(!n[f]){var a="function"==typeof require&&require;if(!u&&a)return a(f,!0);if(i)return i(f,!0);var d=new Error("Cannot find module '"+f+"'");throw d.code="MODULE_NOT_FOUND",d}var p=r[f]={exports:{}};n[f][0].call(p.exports,function(e){var r=n[f][1][e];return t(r?r:e)},p,p.exports,e,n,r,o)}return r[f].exports}for(var i="function"==typeof require&&require,f=0;f<o.length;f++)t(o[f]);return t}({1:[function(e,n,r){function o(e,n){var r=n||0,o=t;return[o[e[r++]],o[e[r++]],o[e[r++]],o[e[r++]],"-",o[e[r++]],o[e[r++]],"-",o[e[r++]],o[e[r++]],"-",o[e[r++]],o[e[r++]],"-",o[e[r++]],o[e[r++]],o[e[r++]],o[e[r++]],o[e[r++]],o[e[r++]]].join("")}for(var t=[],i=0;i<256;++i)t[i]=(i+256).toString(16).substr(1);n.exports=o},{}],2:[function(e,n,r){var o="undefined"!=typeof crypto&&crypto.getRandomValues&&crypto.getRandomValues.bind(crypto)||"undefined"!=typeof msCrypto&&"function"==typeof window.msCrypto.getRandomValues&&msCrypto.getRandomValues.bind(msCrypto);if(o){var t=new Uint8Array(16);n.exports=function(){return o(t),t}}else{var i=new Array(16);n.exports=function(){for(var e,n=0;n<16;n++)0===(3&n)&&(e=4294967296*Math.random()),i[n]=e>>>((3&n)<<3)&255;return i}}},{}],3:[function(e,n,r){function o(e,n,r){var o=n&&r||0;"string"==typeof e&&(n="binary"===e?new Array(16):null,e=null),e=e||{};var f=e.random||(e.rng||t)();if(f[6]=15&f[6]|64,f[8]=63&f[8]|128,n)for(var u=0;u<16;++u)n[o+u]=f[u];return n||i(f)}var t=e("./lib/rng"),i=e("./lib/bytesToUuid");n.exports=o},{"./lib/bytesToUuid":1,"./lib/rng":2}]},{},[3])(3)});
 
     function clearSurveyMetadataFields() {
-        document.getElementById('survey_metadata_fields').innerHTML = ""
+        document.querySelector('#survey_metadata_fields').innerHTML = ""
     }
 
     function includeSurveyMetadataFields(schema_name, survey_type) {
         let eqIdValue = schema_name.split('_')[0]
         let formTypeValue = schema_name.split('_')[1]
 
-        document.getElementById('survey_metadata_fields').innerHTML = `
+        document.querySelector('#survey_metadata_fields').innerHTML = `
             <h3>${survey_type} Survey Metadata</h3>
             <div class="field-container">
                 <label for="eq_id">eq_id</label>
@@ -141,10 +141,10 @@
     }
 
     function loadMetadata() {
-        document.getElementById("submit-btn").disabled = true;
-        document.getElementById("flush-btn").disabled = true;
+        document.querySelector("#submit-btn").disabled = true;
+        document.querySelector("#flush-btn").disabled = true;
 
-        const schema_name = document.getElementById("schema_name").value
+        const schema_name = document.querySelector("#schema_name").value
         const survey_type = document.querySelector(`#schema_name option[value=${schema_name}]`).dataset.surveyType
 
         if (survey_type.toLowerCase() === "test") {
@@ -158,7 +158,7 @@
             if (this.readyState == 4) {
                 if (this.status == 200) {
 
-                    document.getElementById("survey_metadata").innerHTML = ""
+                    document.querySelector("#survey_metadata").innerHTML = ""
 
                     var response = JSON.parse(this.responseText);
 
@@ -201,26 +201,26 @@
                                     "</div>"
                             }
 
-                            document.getElementById("survey_metadata").innerHTML = document.getElementById("survey_metadata").innerHTML + metadataFieldHtml;
+                            document.querySelector("#survey_metadata").innerHTML = document.querySelector("#survey_metadata").innerHTML + metadataFieldHtml;
                         }
                     } else {
-                        document.getElementById("survey_metadata").innerHTML = "No metadata required for this survey";
+                        document.querySelector("#survey_metadata").innerHTML = "No metadata required for this survey";
                     }
 
-                    document.getElementById("submit-btn").disabled = false;
-                    document.getElementById("flush-btn").disabled = false;
+                    document.querySelector("#submit-btn").disabled = false;
+                    document.querySelector("#flush-btn").disabled = false;
 
                 } else {
-                    document.getElementById("survey_metadata").innerHTML = "Failed to load Schema Metadata";
+                    document.querySelector("#survey_metadata").innerHTML = "Failed to load Schema Metadata";
                 }
             }
         };
-        xhttp.open("GET", "/metadata?schema=" + document.getElementById("schema_name").value, true);
+        xhttp.open("GET", "/metadata?schema=" + document.querySelector("#schema_name").value, true);
         xhttp.send();
     }
 
     function uuid(el_id) {
-        document.getElementById(el_id).value = uuidv4();
+        document.querySelector(`#${el_id}`).value = uuidv4();
     }
 
     function numericId(el_id) {
@@ -229,7 +229,7 @@
         for (var i = 16; i > 0; --i) {
             result += chars[Math.round(Math.random() * (chars.length - 1))];
         }
-        document.getElementById(el_id).value = result;
+        document.querySelector(`#${el_id}`).value = result;
     }
 
     function ruref(el_id) {
@@ -238,13 +238,13 @@
         for (var i = 11; i > 0; --i) result += chars[Math.round(Math.random() * (chars.length - 1))];
         var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         result += chars[Math.round(Math.random() * (chars.length - 1))];
-        document.getElementById(el_id).value = result;
+        document.querySelector(`#${el_id}`).value = result;
     }
 
     function setResponseExpiry(days_offset=7) {
         var dt = new Date();
         dt.setDate(dt.getDate()+days_offset)
-        document.getElementById('response_expires_at').value=dt.toISOString().replace(/(\.\d*)/, '').replace(/Z/, '+00:00');
+        document.querySelector('#response_expires_at').value=dt.toISOString().replace(/(\.\d*)/, '').replace(/Z/, '+00:00');
     }
 
     function validateForm() {
@@ -252,9 +252,9 @@
     }
 
     function validateResponseExpiresAt() {
-        response_expires_at = Date.parse(document.getElementById('response_expires_at').value)
+        response_expires_at = Date.parse(document.querySelector('#response_expires_at').value)
         if (isNaN(response_expires_at)) {
-            document.getElementById('response_expires_at').remove()
+            document.querySelector('#response_expires_at').remove()
         }
     }
 
