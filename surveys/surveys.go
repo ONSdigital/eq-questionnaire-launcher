@@ -163,8 +163,6 @@ func FindSurveyByName(name string) LauncherSchema {
 
 	for _, schemasBySurveyType := range availableSchemas {
 		for _, schema := range schemasBySurveyType {
-			log.Print(schema.Name)
-			log.Print(name)
 			if schema.Name == name {
 				return schema
 			}
