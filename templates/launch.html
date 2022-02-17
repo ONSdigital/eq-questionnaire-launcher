@@ -145,7 +145,7 @@
         document.querySelector("#flush-btn").disabled = true;
 
         const schema_name = document.querySelector("#schema_name").value
-        const survey_type = document.querySelector(`#schema_name option[value=${schema_name}]`).dataset.surveyType
+        const survey_type = document.querySelector(`#schema_name option[value="${schema_name}"]`).dataset.surveyType
 
         if (survey_type.toLowerCase() === "test") {
             clearSurveyMetadataFields()
