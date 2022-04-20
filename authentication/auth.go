@@ -261,7 +261,7 @@ func getSchemaClaims(LauncherSchema surveys.LauncherSchema) map[string]interface
 
 	schemaClaims := make(map[string]interface{})
 	if LauncherSchema.URL != "" {
-		schemaClaims["survey_url"] = LauncherSchema.URL
+		schemaClaims["schema_url"] = LauncherSchema.URL
 	}
 
 	return schemaClaims
