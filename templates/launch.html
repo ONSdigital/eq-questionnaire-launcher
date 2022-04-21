@@ -214,7 +214,7 @@
         }
 
         let surveyType = document.querySelector("#schema-url-survey-type").value
-        if (surveyType === "Select Survey Type") {
+        if (surveyType.toLowerCase() === "select survey type") {
             alert("Select a Survey Type.")
             return false
         }
@@ -226,7 +226,7 @@
         loadSurveyMetadata(schemaName, surveyType)
         loadSchemaMetadata(schemaName, schemaUrl)
 
-        if (surveyType === "test") {
+        if (surveyType.toLowerCase() === "test") {
             let schemaUrlNameInput = document.querySelector("#schema-url-name-input")
             schemaUrlNameInput.value = schemaName
             schemaUrlNameInput.disabled = false
