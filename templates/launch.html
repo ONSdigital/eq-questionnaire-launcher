@@ -25,6 +25,7 @@
     <p>----------</p>
 
     <strong><u>Launch by Schema URL</u></strong>
+
     <div class="field-container">
         <span>
             <label for="schema-url-survey-type">Survey Type</label>
@@ -41,7 +42,6 @@
         <span>
             <label for="schema-url">Schema URL</label>
             <input id="schema-url" name="survey_url" type="text" class="qa-schema_url">
-            <input type="submit" onClick="return loadMetadataForSchemaUrl()" value="Load Schema" class="qa-btn-submit-dev btn" id="schema-url-btn"/>
         </span>
     </div>
 
@@ -50,6 +50,10 @@
             <label for="schema-url-name-input">Schema Name</label>
             <input id="schema-url-name-input" name="schema_name" type="text" class="qa-schema_url_name" disabled>
         </span>
+    </div>
+
+    <div class="field-container">
+        <input type="submit" onClick="return loadMetadataForSchemaUrl()" value="Load Schema" class="qa-btn-submit-dev btn" id="schema-url-btn"/>
     </div>
 
     <p>----------</p>
