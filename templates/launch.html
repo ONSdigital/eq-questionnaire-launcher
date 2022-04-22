@@ -178,6 +178,8 @@
     }
 
     function clearAndDisableSchemaUrlSelection() {
+        document.querySelector("#schema-url-btn").disabled = true;
+
         let schemaUrlElement = document.querySelector("#schema-url")
         let surveyTypeElement = document.querySelector("#schema-url-survey-type")
 
@@ -205,11 +207,6 @@
     }
 
     function loadMetadataForSchemaUrl() {
-        if (document.querySelector("#schema_name").selectedIndex !== 0) {
-            document.querySelector("#schema-url-btn").disabled = true;
-            return false
-        }
-
         let schemaUrl = document.querySelector("#schema-url").value
         if (!schemaUrl || !schemaUrl.endsWith(".json")) {
             alert("Schema URL not provided or is not valid.\n" +
