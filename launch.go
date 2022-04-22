@@ -145,9 +145,9 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	accountServiceURL := getAccountServiceURL(r)
 	AccountServiceLogOutURL := getAccountServiceURL(r)
 	urlValues := r.URL.Query()
-	surveyURL := urlValues.Get("url")
+	schemaURL := urlValues.Get("url")
 	defaultValues := authentication.GetDefaultValues()
-	log.Println("Quick launch request received", surveyURL)
+	log.Println("Quick launch request received", schemaURL)
 
 	urlValues.Add("ru_ref", defaultValues["ru_ref"])
 	collectionExerciseSid, _ := uuid.NewV4()
@@ -158,13 +158,13 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	urlValues.Add("language_code", defaultValues["language_code"])
 	urlValues.Add("response_expires_at", time.Now().AddDate(0, 0, 7).Format("2006-01-02T15:04:05+00:00"))
 
-	token, err := authentication.GenerateTokenFromDefaults(surveyURL, accountServiceURL, AccountServiceLogOutURL, urlValues)
+	token, err := authentication.GenerateTokenFromDefaults(schemaURL, accountServiceURL, AccountServiceLogOutURL, urlValues)
 	if err != "" {
 		http.Error(w, err, 400)
 		return
 	}
 
-	if surveyURL != "" {
+	if schemaURL != "" {
 		http.Redirect(w, r, hostURL+"/session?token="+token, 302)
 	} else {
 		http.Error(w, fmt.Sprintf("Not Found"), 404)

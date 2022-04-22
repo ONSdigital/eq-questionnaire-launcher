@@ -346,8 +346,8 @@ func getStringOrDefault(key string, values map[string][]string, defaultValue str
 }
 
 // GenerateTokenFromDefaults coverts a set of DEFAULT values into a JWT
-func GenerateTokenFromDefaults(surveyURL string, accountServiceURL string, accountServiceLogOutURL string, urlValues url.Values) (token string, error string) {
-	launcherSchema, validationError := launcherSchemaFromURL(surveyURL)
+func GenerateTokenFromDefaults(schemaURL string, accountServiceURL string, accountServiceLogOutURL string, urlValues url.Values) (token string, error string) {
+	launcherSchema, validationError := launcherSchemaFromURL(schemaURL)
 	if validationError != "" {
 		return "", validationError
 	}
