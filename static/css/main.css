@@ -84,6 +84,11 @@ select[multiple] {
     margin: 0.5rem;
 }
 
+.btn:disabled {
+    background: #cccccc;
+    color: grey;
+}
+
 #schema-url-name {
     display: none;
 }
