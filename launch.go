@@ -85,10 +85,10 @@ func postLaunchHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getMetadataHandler(w http.ResponseWriter, r *http.Request) {
-	schema := r.URL.Query().Get("schema")
-	log.Println("Searching for schema: " + schema)
+	schemaName := r.URL.Query().Get("schema_name")
+	schemaUrl := r.URL.Query().Get("schema_url")
 
-	launcherSchema := surveys.FindSurveyByName(schema)
+	launcherSchema := surveys.GetLauncherSchema(schemaName, schemaUrl)
 
 	metadata, err := authentication.GetRequiredMetadata(launcherSchema)
 

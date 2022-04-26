@@ -171,3 +171,24 @@ func FindSurveyByName(name string) LauncherSchema {
 
 	panic("Schema not found")
 }
+
+// Return a LauncherSchema instance by loading schema from name or URL
+func GetLauncherSchema(schemaName string, schemaUrl string) LauncherSchema {
+    var launcherSchema LauncherSchema
+
+    if schemaUrl != "" {
+        log.Println("Getting schema by URL: " + schemaUrl)
+        launcherSchema = LauncherSchema {
+            URL: schemaUrl,
+            Name: schemaName,
+        }
+    } else if schemaName != "" {
+        log.Println("Searching for schema by name: " + schemaName)
+        launcherSchema = FindSurveyByName(schemaName)
+    } else {
+        panic("Either `schema_name` or `schema_url` must be provided.")
+    }
+
+    return launcherSchema
+}
+

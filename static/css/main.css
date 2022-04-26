@@ -20,6 +20,23 @@ label { display:inline-block; font-weight: 600; margin-bottom: 0.25rem; width:20
     position: relative;
 }
 
+#schema-url-btn {
+    vertical-align: middle;
+    background:#6099c6;
+    color:white;
+    border-radius:3px;
+    display:inline-block;
+    text-align: center;
+    font-size: 0.9rem;
+    padding:0.50rem 2rem;
+    margin: 0.1rem;
+}
+
+#schema-url-btn:disabled {
+    background: #cccccc;
+    color: grey;
+}
+
 input[type=text] {
     padding:0.3rem;
     width:350px;
@@ -60,10 +77,18 @@ select[multiple] {
     color:white;
     border:0;
     border-radius:3px;
-    display:block;
+    display:inline-block;
     padding:0.75rem 2rem;
     text-align: center;
     font-size: 1rem;
     margin: 0.5rem;
-    float: left;
+}
+
+.btn:disabled {
+    background: #cccccc;
+    color: grey;
+}
+
+#schema-url-name {
+    display: none;
 }
