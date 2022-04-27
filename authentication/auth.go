@@ -405,9 +405,10 @@ func TransformSchemaParamsToName(postValues url.Values) string {
 func GenerateTokenFromPost(postValues url.Values) (string, string) {
 	log.Println("POST received: ", postValues)
 
-	schema := TransformSchemaParamsToName(postValues)
+	schemaName := TransformSchemaParamsToName(postValues)
+	schemaUrl := postValues.Get("survey_url")
 
-	launcherSchema := surveys.FindSurveyByName(schema)
+	launcherSchema := surveys.GetLauncherSchema(schemaName, schemaUrl)
 
 	claims := generateClaims(postValues, launcherSchema)
 

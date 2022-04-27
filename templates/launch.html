@@ -6,9 +6,10 @@
 
 <form action="" method="POST" xmlns="http://www.w3.org/1999/html" onsubmit="validateForm()">
 
+    <strong><u>Launch by Schema Name</u></strong>
     <div class="field-container">
         <label for="schema_name">Schemas</label>
-        <select id="schema_name" name="schema_name" class="qa-select-schema" onchange="loadMetadata()">
+        <select id="schema_name" name="schema_name" class="qa-select-schema" onchange="loadMetadataForSchemaName()">
             <option selected disabled>Select Schema</option>
 
             {{ range $surveyType, $schemasList := .Schemas }}
@@ -21,12 +22,48 @@
         </select>
     </div>
 
+    <p>----------</p>
+
+    <strong><u>Launch by Schema URL</u></strong>
+
+    <div class="field-container">
+        <span>
+            <label for="schema-url-survey-type">Survey Type</label>
+            <select name="survey-types" id="schema-url-survey-type">
+                <option selected disabled>Select Survey Type</option>
+                {{ range $surveyType, $schemasList := .Schemas }}
+                <option name="{{ $surveyType }}" value="{{ $surveyType }}" data-schema-url-survey-type="{{ $surveyType }}">{{ $surveyType }}</option>
+            {{ end }}
+            </select>
+        </span>
+    </div>
+
+    <div class="field-container">
+        <span>
+            <label for="schema-url">Schema URL</label>
+            <input id="schema-url" name="survey_url" type="text" class="qa-schema_url">
+        </span>
+    </div>
+
+    <div class="field-container" id="schema-url-name">
+        <span>
+            <label for="schema-url-name-input">Schema Name</label>
+            <input id="schema-url-name-input" name="schema_name" type="text" class="qa-schema_url_name" disabled>
+        </span>
+    </div>
+
+    <div class="field-container">
+        <input type="submit" onClick="return loadMetadataForSchemaUrl()" value="Load Schema" class="qa-btn-submit-dev btn" id="schema-url-btn"/>
+    </div>
+
+    <p>----------</p>
+
     <div id="survey_metadata_fields">
     </div>
 
     <h3>Survey Metadata</h3>
     <div id="survey_metadata">
-        <p>--- Metadata fields will be loaded when you select a schema ---</p>
+        <p>--- Metadata fields will be loaded when you select or load a schema ---</p>
     </div>
 
     <h3>Required Data</h3>
@@ -125,7 +162,7 @@
 
     function includeSurveyMetadataFields(schema_name, survey_type) {
         let eqIdValue = schema_name.split('_')[0]
-        let formTypeValue = schema_name.split('_')[1]
+        let formTypeValue = schema_name.split("_").slice(1).join("_")
 
         document.querySelector('#survey_metadata_fields').innerHTML = `
             <h3>${survey_type} Survey Metadata</h3>
@@ -140,19 +177,78 @@
         `
     }
 
-    function loadMetadata() {
+    function clearAndDisableSchemaUrlSelection() {
+        document.querySelector("#schema-url-btn").disabled = true;
+
+        let schemaUrlElement = document.querySelector("#schema-url")
+        let surveyTypeElement = document.querySelector("#schema-url-survey-type")
+
+        surveyTypeElement.selectedIndex = 0
+        schemaUrlElement.value = ""
+        surveyTypeElement.disabled = true
+        schemaUrlElement.disabled = true
+    }
+
+    function clearAndDisableSchemaNameSelection() {
+        let schemaNameElement = document.querySelector("#schema_name")
+
+        schemaNameElement.selectedIndex = 0
+        schemaNameElement.disabled = true
+    }
+
+    function loadMetadataForSchemaName() {
+        clearAndDisableSchemaUrlSelection()
+
+        const schemaName = document.querySelector("#schema_name").value
+        const surveyType = document.querySelector(`#schema_name option[value="${schemaName}"]`).dataset.surveyType
+
+        loadSurveyMetadata(schemaName, surveyType)
+        loadSchemaMetadata(schemaName, null)
+    }
+
+    function loadMetadataForSchemaUrl() {
+        let schemaUrl = document.querySelector("#schema-url").value
+        if (!schemaUrl || !schemaUrl.endsWith(".json")) {
+            alert("Schema URL not provided or is not valid.\n" +
+                "URL must end with '.json'")
+            return false
+        }
+
+        let surveyType = document.querySelector("#schema-url-survey-type").value
+        if (surveyType.toLowerCase() === "select survey type") {
+            alert("Select a Survey Type.")
+            return false
+        }
+
+        clearAndDisableSchemaNameSelection()
+
+        let schemaName = schemaUrl.split("/").slice(-1)[0].split(".json")[0]
+
+        loadSurveyMetadata(schemaName, surveyType)
+        loadSchemaMetadata(schemaName, schemaUrl)
+
+        if (surveyType.toLowerCase() === "test") {
+            let schemaUrlNameInput = document.querySelector("#schema-url-name-input")
+            schemaUrlNameInput.value = schemaName
+            schemaUrlNameInput.disabled = false
+            document.querySelector("#schema-url-name").style.display = "inline"
+        }
+
+        return false
+    }
+
+    function loadSurveyMetadata(schema_name, survey_type) {
         document.querySelector("#submit-btn").disabled = true;
         document.querySelector("#flush-btn").disabled = true;
-
-        const schema_name = document.querySelector("#schema_name").value
-        const survey_type = document.querySelector(`#schema_name option[value="${schema_name}"]`).dataset.surveyType
 
         if (survey_type.toLowerCase() === "test") {
             clearSurveyMetadataFields()
         } else {
             includeSurveyMetadataFields(schema_name, survey_type)
         }
+    }
 
+    function loadSchemaMetadata(schemaName, schemaUrl) {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4) {
@@ -212,10 +308,17 @@
 
                 } else {
                     document.querySelector("#survey_metadata").innerHTML = "Failed to load Schema Metadata";
+                    alert("Failed to load Schema Metadata")
                 }
             }
         };
-        xhttp.open("GET", "/metadata?schema=" + document.querySelector("#schema_name").value, true);
+
+        let queryParam = `schema_name=${schemaName}`
+        if (schemaUrl)  {
+            queryParam += `&schema_url=${schemaUrl}`
+        }
+
+        xhttp.open("GET", `/metadata?${queryParam}`, true);
         xhttp.send();
     }
 
@@ -252,8 +355,8 @@
     }
 
     function validateResponseExpiresAt() {
-        response_expires_at = Date.parse(document.querySelector('#response_expires_at').value)
-        if (isNaN(response_expires_at)) {
+        let responseExpiresAt = Date.parse(document.querySelector('#response_expires_at').value)
+        if (isNaN(responseExpiresAt)) {
             document.querySelector('#response_expires_at').remove()
         }
     }
