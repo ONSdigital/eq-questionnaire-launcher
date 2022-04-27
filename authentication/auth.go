@@ -406,7 +406,7 @@ func GenerateTokenFromPost(postValues url.Values) (string, string) {
 	log.Println("POST received: ", postValues)
 
 	schemaName := TransformSchemaParamsToName(postValues)
-	schemaUrl := postValues.Get("survey_url")
+	schemaUrl := postValues.Get("schema_url")
 
 	launcherSchema := surveys.GetLauncherSchema(schemaName, schemaUrl)
 
