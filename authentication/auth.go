@@ -261,7 +261,7 @@ func getSchemaClaims(LauncherSchema surveys.LauncherSchema) map[string]interface
 
 	schemaClaims := make(map[string]interface{})
 	if LauncherSchema.URL != "" {
-		schemaClaims["survey_url"] = LauncherSchema.URL
+		schemaClaims["schema_url"] = LauncherSchema.URL
 	}
 
 	return schemaClaims
@@ -346,8 +346,8 @@ func getStringOrDefault(key string, values map[string][]string, defaultValue str
 }
 
 // GenerateTokenFromDefaults coverts a set of DEFAULT values into a JWT
-func GenerateTokenFromDefaults(surveyURL string, accountServiceURL string, accountServiceLogOutURL string, urlValues url.Values) (token string, error string) {
-	launcherSchema, validationError := launcherSchemaFromURL(surveyURL)
+func GenerateTokenFromDefaults(schemaURL string, accountServiceURL string, accountServiceLogOutURL string, urlValues url.Values) (token string, error string) {
+	launcherSchema, validationError := launcherSchemaFromURL(schemaURL)
 	if validationError != "" {
 		return "", validationError
 	}
@@ -406,7 +406,7 @@ func GenerateTokenFromPost(postValues url.Values) (string, string) {
 	log.Println("POST received: ", postValues)
 
 	schemaName := TransformSchemaParamsToName(postValues)
-	schemaUrl := postValues.Get("survey_url")
+	schemaUrl := postValues.Get("schema_url")
 
 	launcherSchema := surveys.GetLauncherSchema(schemaName, schemaUrl)
 
