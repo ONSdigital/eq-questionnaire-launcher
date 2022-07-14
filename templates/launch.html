@@ -145,7 +145,8 @@
     </div>
 
     <div class="field-container">
-        <input type="submit" name="action_launch" value="Open Survey" class="qa-btn-submit-dev btn" id="submit-btn" disabled="disabled"/>
+        <input type="submit" name="action_launch_v1" value="Open Survey v1" class="qa-btn-submit-dev btn" id="submit-btn-v1" disabled="disabled"/>
+        <input type="submit" name="action_launch_v2" value="Open Survey v2" class="qa-btn-submit-dev btn" id="submit-btn-v2" disabled="disabled"/>
         <input type="submit" name="action_flush" value="Flush Survey Data" class="qa-btn-submit-dev btn" id="flush-btn" disabled="disabled"/>
     </div>
 
@@ -238,7 +239,8 @@
     }
 
     function loadSurveyMetadata(schema_name, survey_type) {
-        document.querySelector("#submit-btn").disabled = true;
+        document.querySelector("#submit-btn-v1").disabled = true;
+        document.querySelector("#submit-btn-v2").disabled = true;
         document.querySelector("#flush-btn").disabled = true;
 
         if (survey_type.toLowerCase() === "test") {
@@ -303,7 +305,8 @@
                         document.querySelector("#survey_metadata").innerHTML = "No metadata required for this survey";
                     }
 
-                    document.querySelector("#submit-btn").disabled = false;
+                    document.querySelector("#submit-btn-v1").disabled = false;
+                    document.querySelector("#submit-btn-v2").disabled = false;
                     document.querySelector("#flush-btn").disabled = false;
 
                 } else {

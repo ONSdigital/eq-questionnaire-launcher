@@ -121,20 +121,25 @@ func getAccountServiceURL(r *http.Request) string {
 func redirectURL(w http.ResponseWriter, r *http.Request) {
 	hostURL := settings.Get("SURVEY_RUNNER_URL")
 
-	token, err := authentication.GenerateTokenFromPost(r.PostForm)
+	launchActionv1 := r.PostForm.Get("action_launch_v1")
+    launchActionv2 := r.PostForm.Get("action_launch_v2")
+
+	tokenV1, err := authentication.GenerateTokenFromPost(r.PostForm, false)
+	tokenV2, err := authentication.GenerateTokenFromPost(r.PostForm, true)
 	if err != "" {
 		http.Error(w, err, 500)
 		return
 	}
 
-	launchAction := r.PostForm.Get("action_launch")
 	flushAction := r.PostForm.Get("action_flush")
 	log.Println("Request: " + r.PostForm.Encode())
 
 	if flushAction != "" {
-		http.Redirect(w, r, hostURL+"/flush?token="+token, 307)
-	} else if launchAction != "" {
-		http.Redirect(w, r, hostURL+"/session?token="+token, 301)
+		http.Redirect(w, r, hostURL+"/flush?token="+tokenV2, 307)
+	} else if launchActionv1 != "" {
+		http.Redirect(w, r, hostURL+"/session?token="+tokenV1, 301)
+    } else if launchActionv2 != "" {
+        http.Redirect(w, r, hostURL+"/session?token="+tokenV2, 301)
 	} else {
 		http.Error(w, fmt.Sprintf("Invalid Action"), 500)
 	}
@@ -146,6 +151,8 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	AccountServiceLogOutURL := getAccountServiceURL(r)
 	urlValues := r.URL.Query()
 	schemaURL := urlValues.Get("url")
+	version := urlValues.Get("version")
+
 	defaultValues := authentication.GetDefaultValues()
 	log.Println("Quick launch request received", schemaURL)
 
@@ -157,6 +164,14 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	urlValues.Add("response_id", randomNumericString(16))
 	urlValues.Add("language_code", defaultValues["language_code"])
 	urlValues.Add("response_expires_at", time.Now().AddDate(0, 0, 7).Format("2006-01-02T15:04:05+00:00"))
+
+	if version == "" {
+	    urlValues.Add("version", defaultValues["version"])
+	} else if version == "v1" {
+	    delete(urlValues, "version")
+	} else {
+	    urlValues.Add("version", version)
+	}
 
 	token, err := authentication.GenerateTokenFromDefaults(schemaURL, accountServiceURL, AccountServiceLogOutURL, urlValues)
 	if err != "" {

@@ -119,7 +119,7 @@ type Metadata struct {
 	Default   string `json:"default"`
 }
 
-func generateClaims(claimValues map[string][]string, launcherSchema surveys.LauncherSchema) (claims map[string]interface{}) {
+func generateClaims(claimValues map[string][]string, launcherSchema surveys.LauncherSchema, launchV2 bool) (claims map[string]interface{}) {
 
 	var roles []string
 	if rolesValues, ok := claimValues["roles"]; ok {
@@ -133,6 +133,10 @@ func generateClaims(claimValues map[string][]string, launcherSchema surveys.Laun
 	claims["roles"] = roles
 	TxID, _ := uuid.NewV4()
 	claims["tx_id"] = TxID.String()
+
+	if launchV2 == true {
+	    claims["version"] = "v2"
+	}
 
 	for key, value := range claimValues {
 		if key != "roles" {
@@ -355,7 +359,7 @@ func GenerateTokenFromDefaults(schemaURL string, accountServiceURL string, accou
 	claims := make(map[string]interface{})
 	urlValues["account_service_url"] = []string{accountServiceURL}
 	urlValues["account_service_log_out_url"] = []string{accountServiceLogOutURL}
-	claims = generateClaims(urlValues, launcherSchema)
+	claims = generateClaims(urlValues, launcherSchema, false)
 
 	requiredMetadata, error := GetRequiredMetadata(launcherSchema)
 	if error != "" {
@@ -402,7 +406,7 @@ func TransformSchemaParamsToName(postValues url.Values) string {
 }
 
 // GenerateTokenFromPost converts a set of POST values into a JWT
-func GenerateTokenFromPost(postValues url.Values) (string, string) {
+func GenerateTokenFromPost(postValues url.Values, launchV2 bool) (string, string) {
 	log.Println("POST received: ", postValues)
 
 	schemaName := TransformSchemaParamsToName(postValues)
@@ -410,7 +414,7 @@ func GenerateTokenFromPost(postValues url.Values) (string, string) {
 
 	launcherSchema := surveys.GetLauncherSchema(schemaName, schemaUrl)
 
-	claims := generateClaims(postValues, launcherSchema)
+	claims := generateClaims(postValues, launcherSchema, launchV2)
 
 	jwtClaims := GenerateJwtClaims()
 	for key, v := range jwtClaims {
@@ -526,6 +530,7 @@ func GetDefaultValues() map[string]string {
 	defaults["postcode"] = "PE12 4GH"
 	defaults["display_address"] = "68 Abingdon Road, Goathill"
 	defaults["country"] = "E"
+	defaults["version"] = "v2"
 
 	return defaults
 }
