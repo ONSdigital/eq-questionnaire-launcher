@@ -90,7 +90,7 @@ func getMetadataHandler(w http.ResponseWriter, r *http.Request) {
 
 	launcherSchema := surveys.GetLauncherSchema(schemaName, schemaUrl)
 
-	metadata, err := authentication.GetRequiredMetadata(launcherSchema)
+	metadata, err := authentication.GetRequiredMetadata(launcherSchema, false)
 
 	if err != "" {
 		http.Error(w, fmt.Sprintf("GetRequiredMetadata err: %v", err), 500)
@@ -121,11 +121,18 @@ func getAccountServiceURL(r *http.Request) string {
 func redirectURL(w http.ResponseWriter, r *http.Request) {
 	hostURL := settings.Get("SURVEY_RUNNER_URL")
 
-	launchActionv1 := r.PostForm.Get("action_launch_v1")
-    launchActionv2 := r.PostForm.Get("action_launch_v2")
+	launchActionV1 := r.PostForm.Get("action_launch_v1")
+	launchActionV2 := r.PostForm.Get("action_launch_v2")
 
-	tokenV1, err := authentication.GenerateTokenFromPost(r.PostForm, false)
-	tokenV2, err := authentication.GenerateTokenFromPost(r.PostForm, true)
+	token := ""
+	err := ""
+
+	if launchActionV2 == "Open Survey v2" {
+		token, err = authentication.GenerateTokenFromPost(r.PostForm, true)
+	} else {
+		token, err = authentication.GenerateTokenFromPost(r.PostForm, false)
+	}
+
 	if err != "" {
 		http.Error(w, err, 500)
 		return
@@ -135,11 +142,9 @@ func redirectURL(w http.ResponseWriter, r *http.Request) {
 	log.Println("Request: " + r.PostForm.Encode())
 
 	if flushAction != "" {
-		http.Redirect(w, r, hostURL+"/flush?token="+tokenV2, 307)
-	} else if launchActionv1 != "" {
-		http.Redirect(w, r, hostURL+"/session?token="+tokenV1, 301)
-    } else if launchActionv2 != "" {
-        http.Redirect(w, r, hostURL+"/session?token="+tokenV2, 301)
+		http.Redirect(w, r, hostURL+"/flush?token="+token, 307)
+	} else if launchActionV1 != "" || launchActionV2 != "" {
+		http.Redirect(w, r, hostURL+"/session?token="+token, 301)
 	} else {
 		http.Error(w, fmt.Sprintf("Invalid Action"), 500)
 	}
@@ -152,8 +157,19 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	urlValues := r.URL.Query()
 	schemaURL := urlValues.Get("url")
 	version := urlValues.Get("version")
+	launchV2 := true
 
 	defaultValues := authentication.GetDefaultValues()
+
+	if version == "" {
+		urlValues.Add("version", defaultValues["version"])
+	} else if version == "v1" {
+		delete(urlValues, "version")
+		launchV2 = false
+	} else {
+		urlValues.Add("version", version)
+	}
+
 	log.Println("Quick launch request received", schemaURL)
 
 	urlValues.Add("ru_ref", defaultValues["ru_ref"])
@@ -165,15 +181,7 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	urlValues.Add("language_code", defaultValues["language_code"])
 	urlValues.Add("response_expires_at", time.Now().AddDate(0, 0, 7).Format("2006-01-02T15:04:05+00:00"))
 
-	if version == "" {
-	    urlValues.Add("version", defaultValues["version"])
-	} else if version == "v1" {
-	    delete(urlValues, "version")
-	} else {
-	    urlValues.Add("version", version)
-	}
-
-	token, err := authentication.GenerateTokenFromDefaults(schemaURL, accountServiceURL, AccountServiceLogOutURL, urlValues)
+	token, err := authentication.GenerateTokenFromDefaults(schemaURL, accountServiceURL, AccountServiceLogOutURL, urlValues, launchV2)
 	if err != "" {
 		http.Error(w, err, 400)
 		return

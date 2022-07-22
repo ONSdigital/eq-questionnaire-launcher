@@ -119,6 +119,27 @@ type Metadata struct {
 	Default   string `json:"default"`
 }
 
+func isSurveyMetadata(key string) bool {
+	switch key {
+	case
+		"case_ref",
+		"case_type",
+		"display_address",
+		"employment_date",
+		"form_type",
+		"period_id",
+		"period_str",
+		"ref_p_end_date",
+		"ref_p_start_date",
+		"ru_name",
+		"ru_ref",
+		"trad_as",
+		"user_id":
+		return true
+	}
+	return false
+}
+
 func generateClaims(claimValues map[string][]string, launcherSchema surveys.LauncherSchema, launchV2 bool) (claims map[string]interface{}) {
 
 	var roles []string
@@ -138,15 +159,38 @@ func generateClaims(claimValues map[string][]string, launcherSchema surveys.Laun
 	    claims["version"] = "v2"
 	}
 
+	surveyMetadata := make(map[string]interface{})
+	data := make(map[string]interface{})
+
 	for key, value := range claimValues {
-		if key != "roles" {
-			if value[0] != "" {
-				claims[key] = value[0]
+		if launchV2 == true {
+			if isSurveyMetadata(key) == true {
+				data[key] = value[0]
+			} else {
+				if key != "roles" {
+					if value[0] != "" {
+						claims[key] = value[0]
+					}
+				} else {
+					claims[key] = value
+				}
 			}
 		} else {
-			claims[key] = value
+			if key != "roles" {
+				if value[0] != "" {
+					claims[key] = value[0]
+				}
+			} else {
+				claims[key] = value
+			}
 		}
 	}
+
+	if launchV2 == true {
+		surveyMetadata["data"] = data
+		claims["survey_metadata"] = surveyMetadata
+	}
+
 	if len(claimValues["form_type"]) > 0 && len(claimValues["eq_id"]) > 0 {
 		log.Println("Deleting schema name from claims")
 		delete(claims, "schema_name")
@@ -350,7 +394,7 @@ func getStringOrDefault(key string, values map[string][]string, defaultValue str
 }
 
 // GenerateTokenFromDefaults coverts a set of DEFAULT values into a JWT
-func GenerateTokenFromDefaults(schemaURL string, accountServiceURL string, accountServiceLogOutURL string, urlValues url.Values) (token string, error string) {
+func GenerateTokenFromDefaults(schemaURL string, accountServiceURL string, accountServiceLogOutURL string, urlValues url.Values, launchV2 bool) (token string, error string) {
 	launcherSchema, validationError := launcherSchemaFromURL(schemaURL)
 	if validationError != "" {
 		return "", validationError
@@ -359,9 +403,9 @@ func GenerateTokenFromDefaults(schemaURL string, accountServiceURL string, accou
 	claims := make(map[string]interface{})
 	urlValues["account_service_url"] = []string{accountServiceURL}
 	urlValues["account_service_log_out_url"] = []string{accountServiceLogOutURL}
-	claims = generateClaims(urlValues, launcherSchema, false)
+	claims = generateClaims(urlValues, launcherSchema, launchV2)
 
-	requiredMetadata, error := GetRequiredMetadata(launcherSchema)
+	requiredMetadata, error := GetRequiredMetadata(launcherSchema, launchV2)
 	if error != "" {
 		return "", fmt.Sprintf("GetRequiredMetadata failed err: %v", error)
 	}
@@ -426,7 +470,7 @@ func GenerateTokenFromPost(postValues url.Values, launchV2 bool) (string, string
 		claims[key] = v
 	}
 
-	requiredMetadata, error := GetRequiredMetadata(launcherSchema)
+	requiredMetadata, error := GetRequiredMetadata(launcherSchema, launchV2)
 	if error != "" {
 		return "", fmt.Sprintf("GetRequiredMetadata failed err: %v", error)
 	}
@@ -451,7 +495,7 @@ func GenerateTokenFromPost(postValues url.Values, launchV2 bool) (string, string
 }
 
 // GetRequiredMetadata Gets the required metadata from a schema
-func GetRequiredMetadata(launcherSchema surveys.LauncherSchema) ([]Metadata, string) {
+func GetRequiredMetadata(launcherSchema surveys.LauncherSchema, launchV2 bool) ([]Metadata, string) {
 	var url string
 
 	if launcherSchema.URL != "" {
