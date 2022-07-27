@@ -156,7 +156,7 @@ func generateClaims(claimValues map[string][]string, launcherSchema surveys.Laun
 	claims["tx_id"] = TxID.String()
 
 	if launchV2 == true {
-	    claims["version"] = "v2"
+		claims["version"] = "v2"
 	}
 
 	surveyMetadata := make(map[string]interface{})
@@ -410,13 +410,36 @@ func GenerateTokenFromDefaults(schemaURL string, accountServiceURL string, accou
 		return "", fmt.Sprintf("GetRequiredMetadata failed err: %v", error)
 	}
 
+	data := make(map[string]interface{})
+
 	for _, metadata := range requiredMetadata {
 		if metadata.Validator == "boolean" {
-			claims[metadata.Name] = getBooleanOrDefault(metadata.Name, urlValues, false)
+			if launchV2 == true {
+				data[metadata.Name] = getBooleanOrDefault(metadata.Name, urlValues, false)
+			} else {
+				claims[metadata.Name] = getBooleanOrDefault(metadata.Name, urlValues, false)
+			}
+
 			continue
 		}
-		claims[metadata.Name] = getStringOrDefault(metadata.Name, urlValues, metadata.Default)
+		if launchV2 == true {
+			data[metadata.Name] = getStringOrDefault(metadata.Name, urlValues, metadata.Default)
+		} else {
+			claims[metadata.Name] = getStringOrDefault(metadata.Name, urlValues, metadata.Default)
+		}
 	}
+
+    surveyMetadata := make(map[string]interface{})
+
+	if launchV2 == true {
+		log.Println("*****  DATA TO ADD  ******", data)
+		log.Println("****** EXISTING  *****", claims["survey_metadata"])
+
+		surveyMetadata["data"] = data
+		claims["survey_metadata"] = surveyMetadata
+	}
+
+	log.Println("Claims survey metadata =====", claims["survey_metadata"])
 
 	jwtClaims := GenerateJwtClaims()
 	for key, v := range jwtClaims {
