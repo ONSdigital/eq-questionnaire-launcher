@@ -432,11 +432,13 @@ func GenerateTokenFromDefaults(schemaURL string, accountServiceURL string, accou
     surveyMetadata := make(map[string]interface{})
 
 	if launchV2 == true {
-		log.Println("*****  DATA TO ADD  ******", data)
-		log.Println("****** EXISTING  *****", claims["survey_metadata"])
-
-		surveyMetadata["data"] = data
-		claims["survey_metadata"] = surveyMetadata
+		if claims["survey_metadata"] != nil {
+            surveyMetadata = claims["survey_metadata"].(map[string]interface{})
+        }
+        for key, value := range data {
+            surveyMetadata[key] = value
+        }
+        claims["survey_metadata"] = surveyMetadata
 	}
 
 	log.Println("Claims survey metadata =====", claims["survey_metadata"])
