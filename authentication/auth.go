@@ -119,7 +119,7 @@ type Metadata struct {
 	Default   string `json:"default"`
 }
 
-func isSurveyMetadata(key string) bool {
+func isSurveyMetadataBusiness(key string) bool {
 	switch key {
 	case
 		"case_ref",
@@ -140,7 +140,18 @@ func isSurveyMetadata(key string) bool {
 	return false
 }
 
-func generateClaims(claimValues map[string][]string, launcherSchema surveys.LauncherSchema, launchV2 bool) (claims map[string]interface{}) {
+func isSurveyMetadataSocial(key string) bool {
+	switch key {
+	case
+		"case_ref",
+		"case_type",
+		"questionnaire_id":
+		return true
+	}
+	return false
+}
+
+func generateClaims(claimValues map[string][]string, launcherSchema surveys.LauncherSchema) (claims map[string]interface{}) {
 
 	var roles []string
 	if rolesValues, ok := claimValues["roles"]; ok {
@@ -155,16 +166,73 @@ func generateClaims(claimValues map[string][]string, launcherSchema surveys.Laun
 	TxID, _ := uuid.NewV4()
 	claims["tx_id"] = TxID.String()
 
-	if launchV2 == true {
-		claims["version"] = "v2"
+	for key, value := range claimValues {
+		if key != "roles" {
+			if value[0] != "" {
+				claims[key] = value[0]
+			}
+		} else {
+			claims[key] = value
+		}
 	}
+	if len(claimValues["form_type"]) > 0 && len(claimValues["eq_id"]) > 0 {
+		log.Println("Deleting schema name from claims")
+		delete(claims, "schema_name")
+	} else {
+		// When quicklaunching, schema_name will not be set, but launcherSchema will have the schema_name.
+		if len(claimValues["schema_name"]) == 0 && launcherSchema.Name != "" {
+			claims["schema_name"] = launcherSchema.Name
+		}
+	}
+
+	log.Printf("Using claims: %s", claims)
+
+	return claims
+}
+
+func generateClaimsV2(claimValues map[string][]string, launcherSchema surveys.LauncherSchema) (claims map[string]interface{}) {
+
+	var roles []string
+	if rolesValues, ok := claimValues["roles"]; ok {
+		roles = rolesValues
+	} else {
+		roles = []string{"dumper"}
+	}
+
+	claims = make(map[string]interface{})
+
+	claims["roles"] = roles
+	TxID, _ := uuid.NewV4()
+	claims["tx_id"] = TxID.String()
+	claims["version"] = "v2"
 
 	surveyMetadata := make(map[string]interface{})
 	data := make(map[string]interface{})
 
-	for key, value := range claimValues {
-		if launchV2 == true {
-			if isSurveyMetadata(key) == true {
+	if launcherSchema.SurveyType == "social" {
+		receiptingKeys := []string{"questionnaire_id"}
+		surveyMetadata["receipting_keys"] = receiptingKeys
+
+		for key, value := range claimValues {
+			if isSurveyMetadataSocial(key) == true {
+				data[key] = value[0]
+			} else {
+				if key != "roles" {
+					if value[0] != "" {
+						claims[key] = value[0]
+					}
+				} else {
+					if isSurveyMetadataBusiness(key) == false {
+						claims[key] = value
+					}
+				}
+			}
+			surveyMetadata["data"] = data
+			claims["survey_metadata"] = surveyMetadata
+		}
+	} else {
+		for key, value := range claimValues {
+			if isSurveyMetadataBusiness(key) == true {
 				data[key] = value[0]
 			} else {
 				if key != "roles" {
@@ -175,30 +243,14 @@ func generateClaims(claimValues map[string][]string, launcherSchema surveys.Laun
 					claims[key] = value
 				}
 			}
-		} else {
-			if key != "roles" {
-				if value[0] != "" {
-					claims[key] = value[0]
-				}
-			} else {
-				claims[key] = value
-			}
 		}
-	}
-
-	if launchV2 == true {
 		surveyMetadata["data"] = data
 		claims["survey_metadata"] = surveyMetadata
 	}
 
-	if len(claimValues["form_type"]) > 0 && len(claimValues["eq_id"]) > 0 {
-		log.Println("Deleting schema name from claims")
-		delete(claims, "schema_name")
-	} else {
-		// When quicklaunching, schema_name will not be set, but launcherSchema will have the schema_name.
-		if len(claimValues["schema_name"]) == 0 && launcherSchema.Name != "" {
-			claims["schema_name"] = launcherSchema.Name
-		}
+	// When quicklaunching, schema_name will not be set, but launcherSchema will have the schema_name.
+	if len(claimValues["schema_name"]) == 0 && launcherSchema.Name != "" {
+		claims["schema_name"] = launcherSchema.Name
 	}
 
 	log.Printf("Using claims: %s", claims)
@@ -394,7 +446,7 @@ func getStringOrDefault(key string, values map[string][]string, defaultValue str
 }
 
 // GenerateTokenFromDefaults coverts a set of DEFAULT values into a JWT
-func GenerateTokenFromDefaults(schemaURL string, accountServiceURL string, accountServiceLogOutURL string, urlValues url.Values, launchV2 bool) (token string, error string) {
+func GenerateTokenFromDefaults(schemaURL string, accountServiceURL string, accountServiceLogOutURL string, urlValues url.Values, launchVersion2 bool) (token string, error string) {
 	launcherSchema, validationError := launcherSchemaFromURL(schemaURL)
 	if validationError != "" {
 		return "", validationError
@@ -403,9 +455,14 @@ func GenerateTokenFromDefaults(schemaURL string, accountServiceURL string, accou
 	claims := make(map[string]interface{})
 	urlValues["account_service_url"] = []string{accountServiceURL}
 	urlValues["account_service_log_out_url"] = []string{accountServiceLogOutURL}
-	claims = generateClaims(urlValues, launcherSchema, launchV2)
 
-	requiredMetadata, error := GetRequiredMetadata(launcherSchema, launchV2)
+	if launchVersion2 {
+		claims = generateClaimsV2(urlValues, launcherSchema)
+	} else {
+		claims = generateClaims(urlValues, launcherSchema)
+	}
+
+	requiredMetadata, error := GetRequiredMetadata(launcherSchema)
 	if error != "" {
 		return "", fmt.Sprintf("GetRequiredMetadata failed err: %v", error)
 	}
@@ -414,7 +471,7 @@ func GenerateTokenFromDefaults(schemaURL string, accountServiceURL string, accou
 
 	for _, metadata := range requiredMetadata {
 		if metadata.Validator == "boolean" {
-			if launchV2 == true {
+			if launchVersion2 == true {
 				data[metadata.Name] = getBooleanOrDefault(metadata.Name, urlValues, false)
 			} else {
 				claims[metadata.Name] = getBooleanOrDefault(metadata.Name, urlValues, false)
@@ -422,26 +479,24 @@ func GenerateTokenFromDefaults(schemaURL string, accountServiceURL string, accou
 
 			continue
 		}
-		if launchV2 == true {
+		if launchVersion2 == true {
 			data[metadata.Name] = getStringOrDefault(metadata.Name, urlValues, metadata.Default)
 		} else {
 			claims[metadata.Name] = getStringOrDefault(metadata.Name, urlValues, metadata.Default)
 		}
 	}
 
-    surveyMetadata := make(map[string]interface{})
+	surveyMetadata := make(map[string]interface{})
 
-	if launchV2 == true {
+	if launchVersion2 == true {
 		if claims["survey_metadata"] != nil {
-            surveyMetadata = claims["survey_metadata"].(map[string]interface{})
-        }
-        for key, value := range data {
-            surveyMetadata[key] = value
-        }
-        claims["survey_metadata"] = surveyMetadata
+			surveyMetadata = claims["survey_metadata"].(map[string]interface{})
+		}
+		for key, value := range data {
+			surveyMetadata[key] = value
+		}
+		claims["survey_metadata"] = surveyMetadata
 	}
-
-	log.Println("Claims survey metadata =====", claims["survey_metadata"])
 
 	jwtClaims := GenerateJwtClaims()
 	for key, v := range jwtClaims {
@@ -475,7 +530,7 @@ func TransformSchemaParamsToName(postValues url.Values) string {
 }
 
 // GenerateTokenFromPost converts a set of POST values into a JWT
-func GenerateTokenFromPost(postValues url.Values, launchV2 bool) (string, string) {
+func GenerateTokenFromPost(postValues url.Values, launchVersion2 bool) (string, string) {
 	log.Println("POST received: ", postValues)
 
 	schemaName := TransformSchemaParamsToName(postValues)
@@ -483,7 +538,13 @@ func GenerateTokenFromPost(postValues url.Values, launchV2 bool) (string, string
 
 	launcherSchema := surveys.GetLauncherSchema(schemaName, schemaUrl)
 
-	claims := generateClaims(postValues, launcherSchema, launchV2)
+	claims := make(map[string]interface{})
+
+	if launchVersion2 {
+		claims = generateClaimsV2(postValues, launcherSchema)
+	} else {
+		claims = generateClaims(postValues, launcherSchema)
+	}
 
 	jwtClaims := GenerateJwtClaims()
 	for key, v := range jwtClaims {
@@ -495,7 +556,7 @@ func GenerateTokenFromPost(postValues url.Values, launchV2 bool) (string, string
 		claims[key] = v
 	}
 
-	requiredMetadata, error := GetRequiredMetadata(launcherSchema, launchV2)
+	requiredMetadata, error := GetRequiredMetadata(launcherSchema)
 	if error != "" {
 		return "", fmt.Sprintf("GetRequiredMetadata failed err: %v", error)
 	}
@@ -520,7 +581,7 @@ func GenerateTokenFromPost(postValues url.Values, launchV2 bool) (string, string
 }
 
 // GetRequiredMetadata Gets the required metadata from a schema
-func GetRequiredMetadata(launcherSchema surveys.LauncherSchema, launchV2 bool) ([]Metadata, string) {
+func GetRequiredMetadata(launcherSchema surveys.LauncherSchema) ([]Metadata, string) {
 	var url string
 
 	if launcherSchema.URL != "" {
@@ -558,7 +619,7 @@ func GetRequiredMetadata(launcherSchema surveys.LauncherSchema, launchV2 bool) (
 		return nil, fmt.Sprintf("Failed to unmarshal Schema from %s", url)
 	}
 
-	defaults := GetDefaultValues()
+	defaults := GetDefaultValues(launcherSchema.SurveyType)
 
 	for i, value := range schema.Metadata {
 		schema.Metadata[i].Default = defaults[value.Name]
@@ -572,34 +633,43 @@ func GetRequiredMetadata(launcherSchema surveys.LauncherSchema, launchV2 bool) (
 }
 
 // GetDefaultValues Returns a map of default values for metadata keys
-func GetDefaultValues() map[string]string {
+func GetDefaultValues(surveyType string) map[string]string {
 
 	defaults := make(map[string]string)
-
 	collectionExerciseSid, _ := uuid.NewV4()
+	questionnaireId, _ := uuid.NewV4()
 
-	defaults["user_id"] = "UNKNOWN"
-	defaults["period_id"] = "201605"
-	defaults["period_str"] = "May 2017"
-	defaults["collection_exercise_sid"] = collectionExerciseSid.String()
-	defaults["ru_ref"] = "12346789012A"
-	defaults["ru_name"] = "ESSENTIAL ENTERPRISE LTD."
-	defaults["ref_p_start_date"] = "2016-05-01"
-	defaults["ref_p_end_date"] = "2016-05-31"
-	defaults["return_by"] = "2016-06-12"
-	defaults["trad_as"] = "ESSENTIAL ENTERPRISE LTD."
-	defaults["employment_date"] = "2016-06-10"
-	defaults["region_code"] = "GB-ENG"
-	defaults["language_code"] = "en"
-	defaults["case_ref"] = "1000000000000001"
-	defaults["address_line1"] = "68 Abingdon Road"
-	defaults["address_line2"] = ""
-	defaults["locality"] = ""
-	defaults["town_name"] = "Goathill"
-	defaults["postcode"] = "PE12 4GH"
-	defaults["display_address"] = "68 Abingdon Road, Goathill"
-	defaults["country"] = "E"
-	defaults["version"] = "v2"
+	if surveyType == "social" {
+		defaults["region_code"] = "GB-ENG"
+		defaults["collection_exercise_sid"] = collectionExerciseSid.String()
+		defaults["case_ref"] = "1000000000000001"
+		defaults["questionnaire_id"] = questionnaireId.String()
+		defaults["version"] = "v2"
+		defaults["case_type"] = "B"
+	} else {
+		defaults["user_id"] = "UNKNOWN"
+		defaults["period_id"] = "201605"
+		defaults["period_str"] = "May 2017"
+		defaults["collection_exercise_sid"] = collectionExerciseSid.String()
+		defaults["ru_ref"] = "12346789012A"
+		defaults["ru_name"] = "ESSENTIAL ENTERPRISE LTD."
+		defaults["ref_p_start_date"] = "2016-05-01"
+		defaults["ref_p_end_date"] = "2016-05-31"
+		defaults["return_by"] = "2016-06-12"
+		defaults["trad_as"] = "ESSENTIAL ENTERPRISE LTD."
+		defaults["employment_date"] = "2016-06-10"
+		defaults["region_code"] = "GB-ENG"
+		defaults["language_code"] = "en"
+		defaults["case_ref"] = "1000000000000001"
+		defaults["address_line1"] = "68 Abingdon Road"
+		defaults["address_line2"] = ""
+		defaults["locality"] = ""
+		defaults["town_name"] = "Goathill"
+		defaults["postcode"] = "PE12 4GH"
+		defaults["display_address"] = "68 Abingdon Road, Goathill"
+		defaults["country"] = "E"
+		defaults["version"] = "v2"
+	}
 
 	return defaults
 }

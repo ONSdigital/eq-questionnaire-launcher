@@ -1,10 +1,21 @@
 {{define "title"}}Launch a Survey{{end}}
 
 {{define "body"}}
+
 <h1>Launch a survey</h1>
 <div class="field-wrap">
 
 <form action="" method="POST" xmlns="http://www.w3.org/1999/html" onsubmit="validateForm()">
+
+    <strong><u>Launch Pattern</u></strong>
+    <div class="field-container">
+        <label for="launch_pattern">Version</label>
+        <select id="launch_pattern" name="launch_version" class="qa-select-launch-version" onchange="clearSchemaNameSelection()">
+            <option selected disabled>Select Launch Pattern</option>
+            <option name="v1" value="v1">v1</option>
+            <option name="v2" value="v2">v2</option>
+        </select>
+    </div>
 
     <strong><u>Launch by Schema Name</u></strong>
     <div class="field-container">
@@ -15,7 +26,7 @@
             {{ range $surveyType, $schemasList := .Schemas }}
                 <optgroup label="{{ $surveyType }} Surveys">
                     {{ range $schema := $schemasList }}
-                        <option name="{{ $schema.Name }}" value="{{ $schema.Name }}" data-survey-type="{{ $surveyType }}">{{ $schema.Name }}</option>
+                        <option class="{{ $surveyType }}" name="{{ $schema.Name }}" value="{{ $schema.Name }}" data-survey-type="{{ $surveyType }}">{{ $schema.Name }}</option>
                     {{ end }}
                 </optgroup>
             {{ end }}
@@ -68,7 +79,7 @@
 
     <h3>Required Data</h3>
 
-    <div class="field-container">
+    <div class="field-container" id="ru_ref_container">
         <label for="ru_ref">RU Ref</label>
         <span>
             <input id="ru_ref" name="ru_ref" type="text" class="qa-ru-ref">
@@ -178,6 +189,19 @@
         `
     }
 
+    function clearSchemaNameSelection() {
+        let schemaNameElement = document.querySelector("#schema_name")
+        schemaNameElement.selectedIndex = 0
+
+        let launchPattern = document.querySelector("#launch_pattern").value
+
+        if (launchPattern === "v1") {
+            document.querySelectorAll(".Social").forEach(function(element) {element.setAttribute("disabled", "disabled")})
+        } else {
+            document.querySelectorAll(".Social").forEach(function(element) {element.removeAttribute("disabled")})
+        }
+    }
+
     function clearAndDisableSchemaUrlSelection() {
         document.querySelector("#schema-url-btn").disabled = true;
 
@@ -203,8 +227,18 @@
         const schemaName = document.querySelector("#schema_name").value
         const surveyType = document.querySelector(`#schema_name option[value="${schemaName}"]`).dataset.surveyType
 
+        if (surveyType.toLowerCase() === "social") {
+            hideNonSocialMetadata("none")
+        } else {
+            hideNonSocialMetadata("block")
+        }
+
         loadSurveyMetadata(schemaName, surveyType)
         loadSchemaMetadata(schemaName, null)
+    }
+
+    function hideNonSocialMetadata(display_value) {
+        document.querySelector("#ru_ref_container").style.display=display_value;
     }
 
     function loadMetadataForSchemaUrl() {
@@ -243,7 +277,7 @@
         document.querySelector("#submit-btn-v2").disabled = true;
         document.querySelector("#flush-btn").disabled = true;
 
-        if (survey_type.toLowerCase() === "test") {
+        if (survey_type.toLowerCase() === "test" || survey_type.toLowerCase() === "social") {
             clearSurveyMetadataFields()
         } else {
             includeSurveyMetadataFields(schema_name, survey_type)
@@ -305,8 +339,18 @@
                         document.querySelector("#survey_metadata").innerHTML = "No metadata required for this survey";
                     }
 
-                    document.querySelector("#submit-btn-v1").disabled = false;
-                    document.querySelector("#submit-btn-v2").disabled = false;
+                    let launchPattern = document.querySelector("#launch_pattern").value
+
+                    if (launchPattern === "v1") {
+                        document.querySelector("#submit-btn-v1").disabled = false;
+                    } else {
+                        document.querySelector("#submit-btn-v1").disabled = true;
+                    }
+                    if (launchPattern === "v2") {
+                        document.querySelector("#submit-btn-v2").disabled = false;
+                    } else {
+                        document.querySelector("#submit-btn-v2").disabled = true;
+                    }
                     document.querySelector("#flush-btn").disabled = false;
 
                 } else {

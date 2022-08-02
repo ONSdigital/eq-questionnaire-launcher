@@ -90,7 +90,7 @@ func getMetadataHandler(w http.ResponseWriter, r *http.Request) {
 
 	launcherSchema := surveys.GetLauncherSchema(schemaName, schemaUrl)
 
-	metadata, err := authentication.GetRequiredMetadata(launcherSchema, false)
+	metadata, err := authentication.GetRequiredMetadata(launcherSchema)
 
 	if err != "" {
 		http.Error(w, fmt.Sprintf("GetRequiredMetadata err: %v", err), 500)
@@ -157,15 +157,15 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	urlValues := r.URL.Query()
 	schemaURL := urlValues.Get("url")
 	version := urlValues.Get("version")
-	launchV2 := true
+	launchVersion2 := true
 
-	defaultValues := authentication.GetDefaultValues()
+	defaultValues := authentication.GetDefaultValues("business")
 
 	if version == "" {
 		urlValues.Add("version", defaultValues["version"])
 	} else if version == "v1" {
 		delete(urlValues, "version")
-		launchV2 = false
+		launchVersion2 = false
 	} else {
 		urlValues.Add("version", version)
 	}
@@ -181,7 +181,7 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	urlValues.Add("language_code", defaultValues["language_code"])
 	urlValues.Add("response_expires_at", time.Now().AddDate(0, 0, 7).Format("2006-01-02T15:04:05+00:00"))
 
-	token, err := authentication.GenerateTokenFromDefaults(schemaURL, accountServiceURL, AccountServiceLogOutURL, urlValues, launchV2)
+	token, err := authentication.GenerateTokenFromDefaults(schemaURL, accountServiceURL, AccountServiceLogOutURL, urlValues, launchVersion2)
 	if err != "" {
 		http.Error(w, err, 400)
 		return
