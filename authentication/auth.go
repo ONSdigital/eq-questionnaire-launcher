@@ -110,6 +110,7 @@ func loadSigningKey() (*PrivateKeyResult, *KeyLoadError) {
 type QuestionnaireSchema struct {
 	Metadata   []Metadata `json:"metadata"`
 	SchemaName string     `json:"schema_name"`
+	SurveyType string     `json:"theme"`
 }
 
 // Metadata is a representation of the metadata within the schema with an additional `Default` value
@@ -338,11 +339,18 @@ func launcherSchemaFromURL(url string) (launcherSchema surveys.LauncherSchema, e
 		schemaName = schema.SchemaName
 	}
 
-	log.Println("Quicklaunch schema_name set to: ", schemaName)
+	surveyType := ""
+
+	if schema.SurveyType == "social" {
+		surveyType = "social"
+	} else {
+		surveyType = "business"
+	}
 
 	launcherSchema = surveys.LauncherSchema{
-		URL:  url + cacheBust,
-		Name: schemaName,
+		URL:        url + cacheBust,
+		Name:       schemaName,
+		SurveyType: surveyType,
 	}
 
 	return launcherSchema, ""
@@ -465,7 +473,50 @@ func getStringOrDefault(key string, values map[string][]string, defaultValue str
 }
 
 // GenerateTokenFromDefaults coverts a set of DEFAULT values into a JWT
-func GenerateTokenFromDefaults(schemaURL string, accountServiceURL string, accountServiceLogOutURL string, urlValues url.Values, launchVersion2 bool) (token string, error string) {
+func GenerateTokenFromDefaults(schemaURL string, accountServiceURL string, accountServiceLogOutURL string, urlValues url.Values) (token string, error string) {
+	launcherSchema, validationError := launcherSchemaFromURL(schemaURL)
+	if validationError != "" {
+		return "", validationError
+	}
+
+	claims := make(map[string]interface{})
+	urlValues["account_service_url"] = []string{accountServiceURL}
+	urlValues["account_service_log_out_url"] = []string{accountServiceLogOutURL}
+	claims = generateClaims(urlValues, launcherSchema)
+
+	requiredMetadata, error := GetRequiredMetadata(launcherSchema)
+	if error != "" {
+		return "", fmt.Sprintf("GetRequiredMetadata failed err: %v", error)
+	}
+
+	for _, metadata := range requiredMetadata {
+		if metadata.Validator == "boolean" {
+			claims[metadata.Name] = getBooleanOrDefault(metadata.Name, urlValues, false)
+			continue
+		}
+		claims[metadata.Name] = getStringOrDefault(metadata.Name, urlValues, metadata.Default)
+	}
+
+	jwtClaims := GenerateJwtClaims()
+	for key, v := range jwtClaims {
+		claims[key] = v
+	}
+
+	schemaClaims := getSchemaClaims(launcherSchema)
+	for key, v := range schemaClaims {
+		claims[key] = v
+	}
+
+	token, tokenError := generateTokenFromClaims(claims)
+	if tokenError != nil {
+		return token, fmt.Sprintf("GenerateTokenFromDefaults failed err: %v", tokenError)
+	}
+
+	return token, ""
+}
+
+// GenerateTokenFromDefaultsV2 coverts a set of DEFAULT values into a JWT
+func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, accountServiceLogOutURL string, urlValues url.Values) (token string, error string) {
 	launcherSchema, validationError := launcherSchemaFromURL(schemaURL)
 	if validationError != "" {
 		return "", validationError
@@ -475,11 +526,7 @@ func GenerateTokenFromDefaults(schemaURL string, accountServiceURL string, accou
 	urlValues["account_service_url"] = []string{accountServiceURL}
 	urlValues["account_service_log_out_url"] = []string{accountServiceLogOutURL}
 
-	if launchVersion2 {
-		claims = generateClaimsV2(urlValues, launcherSchema)
-	} else {
-		claims = generateClaims(urlValues, launcherSchema)
-	}
+	claims = generateClaimsV2(urlValues, launcherSchema)
 
 	requiredMetadata, error := GetRequiredMetadata(launcherSchema)
 	if error != "" {
@@ -490,32 +537,29 @@ func GenerateTokenFromDefaults(schemaURL string, accountServiceURL string, accou
 
 	for _, metadata := range requiredMetadata {
 		if metadata.Validator == "boolean" {
-			if launchVersion2 == true {
-				data[metadata.Name] = getBooleanOrDefault(metadata.Name, urlValues, false)
-			} else {
-				claims[metadata.Name] = getBooleanOrDefault(metadata.Name, urlValues, false)
-			}
+			data[metadata.Name] = getBooleanOrDefault(metadata.Name, urlValues, false)
 
 			continue
 		}
-		if launchVersion2 == true {
-			data[metadata.Name] = getStringOrDefault(metadata.Name, urlValues, metadata.Default)
-		} else {
-			claims[metadata.Name] = getStringOrDefault(metadata.Name, urlValues, metadata.Default)
-		}
+		data[metadata.Name] = getStringOrDefault(metadata.Name, urlValues, metadata.Default)
 	}
 
 	surveyMetadata := make(map[string]interface{})
+	updatedData := make(map[string]interface{})
 
-	if launchVersion2 == true {
-		if claims["survey_metadata"] != nil {
-			surveyMetadata = claims["survey_metadata"].(map[string]interface{})
-		}
-		for key, value := range data {
-			surveyMetadata[key] = value
-		}
-		claims["survey_metadata"] = surveyMetadata
+	if claims["survey_metadata"] != nil {
+		surveyMetadata = claims["survey_metadata"].(map[string]interface{})
 	}
+	for key, value := range data {
+		updatedData[key] = value
+	}
+
+	for key, value := range updatedData {
+		data[key] = value
+	}
+
+	surveyMetadata["data"] = data
+	claims["survey_metadata"] = surveyMetadata
 
 	jwtClaims := GenerateJwtClaims()
 	for key, v := range jwtClaims {

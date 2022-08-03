@@ -181,7 +181,15 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	urlValues.Add("language_code", defaultValues["language_code"])
 	urlValues.Add("response_expires_at", time.Now().AddDate(0, 0, 7).Format("2006-01-02T15:04:05+00:00"))
 
-	token, err := authentication.GenerateTokenFromDefaults(schemaURL, accountServiceURL, AccountServiceLogOutURL, urlValues, launchVersion2)
+	token := ""
+	err := ""
+
+	if launchVersion2 == true {
+		token, err = authentication.GenerateTokenFromDefaultsV2(schemaURL, accountServiceURL, AccountServiceLogOutURL, urlValues)
+	} else {
+		token, err = authentication.GenerateTokenFromDefaults(schemaURL, accountServiceURL, AccountServiceLogOutURL, urlValues)
+	}
+
 	if err != "" {
 		http.Error(w, err, 400)
 		return
