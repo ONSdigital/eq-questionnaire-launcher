@@ -151,6 +151,22 @@ func isSurveyMetadataSocial(key string) bool {
 	return false
 }
 
+func isRequiredMetadata(key string) bool {
+	switch key {
+	case
+		"case_id",
+		"region_code",
+		"channel",
+		"collection_exercise_sid",
+		"response_expires_at",
+		"response_id",
+		"schema_name",
+		"account_service_url":
+		return true
+	}
+	return false
+}
+
 func generateClaims(claimValues map[string][]string, launcherSchema surveys.LauncherSchema) (claims map[string]interface{}) {
 
 	var roles []string
@@ -218,13 +234,14 @@ func generateClaimsV2(claimValues map[string][]string, launcherSchema surveys.La
 				data[key] = value[0]
 			} else {
 				if key != "roles" {
-					if value[0] != "" {
-						claims[key] = value[0]
+					if isRequiredMetadata(key) {
+						if value[0] != "" {
+							claims[key] = value[0]
+						}
 					}
-				} else {
-					if isSurveyMetadataBusiness(key) == false {
-						claims[key] = value
-					}
+				}
+				if key == "roles" {
+					claims[key] = value
 				}
 			}
 			surveyMetadata["data"] = data
@@ -236,8 +253,10 @@ func generateClaimsV2(claimValues map[string][]string, launcherSchema surveys.La
 				data[key] = value[0]
 			} else {
 				if key != "roles" {
-					if value[0] != "" {
-						claims[key] = value[0]
+					if isRequiredMetadata(key) {
+						if value[0] != "" {
+							claims[key] = value[0]
+						}
 					}
 				} else {
 					claims[key] = value
