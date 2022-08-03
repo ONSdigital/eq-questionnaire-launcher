@@ -554,11 +554,13 @@ func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, acc
 		updatedData[key] = value
 	}
 
-	for key, value := range updatedData {
-		data[key] = value
+	initialData := surveyMetadata["data"].(map[string]interface{})
+
+	for key, value := range initialData {
+		updatedData[key] = value
 	}
 
-	surveyMetadata["data"] = data
+	surveyMetadata["data"] = updatedData
 	claims["survey_metadata"] = surveyMetadata
 
 	jwtClaims := GenerateJwtClaims()
