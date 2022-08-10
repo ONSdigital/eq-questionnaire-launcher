@@ -200,6 +200,21 @@
         } else {
             document.querySelectorAll(".Social").forEach(function(element) {element.removeAttribute("disabled")})
         }
+        
+        const schemaName = schemaNameElement.value
+
+        if (schemaName !== "Select Schema" && launchPattern === "v1") {
+            document.querySelector("#submit-btn-v1").disabled = false;
+            document.querySelector("#submit-btn-v2").disabled = true;
+        }
+        else if (schemaName !== "Select Schema" && launchPattern === "v2") {
+            document.querySelector("#submit-btn-v2").disabled = false;
+            document.querySelector("#submit-btn-v1").disabled = true;
+        }
+        else {
+            document.querySelector("#submit-btn-v2").disabled = true;
+            document.querySelector("#submit-btn-v1").disabled = true;
+        }
     }
 
     function clearAndDisableSchemaUrlSelection() {
