@@ -10,7 +10,7 @@
     <strong><u>Launch Pattern</u></strong>
     <div class="field-container">
         <label for="launch_pattern">Version</label>
-        <select id="launch_pattern" name="launch_version" class="qa-select-launch-version" onchange="clearSchemaNameSelection()">
+        <select id="launch_pattern" name="launch_version" class="qa-select-launch-version" onchange="showAllDivs(); clearSchemaNameSelection()">
             <option selected disabled>Select Launch Pattern</option>
             <option name="v1" value="v1">v1</option>
             <option name="v2" value="v2">v2</option>
@@ -18,7 +18,7 @@
     </div>
 
     <strong><u>Launch by Schema Name</u></strong>
-    <div class="field-container">
+    <div class="field-container" style="display: none;">
         <label for="schema_name">Schemas</label>
         <select id="schema_name" name="schema_name" class="qa-select-schema" onchange="loadMetadataForSchemaName()">
             <option selected disabled>Select Schema</option>
@@ -37,7 +37,7 @@
 
     <strong><u>Launch by Schema URL</u></strong>
 
-    <div class="field-container">
+    <div class="field-container" style="display: none;">
         <span>
             <label for="schema-url-survey-type">Survey Type</label>
             <select name="survey-types" id="schema-url-survey-type">
@@ -49,37 +49,37 @@
         </span>
     </div>
 
-    <div class="field-container">
+    <div class="field-container" style="display: none;">
         <span>
             <label for="schema-url">Schema URL</label>
             <input id="schema-url" name="schema_url" type="text" class="qa-schema_url">
         </span>
     </div>
 
-    <div class="field-container" id="schema-url-name">
+    <div class="field-container" id="schema-url-name" style="display: none;">
         <span>
             <label for="schema-url-name-input">Schema Name</label>
             <input id="schema-url-name-input" name="schema_name" type="text" class="qa-schema_url_name" disabled>
         </span>
     </div>
 
-    <div class="field-container">
+    <div class="field-container" style="display: none;">
         <input type="submit" onClick="return loadMetadataForSchemaUrl()" value="Load Schema" class="qa-btn-submit-dev btn" id="schema-url-btn"/>
     </div>
 
     <p>----------</p>
 
-    <div id="survey_metadata_fields">
+    <div id="survey_metadata_fields" style="display: none;">
     </div>
 
     <h3>Survey Metadata</h3>
-    <div id="survey_metadata">
+    <div id="survey_metadata" style="display: none;">
         <p>--- Metadata fields will be loaded when you select or load a schema ---</p>
     </div>
 
     <h3>Required Data</h3>
 
-    <div class="field-container" id="ru_ref_container">
+    <div class="field-container" id="ru_ref_container" style="display: none;">
         <label for="ru_ref">RU Ref</label>
         <span>
             <input id="ru_ref" name="ru_ref" type="text" class="qa-ru-ref">
@@ -87,7 +87,7 @@
         </span>
     </div>
 
-    <div class="field-container">
+    <div class="field-container" style="display: none;">
         <label for="case_id">Case ID</label>
         <span>
             <input id="case_id" name="case_id" type="text" class="qa-case_id">
@@ -95,7 +95,7 @@
         </span>
     </div>
 
-    <div class="field-container">
+    <div class="field-container" style="display: none;">
         <label for="response_id">Response ID</label>
         <span>
             <input id="response_id" name="response_id" type="text" class="qa-response_id">
@@ -103,7 +103,7 @@
         </span>
     </div>
 
-    <div class="field-container">
+    <div class="field-container" style="display: none;">
         <label for="collection_exercise_sid">Collection Exercise SID</label>
         <span>
             <input id="collection_exercise_sid" name="collection_exercise_sid" type="text" class="qa-collection-sid">
@@ -111,7 +111,7 @@
         </span>
     </div>
 
-    <div class="field-container">
+    <div class="field-container" style="display: none;">
         <label for="response_expires_at">Response Expiry Time</label>
         <span>
             <input id="response_expires_at" name="response_expires_at" type="text" class="qa-response-expires-at">
@@ -121,12 +121,12 @@
 
 
     <h3>Runner Data</h3>
-    <div class="field-container">
+    <div class="field-container" style="display: none;">
         <label for="exp">Token Expiry (seconds)</label>
         <input id="exp" name="exp" type="text" value="1800" class="qa-token-expiry">
     </div>
 
-    <div class="field-container">
+    <div class="field-container" style="display: none;">
         <label for="language_code">Language</label>
         <select id="language_code" name="language_code" class="qa-language-code">
             <option name="en" value="en">English (en)</option>
@@ -137,7 +137,7 @@
         </select>
     </div>
 
-    <div class="field-container">
+    <div class="field-container" style="display: none;">
         <label for="roles">Roles</label>
         <select id="roles" name="roles" multiple="multiple" class="qa-roles">
             <option name="flusher" value="flusher">flusher</option>
@@ -145,20 +145,20 @@
         </select>
     </div>
 
-    <div class="field-container">
+    <div class="field-container" style="display: none;">
         <label for="account_service_url">Account Service URL</label>
         <input id="account_service_url" name="account_service_url" type="text" value="{{.AccountServiceURL}}" class="qa-account_service_url">
     </div>
 
-    <div class="field-container">
+    <div class="field-container" style="display: none;">
         <label for="account_service_log_out_url">Account Service Log Out URL</label>
         <input id="account_service_log_out_url" name="account_service_log_out_url" type="text" value="{{.AccountServiceLogOutURL}}" class="qa-account_service_log_out_url">
     </div>
 
-    <div class="field-container">
-        <input type="submit" name="action_launch_v1" value="Open Survey v1" class="qa-btn-submit-dev btn" id="submit-btn-v1" disabled="disabled"/>
-        <input type="submit" name="action_launch_v2" value="Open Survey v2" class="qa-btn-submit-dev btn" id="submit-btn-v2" disabled="disabled"/>
-        <input type="submit" name="action_flush" value="Flush Survey Data" class="qa-btn-submit-dev btn" id="flush-btn" disabled="disabled"/>
+    <div class="field-container" style="display: none;">
+        <input type="submit" name="action_launch_v1" value="Open Survey v1" class="qa-btn-submit-dev btn" id="submit-btn-v1"/>
+        <input type="submit" name="action_launch_v2" value="Open Survey v2" class="qa-btn-submit-dev btn" id="submit-btn-v2"/>
+        <input type="submit" name="action_flush" value="Flush Survey Data" class="qa-btn-submit-dev btn" id="flush-btn"/>
     </div>
 
 </form>
@@ -172,17 +172,33 @@
         document.querySelector('#survey_metadata_fields').innerHTML = ""
     }
 
+    function showAllDivs() {
+        let launchPattern = document.querySelector("#launch_pattern").value
+        if ( launchPattern === "v1" || launchPattern === "v2" ){
+            document.querySelectorAll("#survey_metadata, .field-container", ).forEach(function (el) {
+                el.style.display = 'block';
+            });
+        }
+        else {
+            document.querySelectorAll("#survey_metadata, .field-container").forEach(function(el) {
+                el.style.display = 'none';
+            });
+        }
+    }
+
     function includeSurveyMetadataFields(schema_name, survey_type) {
         let eqIdValue = schema_name.split('_')[0]
         let formTypeValue = schema_name.split("_").slice(1).join("_")
 
+        document.querySelector('#survey_metadata_fields').style.display = "block";
+
         document.querySelector('#survey_metadata_fields').innerHTML = `
             <h3>${survey_type} Survey Metadata</h3>
-            <div class="field-container">
+            <div class="field-container" style="display: block;">
                 <label for="eq_id">eq_id</label>
-                <input id="eq_id" name="eq_id" type="text" value="${eqIdValue}" class="qa-eq_id">
+                <input id="eq_id" name="eq_id" type="text" value="${eqIdValue}" class="qa-eq_id" >
             </div>
-            <div class="field-container">
+            <div class="field-container" style="display: block;">
                 <label for="form_type">form_type</label>
                 <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="qa-form_type">
             </div>
@@ -204,16 +220,16 @@
         const schemaName = schemaNameElement.value
 
         if (schemaName !== "Select Schema" && launchPattern === "v1") {
-            document.querySelector("#submit-btn-v1").disabled = false;
-            document.querySelector("#submit-btn-v2").disabled = true;
+            document.querySelector("#submit-btn-v1").style.display = 'inline-block';
+            document.querySelector("#submit-btn-v2").style.display = 'none';
         }
         else if (schemaName !== "Select Schema" && launchPattern === "v2") {
-            document.querySelector("#submit-btn-v2").disabled = false;
-            document.querySelector("#submit-btn-v1").disabled = true;
+            document.querySelector("#submit-btn-v2").style.display = 'inline-block';
+            document.querySelector("#submit-btn-v1").style.display = 'none';
         }
         else {
-            document.querySelector("#submit-btn-v2").disabled = true;
-            document.querySelector("#submit-btn-v1").disabled = true;
+            document.querySelector("#submit-btn-v2").style.display = 'none';
+            document.querySelector("#submit-btn-v1").style.display = 'none';
         }
     }
 
@@ -288,9 +304,9 @@
     }
 
     function loadSurveyMetadata(schema_name, survey_type) {
-        document.querySelector("#submit-btn-v1").disabled = true;
-        document.querySelector("#submit-btn-v2").disabled = true;
-        document.querySelector("#flush-btn").disabled = true;
+        document.querySelector("#submit-btn-v1").style.display = 'none';
+        document.querySelector("#submit-btn-v2").style.display = 'none';
+        document.querySelector("#flush-btn").style.display = 'none';
 
         if (survey_type.toLowerCase() === "test" || survey_type.toLowerCase() === "social") {
             clearSurveyMetadataFields()
@@ -357,16 +373,16 @@
                     let launchPattern = document.querySelector("#launch_pattern").value
 
                     if (launchPattern === "v1") {
-                        document.querySelector("#submit-btn-v1").disabled = false;
+                        document.querySelector("#submit-btn-v1").style.display = 'inline-block';
                     } else {
-                        document.querySelector("#submit-btn-v1").disabled = true;
+                        document.querySelector("#submit-btn-v1").style.display = 'none';
                     }
                     if (launchPattern === "v2") {
-                        document.querySelector("#submit-btn-v2").disabled = false;
+                        document.querySelector("#submit-btn-v2").style.display = 'inline-block';
                     } else {
-                        document.querySelector("#submit-btn-v2").disabled = true;
+                        document.querySelector("#submit-btn-v2").style.display = 'none';
                     }
-                    document.querySelector("#flush-btn").disabled = false;
+                    document.querySelector("#flush-btn").style.display = 'inline-block';
 
                 } else {
                     document.querySelector("#survey_metadata").innerHTML = "Failed to load Schema Metadata";
