@@ -501,7 +501,6 @@ func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, acc
 
 	claims := make(map[string]interface{})
 	urlValues["account_service_url"] = []string{accountServiceURL}
-	urlValues["account_service_log_out_url"] = []string{accountServiceLogOutURL}
 
 	claims = generateClaimsV2(urlValues, launcherSchema)
 
