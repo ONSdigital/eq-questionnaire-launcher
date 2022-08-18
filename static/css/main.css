@@ -16,8 +16,31 @@ label { display:inline-block; font-weight: 600; margin-bottom: 0.25rem; width:20
     position: relative;
 }
 
+.hidden-field-container {
+    display:none;
+    margin: 0 0 0.2rem 0;
+    position: relative;
+}
+
+.hidden-field-container span {
+    position: relative;
+}
+
+
 .field-container span {
     position: relative;
+}
+
+.group-title{
+    display:none;
+}
+
+.visible-block{
+    display:block;
+}
+
+.hidden-block{
+    display:none;
 }
 
 #schema-url-btn {
@@ -60,6 +83,16 @@ select {
 
 select[multiple] {
     background:none;
+}
+
+.hidden-field-container img {
+    width:26px;
+    height:auto;
+    display:block;
+    position:absolute;
+    top: -1px;
+    right: 2px;
+    cursor:pointer;
 }
 
 .field-container img {
