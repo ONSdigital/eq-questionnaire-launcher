@@ -265,17 +265,15 @@
         const surveyType = document.querySelector(`#schema_name option[value="${schemaName}"]`).dataset.surveyType
 
         if (surveyType.toLowerCase() === "social") {
-            hideNonSocialMetadata("none")
-        } else {
-            hideNonSocialMetadata("block")
+            hideNonSocialMetadata()
         }
 
         loadSurveyMetadata(schemaName, surveyType)
         loadSchemaMetadata(schemaName, null)
     }
 
-    function hideNonSocialMetadata(display_value) {
-        document.querySelector("#ru_ref_container").style.display=display_value;
+    function hideNonSocialMetadata() {
+        document.querySelector("#ru_ref_container").innerHTML=""
     }
 
     function loadMetadataForSchemaUrl() {

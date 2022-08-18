@@ -120,7 +120,7 @@ type Metadata struct {
 	Default   string `json:"default"`
 }
 
-func isSurveyMetadataBusiness(key string) bool {
+func isSurveyMetadata(key string) bool {
 	switch key {
 	case
 		"case_ref",
@@ -135,17 +135,7 @@ func isSurveyMetadataBusiness(key string) bool {
 		"ru_name",
 		"ru_ref",
 		"trad_as",
-		"user_id":
-		return true
-	}
-	return false
-}
-
-func isSurveyMetadataSocial(key string) bool {
-	switch key {
-	case
-		"case_ref",
-		"case_type",
+		"user_id",
 		"questionnaire_id":
 		return true
 	}
@@ -166,6 +156,28 @@ func isRequiredMetadata(key string) bool {
 		return true
 	}
 	return false
+}
+
+func getSurveyMetadataFromClaims(claimValues map[string][]string, data map[string]interface{}, claims map[string]interface{}, surveyMetadata map[string]interface{}) {
+	for key, value := range claimValues {
+		if isSurveyMetadata(key) == true {
+			data[key] = value[0]
+		} else {
+			if key != "roles" {
+				if isRequiredMetadata(key) {
+					if value[0] != "" {
+						claims[key] = value[0]
+					}
+				}
+			}
+			if key == "roles" {
+				claims[key] = value
+			}
+		}
+		surveyMetadata["data"] = data
+		claims["survey_metadata"] = surveyMetadata
+	}
+
 }
 
 func generateClaims(claimValues map[string][]string, launcherSchema surveys.LauncherSchema) (claims map[string]interface{}) {
@@ -229,44 +241,9 @@ func generateClaimsV2(claimValues map[string][]string, launcherSchema surveys.La
 	if launcherSchema.SurveyType == "social" {
 		receiptingKeys := []string{"questionnaire_id"}
 		surveyMetadata["receipting_keys"] = receiptingKeys
-
-		for key, value := range claimValues {
-			if isSurveyMetadataSocial(key) == true {
-				data[key] = value[0]
-			} else {
-				if key != "roles" {
-					if isRequiredMetadata(key) {
-						if value[0] != "" {
-							claims[key] = value[0]
-						}
-					}
-				}
-				if key == "roles" {
-					claims[key] = value
-				}
-			}
-			surveyMetadata["data"] = data
-			claims["survey_metadata"] = surveyMetadata
-		}
-	} else {
-		for key, value := range claimValues {
-			if isSurveyMetadataBusiness(key) == true {
-				data[key] = value[0]
-			} else {
-				if key != "roles" {
-					if isRequiredMetadata(key) {
-						if value[0] != "" {
-							claims[key] = value[0]
-						}
-					}
-				} else {
-					claims[key] = value
-				}
-			}
-		}
-		surveyMetadata["data"] = data
-		claims["survey_metadata"] = surveyMetadata
 	}
+
+	getSurveyMetadataFromClaims(claimValues, data, claims, surveyMetadata)
 
 	// When quicklaunching, schema_name will not be set, but launcherSchema will have the schema_name.
 	if len(claimValues["schema_name"]) == 0 && launcherSchema.Name != "" {
