@@ -316,18 +316,10 @@ func launcherSchemaFromURL(url string) (launcherSchema surveys.LauncherSchema, e
 		schemaName = schema.SchemaName
 	}
 
-	surveyType := ""
-
-	if schema.SurveyType == "social" {
-		surveyType = "social"
-	} else {
-		surveyType = "business"
-	}
-
 	launcherSchema = surveys.LauncherSchema{
 		URL:        url + cacheBust,
 		Name:       schemaName,
-		SurveyType: surveyType,
+		SurveyType: schema.SurveyType,
 	}
 
 	return launcherSchema, ""
