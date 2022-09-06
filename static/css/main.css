@@ -22,7 +22,7 @@ label { display:inline-block; font-weight: 600; margin-bottom: 0.25rem; width:20
     position: relative;
 }
 
-.hidden-field-container span {
+.hidden-field-container__span {
     position: relative;
 }
 
