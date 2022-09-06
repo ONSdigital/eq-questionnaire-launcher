@@ -317,9 +317,7 @@
     }
 
     function loadSurveyMetadata(schema_name, survey_type) {
-        document.querySelector("#submit-btn-v1").style.display = 'none';
-        document.querySelector("#submit-btn-v2").style.display = 'none';
-        document.querySelector("#flush-btn").style.display = 'none';
+        document.querySelectorAll("#submit-btn-v1", "#submit-btn-v2", "#flush-btn").style.display = 'none';
 
         if (survey_type.toLowerCase() === "test" || survey_type.toLowerCase() === "social") {
             clearSurveyMetadataFields()
