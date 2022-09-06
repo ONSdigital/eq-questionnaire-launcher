@@ -211,6 +211,12 @@
 
     }
 
+    function displayLaunchButton() {
+        let launchPattern = document.querySelector("#launch_pattern").value
+        document.querySelector(`#submit-btn-${launchPattern}`).style.display = 'inline-block';
+        document.querySelector("#flush-btn").style.display = 'inline-block';
+    }
+
     function clearSchemaNameSelection() {
         let schemaNameElement = document.querySelector("#schema_name")
         schemaNameElement.selectedIndex = 0
@@ -270,6 +276,7 @@
 
         loadSurveyMetadata(schemaName, surveyType)
         loadSchemaMetadata(schemaName, null)
+        displayLaunchButton()
     }
 
     function hideNonSocialMetadata() {
@@ -303,6 +310,8 @@
             schemaUrlNameInput.disabled = false
             document.querySelector("#schema-url-name").style.display = "inline"
         }
+
+        displayLaunchButton()
 
         return false
     }
@@ -374,18 +383,6 @@
                         document.querySelector("#survey_metadata").innerHTML = "No metadata required for this survey";
                     }
 
-                    let launchPattern = document.querySelector("#launch_pattern").value
-
-                    if (launchPattern === "v1") {
-                        document.querySelector("#submit-btn-v1").style.display = 'inline-block';
-                    } else {
-                        document.querySelector("#submit-btn-v1").style.display = 'none';
-                    }
-                    if (launchPattern === "v2") {
-                        document.querySelector("#submit-btn-v2").style.display = 'inline-block';
-                    } else {
-                        document.querySelector("#submit-btn-v2").style.display = 'none';
-                    }
                     document.querySelector("#flush-btn").style.display = 'inline-block';
 
                 } else {
