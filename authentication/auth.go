@@ -163,14 +163,13 @@ func getSurveyMetadataFromClaims(claimValues map[string][]string, data map[strin
 		if isSurveyMetadata(key) {
 			data[key] = value[0]
 		} else if key != "roles" && isRequiredMetadata(key) && value[0] != "" {
-			claims[key] = value[0]} else if key == "roles" {
+			claims[key] = value[0]
+		} else if key == "roles" {
 			claims[key] = value
 		}
 	}
-		surveyMetadata["data"] = data
-		claims["survey_metadata"] = surveyMetadata
-	}
-
+	surveyMetadata["data"] = data
+	claims["survey_metadata"] = surveyMetadata
 }
 
 func generateClaims(claimValues map[string][]string, launcherSchema surveys.LauncherSchema) (claims map[string]interface{}) {
