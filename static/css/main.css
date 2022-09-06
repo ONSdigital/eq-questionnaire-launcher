@@ -85,7 +85,7 @@ select[multiple] {
     background:none;
 }
 
-.hidden-field-container img {
+.hidden-field-container__img {
     width:26px;
     height:auto;
     display:block;
