@@ -162,18 +162,11 @@ func getSurveyMetadataFromClaims(claimValues map[string][]string, data map[strin
 	for key, value := range claimValues {
 		if isSurveyMetadata(key) == true {
 			data[key] = value[0]
-		} else {
-			if key != "roles" {
-				if isRequiredMetadata(key) {
-					if value[0] != "" {
-						claims[key] = value[0]
-					}
-				}
-			}
-			if key == "roles" {
-				claims[key] = value
-			}
+		} else if key != "roles" && isRequiredMetadata(key) && value[0] != "" {
+			claims[key] = value[0]} else if key == "roles" {
+			claims[key] = value
 		}
+	}
 		surveyMetadata["data"] = data
 		claims["survey_metadata"] = surveyMetadata
 	}
