@@ -27,7 +27,7 @@ label { display:inline-block; font-weight: 600; margin-bottom: 0.25rem; width:20
 }
 
 
-.field-container span {
+.field-container__span {
     position: relative;
 }
 
