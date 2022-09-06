@@ -95,7 +95,7 @@ select[multiple] {
     cursor:pointer;
 }
 
-.field-container img {
+.field-container__img {
     width:26px;
     height:auto;
     display:block;
