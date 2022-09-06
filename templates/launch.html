@@ -56,13 +56,6 @@
         </span>
     </div>
 
-    <div class="hidden-field-container" id="schema-url-name">
-        <span>
-            <label for="schema-url-name-input">Schema Name</label>
-            <input id="schema-url-name-input" name="schema_name" type="text" class="qa-schema_url_name" disabled>
-        </span>
-    </div>
-
     <div class="hidden-field-container">
         <input type="submit" onClick="return loadMetadataForSchemaUrl()" value="Load Schema" class="qa-btn-submit-dev btn" id="schema-url-btn"/>
     </div>
@@ -228,7 +221,7 @@
         } else {
             document.querySelectorAll(".Social").forEach(function(element) {element.removeAttribute("disabled")})
         }
-        
+
         const schemaName = schemaNameElement.value
 
         if (schemaName !== "Select Schema" && launchPattern === "v1") {
@@ -304,20 +297,13 @@
         loadSurveyMetadata(schemaName, surveyType)
         loadSchemaMetadata(schemaName, schemaUrl)
 
-        if (surveyType.toLowerCase() === "test") {
-            let schemaUrlNameInput = document.querySelector("#schema-url-name-input")
-            schemaUrlNameInput.value = schemaName
-            schemaUrlNameInput.disabled = false
-            document.querySelector("#schema-url-name").style.display = "inline"
-        }
-
         displayLaunchButton()
 
         return false
     }
 
     function loadSurveyMetadata(schema_name, survey_type) {
-        document.querySelectorAll("#submit-btn-v1", "#submit-btn-v2", "#flush-btn").style.display = 'none';
+        document.querySelector("#submit-btn-v1, #submit-btn-v2, #flush-btn").style.display = 'none';
 
         if (survey_type.toLowerCase() === "test" || survey_type.toLowerCase() === "social") {
             clearSurveyMetadataFields()
