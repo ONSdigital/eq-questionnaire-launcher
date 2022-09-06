@@ -160,7 +160,7 @@ func isRequiredMetadata(key string) bool {
 
 func getSurveyMetadataFromClaims(claimValues map[string][]string, data map[string]interface{}, claims map[string]interface{}, surveyMetadata map[string]interface{}) {
 	for key, value := range claimValues {
-		if isSurveyMetadata(key) == true {
+		if isSurveyMetadata(key) {
 			data[key] = value[0]
 		} else if key != "roles" && isRequiredMetadata(key) && value[0] != "" {
 			claims[key] = value[0]} else if key == "roles" {
