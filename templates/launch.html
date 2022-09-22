@@ -215,17 +215,16 @@
 
         const schemaName = schemaNameElement.value
 
-        if (schemaName !== "Select Schema" && launchPattern === "v1") {
-            document.querySelector("#submit-btn-v1").style.display = 'inline-block';
-            document.querySelector("#submit-btn-v2").style.display = 'none';
-        }
-        else if (schemaName !== "Select Schema" && launchPattern === "v2") {
-            document.querySelector("#submit-btn-v2").style.display = 'inline-block';
-            document.querySelector("#submit-btn-v1").style.display = 'none';
-        }
-        else {
-            document.querySelector("#submit-btn-v2").style.display = 'none';
-            document.querySelector("#submit-btn-v1").style.display = 'none';
+        if (schemaName !== "Select Schema") {
+            if (launchPattern === "v1") {
+                document.querySelector("#submit-btn-v1").style.display = 'inline-block';
+                document.querySelector("#submit-btn-v2").style.display = 'none';
+            } else if (launchPattern === "v2") {
+                document.querySelector("#submit-btn-v2").style.display = 'inline-block';
+                document.querySelector("#submit-btn-v1").style.display = 'none';
+            }
+        } else {
+            document.querySelector("#submit-btn-v1, #submit-btn-v2").style.display = 'none';
         }
     }
 
