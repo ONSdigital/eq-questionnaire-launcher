@@ -61,12 +61,12 @@
 
         <p class="group-title">----------</p>
 
-        <div id="survey_metadata_fields" class="hidden-block">
+        <div id="survey_metadata_fields" class="metadata-fields">
         </div>
 
         <h3 class="group-title">Survey Metadata</h3>
-        <div id="survey_metadata" class="hidden-block">
-            <p>--- Metadata fields will be loaded when you select or load a schema ---</p>
+        <div id="survey_metadata" class="metadata-fields">
+            <p>--- Metadata fields will be loaded when you select a version and load a schema ---</p>
         </div>
 
         <h3 class="group-title">Required Data</h3>
@@ -174,11 +174,11 @@
         if (launchPattern === "v1") {
             document.querySelector('#survey_metadata_fields').innerHTML = `
                 <h3>${survey_type} Survey Metadata</h3>
-                <div class="field-container" class="visible-block">
+                <div class="field-container">
                     <label for="eq_id">eq_id</label>
                     <input id="eq_id" name="eq_id" type="text" value="${eqIdValue}" class="qa-eq_id" >
                 </div>
-                <div class="field-container" class="visible-block">
+                <div class="field-container">
                     <label for="form_type">form_type</label>
                     <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="qa-form_type">
                 </div>
@@ -186,7 +186,7 @@
         } else {
             document.querySelector('#survey_metadata_fields').innerHTML = `
                 <h3>${survey_type} Survey Metadata</h3>
-                <div class="field-container" class="visible-block">
+                <div class="field-container">
                     <label for="form_type">form_type</label>
                     <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="qa-form_type">
                 </div>

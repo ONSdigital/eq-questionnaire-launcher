@@ -35,11 +35,7 @@ label { display:inline-block; font-weight: 600; margin-bottom: 0.25rem; width:20
     display:none;
 }
 
-.visible-block{
-    display:block;
-}
-
-.hidden-block{
+.metadata-fields{
     display:none;
 }
 
