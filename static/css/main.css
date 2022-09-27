@@ -11,19 +11,12 @@ label { display:inline-block; font-weight: 600; margin-bottom: 0.25rem; width:20
 }
 
 .field-container {
-    display:block;
     margin: 0 0 0.2rem 0;
     position: relative;
 }
 
-.hidden-field-container {
+.hidden-container {
     display:none;
-    margin: 0 0 0.2rem 0;
-    position: relative;
-}
-
-.hidden-field-container__span {
-    position: relative;
 }
 
 
@@ -79,16 +72,6 @@ select {
 
 select[multiple] {
     background:none;
-}
-
-.hidden-field-container__img {
-    width:26px;
-    height:auto;
-    display:block;
-    position:absolute;
-    top: -1px;
-    right: 2px;
-    cursor:pointer;
 }
 
 .field-container__img {
