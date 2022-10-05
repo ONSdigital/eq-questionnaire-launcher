@@ -3,13 +3,13 @@
 {{define "body"}}
 
 <h1>Launch a survey</h1>
-<div class="field-wrap">
+<div>
     <form action="" method="POST" xmlns="http://www.w3.org/1999/html" onsubmit="validateForm()">
 
         <strong><u>Launch Pattern</u></strong>
         <div class="field-container">
             <label for="launch_pattern">Version</label>
-            <select id="launch_pattern" name="launch_version" class="qa-select-launch-version" onchange="showAllDivs(); clearSchemaNameSelection()">
+            <select id="launch_pattern" name="launch_version" class="qa-select-launch-version" onchange="showAllDivs(); displayLaunchButton();">
                 <option selected disabled>Select Launch Pattern</option>
                 <option name="v1" value="v1">v1</option>
                 <option name="v2" value="v2">v2</option>
@@ -32,9 +32,9 @@
             </select>
         </div>
 
-        <p class="group-title">----------</p>
+        <p>----------</p>
 
-        <strong class="group-title"><u>Launch by Schema URL</u></strong>
+        <strong><u>Launch by Schema URL</u></strong>
 
         <div class="field-container">
             <span class="field-container__span">
@@ -55,23 +55,23 @@
             </span>
         </div>
 
-        <div class="field-container hidden-container">
+        <div class="field-container field-container--hidden">
             <input type="submit" onClick="return loadMetadataForSchemaUrl()" value="Load Schema" class="qa-btn-submit-dev btn" id="schema-url-btn"/>
         </div>
 
-        <p class="group-title">----------</p>
+        <p>----------</p>
 
-        <div id="survey_metadata_fields" class="metadata-fields">
+        <div id="survey_metadata_fields" class="metadata-fields--hidden">
         </div>
 
-        <h3 class="group-title">Survey Metadata</h3>
-        <div id="survey_metadata" class="metadata-fields">
+        <h3 class="group-title--hidden">Survey Metadata</h3>
+        <div id="survey_metadata" class="metadata-fields--hidden">
             <p>--- Metadata fields will be loaded when you select a version and load a schema ---</p>
         </div>
 
-        <h3 class="group-title">Required Data</h3>
+        <h3 class="group-title--hidden">Required Data</h3>
 
-        <div class="field-container hidden-container">
+        <div class="field-container field-container--hidden">
             <label for="case_id">Case ID</label>
             <span class="field-container__span">
                 <input id="case_id" name="case_id" type="text" class="qa-case_id">
@@ -79,7 +79,7 @@
             </span>
         </div>
 
-        <div class="field-container hidden-container">
+        <div class="field-container field-container--hidden">
             <label for="response_id">Response ID</label>
             <span class="field-container__span">
                 <input id="response_id" name="response_id" type="text" class="qa-response_id">
@@ -87,7 +87,7 @@
             </span>
         </div>
 
-        <div class="field-container hidden-container">
+        <div class="field-container field-container--hidden">
             <label for="collection_exercise_sid">Collection Exercise SID</label>
             <span class="field-container__span">
                 <input id="collection_exercise_sid" name="collection_exercise_sid" type="text" class="qa-collection-sid">
@@ -95,7 +95,7 @@
             </span>
         </div>
 
-        <div class="field-container hidden-container">
+        <div class="field-container field-container--hidden">
             <label for="response_expires_at">Response Expiry Time</label>
             <span class="field-container__span">
                 <input id="response_expires_at" name="response_expires_at" type="text" class="qa-response-expires-at">
@@ -104,13 +104,13 @@
         </div>
 
 
-        <h3 class="group-title">Runner Data</h3>
-        <div class="field-container hidden-container">
+        <h3 class="group-title--hidden">Runner Data</h3>
+        <div class="field-container field-container--hidden">
             <label for="exp">Token Expiry (seconds)</label>
             <input id="exp" name="exp" type="text" value="1800" class="qa-token-expiry">
         </div>
 
-        <div class="field-container hidden-container">
+        <div class="field-container field-container--hidden">
             <label for="language_code">Language</label>
             <select id="language_code" name="language_code" class="qa-language-code">
                 <option name="en" value="en">English (en)</option>
@@ -121,7 +121,7 @@
             </select>
         </div>
 
-        <div class="field-container hidden-container">
+        <div class="field-container field-container--hidden">
             <label for="roles">Roles</label>
             <select id="roles" name="roles" multiple="multiple" class="qa-roles">
                 <option name="flusher" value="flusher">flusher</option>
@@ -129,20 +129,20 @@
             </select>
         </div>
 
-        <div class="field-container  hidden-container">
+        <div class="field-container  field-container--hidden">
             <label for="account_service_url">Account Service URL</label>
             <input id="account_service_url" name="account_service_url" type="text" value="{{.AccountServiceURL}}" class="qa-account_service_url">
         </div>
 
-        <div class="field-container hidden-container">
+        <div class="field-container field-container--hidden">
             <label for="account_service_log_out_url">Account Service Log Out URL</label>
             <input id="account_service_log_out_url" name="account_service_log_out_url" type="text" value="{{.AccountServiceLogOutURL}}" class="qa-account_service_log_out_url">
         </div>
 
-        <div class="field-container hidden-container">
-            <input type="submit" name="action_launch_v1" value="Open Survey v1" class="qa-btn-submit-dev btn" id="submit-btn-v1"/>
-            <input type="submit" name="action_launch_v2" value="Open Survey v2" class="qa-btn-submit-dev btn" id="submit-btn-v2"/>
-            <input type="submit" name="action_flush" value="Flush Survey Data" class="qa-btn-submit-dev btn" id="flush-btn"/>
+        <div class="field-container">
+            <input type="submit" name="action_launch_v1" value="Open Survey v1" class="qa-btn-submit-dev btn button--hidden" id="submit-btn-v1"/>
+            <input type="submit" name="action_launch_v2" value="Open Survey v2" class="qa-btn-submit-dev btn button--hidden" id="submit-btn-v2"/>
+            <input type="submit" name="action_flush" value="Flush Survey Data" class="qa-btn-submit-dev btn button--hidden" id="flush-btn"/>
         </div>
 
     </form>
@@ -159,9 +159,17 @@
     function showAllDivs() {
         document.querySelector("#launch_pattern").setAttribute("disabled", "disabled")
 
-        document.querySelectorAll("#survey_metadata, .hidden-container, .group-title", ).forEach(function (element) {
+        document.querySelectorAll("#survey_metadata, .field-container--hidden, .group-title--hidden", ).forEach(function (element) {
             element.style.display = 'block';
         });
+
+        let launchPattern = document.querySelector("#launch_pattern").value
+
+        if (launchPattern === "v1") {
+            document.querySelectorAll(".Social").forEach(function(element) {element.setAttribute("disabled", "disabled")})
+        } else {
+            document.querySelectorAll(".Social").forEach(function(element) {element.removeAttribute("disabled")})
+        }
     }
 
     function includeSurveyMetadataFields(schema_name, survey_type) {
@@ -201,35 +209,6 @@
         document.querySelector("#flush-btn").style.display = 'inline-block';
     }
 
-    function clearSchemaNameSelection() {
-        let schemaNameElement = document.querySelector("#schema_name")
-        schemaNameElement.selectedIndex = 0
-
-        let launchPattern = document.querySelector("#launch_pattern").value
-
-        if (launchPattern === "v1") {
-            document.querySelectorAll(".Social").forEach(function(element) {element.setAttribute("disabled", "disabled")})
-        } else {
-            document.querySelectorAll(".Social").forEach(function(element) {element.removeAttribute("disabled")})
-        }
-
-        const schemaName = schemaNameElement.value
-
-        if (schemaName !== "Select Schema") {
-            if (launchPattern === "v1") {
-                document.querySelector("#submit-btn-v1").style.display = 'inline-block';
-                document.querySelector("#submit-btn-v2").style.display = 'none';
-            } else if (launchPattern === "v2") {
-                document.querySelector("#submit-btn-v2").style.display = 'inline-block';
-                document.querySelector("#submit-btn-v1").style.display = 'none';
-            }
-        } else {
-            document.querySelector("#submit-btn-v1, #submit-btn-v2").style.display = 'none';
-        }
-
-        numericId()
-    }
-
     function clearAndDisableSchemaUrlSelection() {
         document.querySelector("#schema-url-btn").disabled = true;
 
@@ -255,17 +234,8 @@
         const schemaName = document.querySelector("#schema_name").value
         const surveyType = document.querySelector(`#schema_name option[value="${schemaName}"]`).dataset.surveyType
 
-        if (surveyType.toLowerCase() === "social") {
-            hideNonSocialMetadata()
-        }
-
         loadSurveyMetadata(schemaName, surveyType)
         loadSchemaMetadata(schemaName, null)
-        displayLaunchButton()
-    }
-
-    function hideNonSocialMetadata() {
-        document.querySelector("#ru_ref_container").innerHTML=""
     }
 
     function loadMetadataForSchemaUrl() {
@@ -295,8 +265,6 @@
     }
 
     function loadSurveyMetadata(schema_name, survey_type) {
-        document.querySelector("#submit-btn-v1, #submit-btn-v2, #flush-btn").style.display = 'none';
-
         if (survey_type.toLowerCase() === "test" || survey_type.toLowerCase() === "social") {
             clearSurveyMetadataFields()
         } else {
@@ -390,15 +358,6 @@
         document.querySelector(`#response_id`).value = result;
     }
 
-    function ruref(el_id) {
-        var result = '';
-        var chars = '0123456789';
-        for (var i = 11; i > 0; --i) result += chars[Math.round(Math.random() * (chars.length - 1))];
-        var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        result += chars[Math.round(Math.random() * (chars.length - 1))];
-        document.querySelector(`#${el_id}`).value = result;
-    }
-
     function setResponseExpiry(days_offset=7) {
         var dt = new Date();
         dt.setDate(dt.getDate()+days_offset)
@@ -418,7 +377,6 @@
 
     uuid('collection_exercise_sid');
     uuid('case_id');
-    ruref('ru_ref');
     numericId();
     setResponseExpiry();
 
