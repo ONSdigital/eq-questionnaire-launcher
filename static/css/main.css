@@ -54,6 +54,11 @@ select {
 
 select[multiple] {
     background:none;
+    cursor: pointer;
+}
+
+select:disabled {
+    cursor: default;
 }
 
 .field-container__img {
@@ -75,9 +80,11 @@ select[multiple] {
     text-align: center;
     font-size: 1rem;
     margin: 0.5rem;
+    cursor: pointer;
 }
 
 .btn:disabled {
     background: #cccccc;
     color: grey;
+    cursor: default;
 }
