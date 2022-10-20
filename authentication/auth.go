@@ -644,7 +644,7 @@ func GetRequiredMetadata(launcherSchema surveys.LauncherSchema) ([]Metadata, str
 		return nil, fmt.Sprintf("Failed to unmarshal Schema from %s", url)
 	}
 
-	defaults := GetDefaultValues(launcherSchema.SurveyType)
+	defaults := GetDefaultValues()
 
 	for i, value := range schema.Metadata {
 		schema.Metadata[i].Default = defaults[value.Name]
@@ -658,43 +658,36 @@ func GetRequiredMetadata(launcherSchema surveys.LauncherSchema) ([]Metadata, str
 }
 
 // GetDefaultValues Returns a map of default values for metadata keys
-func GetDefaultValues(surveyType string) map[string]string {
-
+func GetDefaultValues() map[string]string {
 	defaults := make(map[string]string)
 	collectionExerciseSid, _ := uuid.NewV4()
 	questionnaireId, _ := uuid.NewV4()
 
-	if surveyType == "social" {
-		defaults["region_code"] = "GB-ENG"
-		defaults["collection_exercise_sid"] = collectionExerciseSid.String()
-		defaults["case_ref"] = "1000000000000001"
-		defaults["questionnaire_id"] = questionnaireId.String()
-		defaults["version"] = "v2"
-		defaults["case_type"] = "B"
-	} else {
-		defaults["user_id"] = "UNKNOWN"
-		defaults["period_id"] = "201605"
-		defaults["period_str"] = "May 2017"
-		defaults["collection_exercise_sid"] = collectionExerciseSid.String()
-		defaults["ru_ref"] = "12346789012A"
-		defaults["ru_name"] = "ESSENTIAL ENTERPRISE LTD."
-		defaults["ref_p_start_date"] = "2016-05-01"
-		defaults["ref_p_end_date"] = "2016-05-31"
-		defaults["return_by"] = "2016-06-12"
-		defaults["trad_as"] = "ESSENTIAL ENTERPRISE LTD."
-		defaults["employment_date"] = "2016-06-10"
-		defaults["region_code"] = "GB-ENG"
-		defaults["language_code"] = "en"
-		defaults["case_ref"] = "1000000000000001"
-		defaults["address_line1"] = "68 Abingdon Road"
-		defaults["address_line2"] = ""
-		defaults["locality"] = ""
-		defaults["town_name"] = "Goathill"
-		defaults["postcode"] = "PE12 4GH"
-		defaults["display_address"] = "68 Abingdon Road, Goathill"
-		defaults["country"] = "E"
-		defaults["version"] = "v2"
-	}
+	defaults["collection_exercise_sid"] = collectionExerciseSid.String()
+	defaults["questionnaire_id"] = questionnaireId.String()
+	defaults["version"] = "v2"
+	defaults["case_type"] = "B"
+	defaults["user_id"] = "UNKNOWN"
+	defaults["period_id"] = "201605"
+	defaults["period_str"] = "May 2017"
+	defaults["collection_exercise_sid"] = collectionExerciseSid.String()
+	defaults["ru_ref"] = "12346789012A"
+	defaults["ru_name"] = "ESSENTIAL ENTERPRISE LTD."
+	defaults["ref_p_start_date"] = "2016-05-01"
+	defaults["ref_p_end_date"] = "2016-05-31"
+	defaults["return_by"] = "2016-06-12"
+	defaults["trad_as"] = "ESSENTIAL ENTERPRISE LTD."
+	defaults["employment_date"] = "2016-06-10"
+	defaults["region_code"] = "GB-ENG"
+	defaults["language_code"] = "en"
+	defaults["case_ref"] = "1000000000000001"
+	defaults["address_line1"] = "68 Abingdon Road"
+	defaults["address_line2"] = ""
+	defaults["locality"] = ""
+	defaults["town_name"] = "Goathill"
+	defaults["postcode"] = "PE12 4GH"
+	defaults["display_address"] = "68 Abingdon Road, Goathill"
+	defaults["country"] = "E"
 
 	return defaults
 }

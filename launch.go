@@ -159,7 +159,7 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	version := urlValues.Get("version")
 	launchVersion2 := true
 
-	defaultValues := authentication.GetDefaultValues("business")
+	defaultValues := authentication.GetDefaultValues()
 
 	if version == "" {
 		urlValues.Add("version", defaultValues["version"])
