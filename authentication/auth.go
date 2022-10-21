@@ -230,7 +230,7 @@ func generateClaimsV2(claimValues map[string][]string, launcherSchema surveys.La
 	surveyMetadata := make(map[string]interface{})
 	data := make(map[string]interface{})
 
-	if launcherSchema.SurveyType == "social" {
+	if launcherSchema.SurveyType == "social" || launcherSchema.SurveyType == "health" {
 		receiptingKeys := []string{"questionnaire_id"}
 		surveyMetadata["receipting_keys"] = receiptingKeys
 	}
@@ -654,7 +654,59 @@ func GetRequiredMetadata(launcherSchema surveys.LauncherSchema) ([]Metadata, str
 		}
 	}
 
+	claims := make([]string, 0)
+	for _, v := range schema.Metadata {
+		claims = append(claims, v.Name)
+	}
+
+	mandatoryClaims := getMandatatoryClaims(schema.SurveyType, defaults)
+
+	missingClaims := getMissingMandatoryClaims(claims, mandatoryClaims)
+
+	for _, v := range missingClaims {
+		schema.Metadata = append(schema.Metadata, v)
+	}
+
 	return schema.Metadata, ""
+}
+
+func getMandatatoryClaims(surveyType string, defaults map[string]string) []Metadata {
+	claims := make([]Metadata, 0)
+	if surveyType == "health" || surveyType == "social" {
+		claims = []Metadata{
+			{"questionnaire_id", "false", defaults["questionnaire_id"]},
+			{"case_ref", "false", defaults["case_ref"]},
+		}
+
+	} else {
+		claims = []Metadata{
+			{"ru_ref", "false", defaults["ru_ref"]},
+			{"period_id", "false", defaults["period_id"]},
+			{"user_id", "false", defaults["user_id"]},
+		}
+	}
+
+	return claims
+}
+
+func getMissingMandatoryClaims(claims []string, mandatoryClaims []Metadata) []Metadata {
+	missingClaims := make([]Metadata, 0)
+	for _, v := range mandatoryClaims {
+		if !(stringInSlice(v.Name, claims)) {
+			missingClaims = append(missingClaims, v)
+		}
+	}
+
+	return missingClaims
+}
+
+func stringInSlice(a string, list []string) bool {
+	for _, b := range list {
+		if b == a {
+			return true
+		}
+	}
+	return false
 }
 
 // GetDefaultValues Returns a map of default values for metadata keys
