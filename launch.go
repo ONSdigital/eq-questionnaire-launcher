@@ -185,7 +185,7 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	err := ""
 
 	if launchVersion2 {
-		token, err = authentication.GenerateTokenFromDefaultsV2(schemaURL, accountServiceURL, AccountServiceLogOutURL, urlValues)
+		token, err = authentication.GenerateTokenFromDefaultsV2(schemaURL, accountServiceURL, urlValues)
 	} else {
 		token, err = authentication.GenerateTokenFromDefaults(schemaURL, accountServiceURL, AccountServiceLogOutURL, urlValues)
 	}

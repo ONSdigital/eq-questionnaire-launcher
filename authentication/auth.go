@@ -211,7 +211,7 @@ func generateClaims(claimValues map[string][]string, launcherSchema surveys.Laun
 	return claims
 }
 
-func generateClaimsV2(claimValues map[string][]string, launcherSchema surveys.LauncherSchema) (claims map[string]interface{}) {
+func generateClaimsV2(claimValues map[string][]string, launcherSchema surveys.LauncherSchema, schema QuestionnaireSchema) (claims map[string]interface{}) {
 
 	var roles []string
 	if rolesValues, ok := claimValues["roles"]; ok {
@@ -230,7 +230,7 @@ func generateClaimsV2(claimValues map[string][]string, launcherSchema surveys.La
 	surveyMetadata := make(map[string]interface{})
 	data := make(map[string]interface{})
 
-	if launcherSchema.SurveyType == "social" || launcherSchema.SurveyType == "health" {
+	if schema.SurveyType == "social" || schema.SurveyType == "health" {
 		receiptingKeys := []string{"questionnaire_id"}
 		surveyMetadata["receipting_keys"] = receiptingKeys
 	}
@@ -477,16 +477,21 @@ func GenerateTokenFromDefaults(schemaURL string, accountServiceURL string, accou
 }
 
 // GenerateTokenFromDefaultsV2 coverts a set of DEFAULT values into a JWT
-func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, accountServiceLogOutURL string, urlValues url.Values) (token string, error string) {
+func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, urlValues url.Values) (token string, error string) {
 	launcherSchema, validationError := launcherSchemaFromURL(schemaURL)
 	if validationError != "" {
 		return "", validationError
 	}
 
+	schema, error := getSchema(launcherSchema)
+	if error != "" {
+		return "", fmt.Sprintf("getSchema failed err: %v", error)
+	}
+
 	claims := make(map[string]interface{})
 	urlValues["account_service_url"] = []string{accountServiceURL}
 
-	claims = generateClaimsV2(urlValues, launcherSchema)
+	claims = generateClaimsV2(urlValues, launcherSchema, schema)
 
 	requiredMetadata, error := GetRequiredMetadata(launcherSchema)
 	if error != "" {
@@ -563,10 +568,15 @@ func GenerateTokenFromPost(postValues url.Values, launchVersion2 bool) (string, 
 
 	launcherSchema := surveys.GetLauncherSchema(schemaName, schemaUrl)
 
+	schema, error := getSchema(launcherSchema)
+	if error != "" {
+		return "", fmt.Sprintf("getSchema failed err: %v", error)
+	}
+
 	claims := make(map[string]interface{})
 
 	if launchVersion2 {
-		claims = generateClaimsV2(postValues, launcherSchema)
+		claims = generateClaimsV2(postValues, launcherSchema, schema)
 	} else {
 		claims = generateClaims(postValues, launcherSchema)
 	}
@@ -607,41 +617,9 @@ func GenerateTokenFromPost(postValues url.Values, launchVersion2 bool) (string, 
 
 // GetRequiredMetadata Gets the required metadata from a schema
 func GetRequiredMetadata(launcherSchema surveys.LauncherSchema) ([]Metadata, string) {
-	var url string
-
-	if launcherSchema.URL != "" {
-		url = launcherSchema.URL
-	} else {
-		hostURL := settings.Get("SURVEY_RUNNER_SCHEMA_URL")
-
-		log.Println("Name: ", launcherSchema.Name)
-		url = fmt.Sprintf("%s/schemas/%s", hostURL, launcherSchema.Name)
-	}
-
-	log.Println("Loading metadata from schema:", url)
-
-	resp, err := clients.GetHTTPClient().Get(url)
-	if err != nil {
-		log.Println("Failed to load schema from:", url)
-		return nil, fmt.Sprintf("Failed to load Schema from %s", url)
-	}
-
-	if resp.StatusCode != 200 {
-		log.Print("Invalid response code for schema from: ", url)
-		return nil, fmt.Sprintf("Failed to load Schema from %s", url)
-	}
-
-	responseBody, err := ioutil.ReadAll(resp.Body)
-	resp.Body.Close()
-	if err != nil {
-		log.Print(err)
-		return nil, fmt.Sprintf("Failed to load Schema from %s", url)
-	}
-
-	var schema QuestionnaireSchema
-	if err := json.Unmarshal(responseBody, &schema); err != nil {
-		log.Print(err)
-		return nil, fmt.Sprintf("Failed to unmarshal Schema from %s", url)
+	schema, error := getSchema(launcherSchema)
+	if error != "" {
+		return nil, fmt.Sprintf("getSchema failed err: %v", error)
 	}
 
 	defaults := GetDefaultValues()
@@ -668,6 +646,47 @@ func GetRequiredMetadata(launcherSchema surveys.LauncherSchema) ([]Metadata, str
 	}
 
 	return schema.Metadata, ""
+}
+
+func getSchema(launcherSchema surveys.LauncherSchema) (QuestionnaireSchema, string) {
+	var url string
+
+	if launcherSchema.URL != "" {
+		url = launcherSchema.URL
+	} else {
+		hostURL := settings.Get("SURVEY_RUNNER_SCHEMA_URL")
+
+		log.Println("Name: ", launcherSchema.Name)
+		url = fmt.Sprintf("%s/schemas/%s", hostURL, launcherSchema.Name)
+	}
+
+	log.Println("Loading metadata from schema:", url)
+
+	var schema QuestionnaireSchema
+	resp, err := clients.GetHTTPClient().Get(url)
+	if err != nil {
+		log.Println("Failed to load schema from:", url)
+		return schema, fmt.Sprintf("Failed to load Schema from %s", url)
+	}
+
+	if resp.StatusCode != 200 {
+		log.Print("Invalid response code for schema from: ", url)
+		return schema, fmt.Sprintf("Failed to load Schema from %s", url)
+	}
+
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	resp.Body.Close()
+	if err != nil {
+		log.Print(err)
+		return schema, fmt.Sprintf("Failed to load Schema from %s", url)
+	}
+
+	if err := json.Unmarshal(responseBody, &schema); err != nil {
+		log.Print(err)
+		return schema, fmt.Sprintf("Failed to unmarshal Schema from %s", url)
+	}
+
+	return schema, ""
 }
 
 func getMandatatoryClaims(surveyType string, defaults map[string]string) []Metadata {
