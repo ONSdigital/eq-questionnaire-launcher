@@ -9,7 +9,7 @@
         <strong><u>Launch Pattern</u></strong>
         <div class="field-container">
             <label for="launch_pattern">Version</label>
-            <select id="launch_pattern" name="launch_version" class="qa-select-launch-version" onchange="showAllDivs(); displayLaunchButton();">
+            <select id="launch_pattern" name="launch_version" class="qa-select-launch-version" onchange="showAllDivs();">
                 <option selected disabled>Select Launch Pattern</option>
                 <option name="v1" value="v1">v1</option>
                 <option name="v2" value="v2">v2</option>
@@ -19,7 +19,7 @@
         <strong><u>Launch by Schema Name</u></strong>
         <div class="field-container">
             <label for="schema_name">Schemas</label>
-            <select id="schema_name" name="schema_name" class="qa-select-schema" onchange="loadMetadataForSchemaName()">
+            <select id="schema_name" name="schema_name" class="qa-select-schema" onchange="loadMetadataForSchemaName(); displayLaunchButton();">
                 <option selected disabled>Select Schema</option>
 
                 {{ range $surveyType, $schemasList := .Schemas }}
