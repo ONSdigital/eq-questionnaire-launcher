@@ -121,13 +121,12 @@ func getAccountServiceURL(r *http.Request) string {
 func redirectURL(w http.ResponseWriter, r *http.Request) {
 	hostURL := settings.Get("SURVEY_RUNNER_URL")
 
-	launchActionV1 := r.PostForm.Get("action_launch_v1")
-	launchActionV2 := r.PostForm.Get("action_launch_v2")
+	launchVersion := r.FormValue("launch_version")
 
 	token := ""
 	err := ""
 
-	if launchActionV2 == "Open Survey v2" {
+	if launchVersion == "v2" {
 		token, err = authentication.GenerateTokenFromPost(r.PostForm, true)
 	} else {
 		token, err = authentication.GenerateTokenFromPost(r.PostForm, false)
@@ -143,7 +142,7 @@ func redirectURL(w http.ResponseWriter, r *http.Request) {
 
 	if flushAction != "" {
 		http.Redirect(w, r, hostURL+"/flush?token="+token, 307)
-	} else if launchActionV1 != "" || launchActionV2 != "" {
+	} else if launchVersion != "" {
 		http.Redirect(w, r, hostURL+"/session?token="+token, 301)
 	} else {
 		http.Error(w, fmt.Sprintf("Invalid Action"), 500)

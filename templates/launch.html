@@ -11,8 +11,8 @@
             <label for="launch_pattern">Version</label>
             <select id="launch_pattern" name="launch_version" class="qa-select-launch-version" onchange="showAllDivs();">
                 <option selected disabled>Select Launch Pattern</option>
-                <option name="v1" value="v1">v1</option>
-                <option name="v2" value="v2">v2</option>
+                <option class="version" name="version" id="version_v1" value="v1">v1</option>
+                <option class="version" name="version" id="version_v2" value="v2">v2</option>
             </select>
         </div>
 
@@ -140,8 +140,7 @@
         </div>
 
         <div class="field-container">
-            <input type="submit" name="action_launch_v1" value="Open Survey v1" class="qa-btn-submit-dev btn button--hidden" id="submit-btn-v1"/>
-            <input type="submit" name="action_launch_v2" value="Open Survey v2" class="qa-btn-submit-dev btn button--hidden" id="submit-btn-v2"/>
+            <input type="submit" name="action_launch" value="Open Survey" class="qa-btn-submit-dev btn button--hidden" id="submit-btn"/>
             <input type="submit" name="action_flush" value="Flush Survey Data" class="qa-btn-submit-dev btn button--hidden" id="flush-btn"/>
         </div>
 
@@ -157,8 +156,6 @@
     }
 
     function showAllDivs() {
-        document.querySelector("#launch_pattern").setAttribute("disabled", "disabled")
-
         document.querySelectorAll("#survey_metadata, .field-container--hidden, .group-title--hidden").forEach(function (element) {
             element.style.display = 'block';
         });
@@ -204,8 +201,7 @@
     }
 
     function displayLaunchButton() {
-        let launchPattern = document.querySelector("#launch_pattern").value
-        document.querySelector(`#submit-btn-${launchPattern}`).style.display = 'inline-block';
+        document.querySelector(`#submit-btn`).style.display = 'inline-block';
         document.querySelector("#flush-btn").style.display = 'inline-block';
     }
 
