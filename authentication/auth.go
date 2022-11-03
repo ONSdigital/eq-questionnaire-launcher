@@ -7,6 +7,7 @@ import (
 	"encoding/pem"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"net/url"
 	"time"
@@ -732,10 +733,9 @@ func stringInSlice(a string, list []string) bool {
 func GetDefaultValues() map[string]string {
 	defaults := make(map[string]string)
 	collectionExerciseSid, _ := uuid.NewV4()
-	questionnaireId, _ := uuid.NewV4()
 
 	defaults["collection_exercise_sid"] = collectionExerciseSid.String()
-	defaults["questionnaire_id"] = questionnaireId.String()
+	defaults["questionnaire_id"] = fmt.Sprintf("%016d", rand.Int63n(1e16))
 	defaults["version"] = "v2"
 	defaults["case_type"] = "B"
 	defaults["user_id"] = "UNKNOWN"
