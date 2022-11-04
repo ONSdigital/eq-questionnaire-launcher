@@ -137,7 +137,7 @@ func isSurveyMetadata(key string) bool {
 		"ru_ref",
 		"trad_as",
 		"user_id",
-		"questionnaire_id":
+		"qid":
 		return true
 	}
 	return false
@@ -232,7 +232,7 @@ func generateClaimsV2(claimValues map[string][]string, launcherSchema surveys.La
 	data := make(map[string]interface{})
 
 	if schema.SurveyType == "social" || schema.SurveyType == "health" {
-		receiptingKeys := []string{"questionnaire_id"}
+		receiptingKeys := []string{"qid"}
 		surveyMetadata["receipting_keys"] = receiptingKeys
 	}
 
@@ -694,7 +694,7 @@ func getMandatatoryClaims(surveyType string, defaults map[string]string) []Metad
 	claims := make([]Metadata, 0)
 	if surveyType == "health" || surveyType == "social" {
 		claims = []Metadata{
-			{"questionnaire_id", "false", defaults["questionnaire_id"]},
+			{"qid", "false", defaults["qid"]},
 			{"case_ref", "false", defaults["case_ref"]},
 		}
 
@@ -735,7 +735,7 @@ func GetDefaultValues() map[string]string {
 	collectionExerciseSid, _ := uuid.NewV4()
 
 	defaults["collection_exercise_sid"] = collectionExerciseSid.String()
-	defaults["questionnaire_id"] = fmt.Sprintf("%016d", rand.Int63n(1e16))
+	defaults["qid"] = fmt.Sprintf("%016d", rand.Int63n(1e16))
 	defaults["version"] = "v2"
 	defaults["case_type"] = "B"
 	defaults["user_id"] = "UNKNOWN"
