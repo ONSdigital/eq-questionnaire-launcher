@@ -25,7 +25,7 @@
                 {{ range $surveyType, $schemasList := .Schemas }}
                     <optgroup label="{{ $surveyType }} Surveys">
                         {{ range $schema := $schemasList }}
-                            <option class="{{ $surveyType }}" name="{{ $schema.Name }}" value="{{ $schema.Name }}" data-survey-type="{{ $surveyType }}">{{ $schema.Name }}</option>
+                            <option value="{{ $schema.Name }}" data-survey-type="{{ $surveyType }}">{{ $schema.Name }}</option>
                         {{ end }}
                     </optgroup>
                 {{ end }}
