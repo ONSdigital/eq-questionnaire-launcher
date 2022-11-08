@@ -42,7 +42,7 @@
                 <select name="survey-types" id="schema-url-survey-type">
                     <option selected disabled>Select Survey Type</option>
                     {{ range $surveyType, $schemasList := .Schemas }}
-                    <option name="{{ $surveyType }}" value="{{ $surveyType }}" data-schema-url-survey-type="{{ $surveyType }}">{{ $surveyType }}</option>
+                    <option value="{{ $surveyType }}">{{ $surveyType }}</option>
                 {{ end }}
                 </select>
             </span>
