@@ -3,150 +3,150 @@
 {{define "body"}}
 
 <body onbeforeunload='resetDropdowns();'>
-<h1>Launch a survey</h1>
-<div>
-    <form action="" method="POST" xmlns="http://www.w3.org/1999/html" onsubmit="validateForm()">
+    <h1>Launch a survey</h1>
+    <div>
+        <form action="" method="POST" xmlns="http://www.w3.org/1999/html" onsubmit="validateForm()">
 
-        <strong><u>Launch Pattern</u></strong>
-        <div class="field-container">
-            <label for="launch_pattern">Version</label>
-            <select id="launch_pattern" name="launch_version" class="qa-select-launch-version" onchange="showAllDivs(); displayLaunchButton(false);">
-                <option selected disabled>Select Launch Pattern</option>
-                <option value="v1">v1</option>
-                <option value="v2">v2</option>
-            </select>
-        </div>
-
-        <strong><u>Launch by Schema Name</u></strong>
-        <div class="field-container">
-            <label for="schema_name">Schemas</label>
-            <select id="schema_name" name="schema_name" class="qa-select-schema" onchange="loadMetadataForSchemaName(); displayLaunchButton(false);">
-                <option selected disabled>Select Schema</option>
-
-                {{ range $surveyType, $schemasList := .Schemas }}
-                    <optgroup label="{{ $surveyType }} Surveys">
-                        {{ range $schema := $schemasList }}
-                            <option value="{{ $schema.Name }}" data-survey-type="{{ $surveyType }}">{{ $schema.Name }}</option>
-                        {{ end }}
-                    </optgroup>
-                {{ end }}
-            </select>
-        </div>
-
-        <p>----------</p>
-
-        <strong><u>Launch by Schema URL</u></strong>
-
-        <div class="field-container">
-            <span class="field-container__span">
-                <label for="schema-url-survey-type">Survey Type</label>
-                <select name="survey-types" id="schema-url-survey-type">
-                    <option selected disabled>Select Survey Type</option>
-                    {{ range $surveyType, $schemasList := .Schemas }}
-                    <option value="{{ $surveyType }}">{{ $surveyType }}</option>
-                {{ end }}
+            <strong><u>Launch Pattern</u></strong>
+            <div class="field-container">
+                <label for="launch_pattern">Version</label>
+                <select id="launch_pattern" name="launch_version" class="qa-select-launch-version" onchange="showAllDivs(); displayLaunchButton(false);">
+                    <option selected disabled>Select Launch Pattern</option>
+                    <option value="v1">v1</option>
+                    <option value="v2">v2</option>
                 </select>
-            </span>
-        </div>
+            </div>
 
-        <div class="field-container">
-            <span class="field-container__span">
-                <label for="schema-url">Schema URL</label>
-                <input id="schema-url" name="schema_url" type="text" class="qa-schema_url">
-            </span>
-        </div>
+            <strong><u>Launch by Schema Name</u></strong>
+            <div class="field-container">
+                <label for="schema_name">Schemas</label>
+                <select id="schema_name" name="schema_name" class="qa-select-schema" onchange="loadMetadataForSchemaName(); displayLaunchButton(false);">
+                    <option selected disabled>Select Schema</option>
 
-        <div class="field-container field-container--hidden">
-            <input type="submit" onClick="displayLaunchButton(true); return loadMetadataForSchemaUrl();" value="Load Schema" class="qa-btn-submit-dev btn btn--small" id="schema-url-btn"/>
-        </div>
+                    {{ range $surveyType, $schemasList := .Schemas }}
+                        <optgroup label="{{ $surveyType }} Surveys">
+                            {{ range $schema := $schemasList }}
+                                <option value="{{ $schema.Name }}" data-survey-type="{{ $surveyType }}">{{ $schema.Name }}</option>
+                            {{ end }}
+                        </optgroup>
+                    {{ end }}
+                </select>
+            </div>
 
-        <p>----------</p>
+            <p>----------</p>
 
-        <div id="survey_metadata_fields" class="metadata-fields--hidden">
-        </div>
+            <strong><u>Launch by Schema URL</u></strong>
 
-        <h3 class="group-title--hidden">Survey Metadata</h3>
-        <div id="survey_metadata" class="metadata-fields--hidden">
-            <p>--- Metadata fields will be loaded when you select a version and load a schema ---</p>
-        </div>
+            <div class="field-container">
+                <span class="field-container__span">
+                    <label for="schema-url-survey-type">Survey Type</label>
+                    <select name="survey-types" id="schema-url-survey-type">
+                        <option selected disabled>Select Survey Type</option>
+                        {{ range $surveyType, $schemasList := .Schemas }}
+                        <option value="{{ $surveyType }}">{{ $surveyType }}</option>
+                    {{ end }}
+                    </select>
+                </span>
+            </div>
 
-        <h3 class="group-title--hidden">Required Data</h3>
+            <div class="field-container">
+                <span class="field-container__span">
+                    <label for="schema-url">Schema URL</label>
+                    <input id="schema-url" name="schema_url" type="text" class="qa-schema_url">
+                </span>
+            </div>
 
-        <div class="field-container field-container--hidden">
-            <label for="case_id">Case ID</label>
-            <span class="field-container__span">
-                <input id="case_id" name="case_id" type="text" class="qa-case_id">
-                <img class="field-container__img" onclick="uuid('case_id')" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg==">
-            </span>
-        </div>
+            <div class="field-container field-container--hidden">
+                <input type="submit" onClick="displayLaunchButton(true); return loadMetadataForSchemaUrl();" value="Load Schema" class="qa-btn-submit-dev btn btn--small" id="schema-url-btn"/>
+            </div>
 
-        <div class="field-container field-container--hidden">
-            <label for="response_id">Response ID</label>
-            <span class="field-container__span">
-                <input id="response_id" name="response_id" type="text" class="qa-response_id">
-                <img class="field-container__img" onclick="numericId()" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg==">
-            </span>
-        </div>
+            <p>----------</p>
 
-        <div class="field-container field-container--hidden">
-            <label for="collection_exercise_sid">Collection Exercise SID</label>
-            <span class="field-container__span">
-                <input id="collection_exercise_sid" name="collection_exercise_sid" type="text" class="qa-collection-sid">
-                <img class="field-container__img" onclick="uuid('collection_exercise_sid')" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg==">
-            </span>
-        </div>
+            <div id="survey_metadata_fields" class="metadata-fields--hidden">
+            </div>
 
-        <div class="field-container field-container--hidden">
-            <label for="response_expires_at">Response Expiry Time</label>
-            <span class="field-container__span">
-                <input id="response_expires_at" name="response_expires_at" type="text" class="qa-response-expires-at">
-                <img class="field-container__img" onclick="setResponseExpiry()" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg==">
-            </span>
-        </div>
+            <h3 class="group-title--hidden">Survey Metadata</h3>
+            <div id="survey_metadata" class="metadata-fields--hidden">
+                <p>--- Metadata fields will be loaded when you select a version and load a schema ---</p>
+            </div>
+
+            <h3 class="group-title--hidden">Required Data</h3>
+
+            <div class="field-container field-container--hidden">
+                <label for="case_id">Case ID</label>
+                <span class="field-container__span">
+                    <input id="case_id" name="case_id" type="text" class="qa-case_id">
+                    <img class="field-container__img" onclick="uuid('case_id')" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg==">
+                </span>
+            </div>
+
+            <div class="field-container field-container--hidden">
+                <label for="response_id">Response ID</label>
+                <span class="field-container__span">
+                    <input id="response_id" name="response_id" type="text" class="qa-response_id">
+                    <img class="field-container__img" onclick="numericId()" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg==">
+                </span>
+            </div>
+
+            <div class="field-container field-container--hidden">
+                <label for="collection_exercise_sid">Collection Exercise SID</label>
+                <span class="field-container__span">
+                    <input id="collection_exercise_sid" name="collection_exercise_sid" type="text" class="qa-collection-sid">
+                    <img class="field-container__img" onclick="uuid('collection_exercise_sid')" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg==">
+                </span>
+            </div>
+
+            <div class="field-container field-container--hidden">
+                <label for="response_expires_at">Response Expiry Time</label>
+                <span class="field-container__span">
+                    <input id="response_expires_at" name="response_expires_at" type="text" class="qa-response-expires-at">
+                    <img class="field-container__img" onclick="setResponseExpiry()" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg==">
+                </span>
+            </div>
 
 
-        <h3 class="group-title--hidden">Runner Data</h3>
-        <div class="field-container field-container--hidden">
-            <label for="exp">Token Expiry (seconds)</label>
-            <input id="exp" name="exp" type="text" value="1800" class="qa-token-expiry">
-        </div>
+            <h3 class="group-title--hidden">Runner Data</h3>
+            <div class="field-container field-container--hidden">
+                <label for="exp">Token Expiry (seconds)</label>
+                <input id="exp" name="exp" type="text" value="1800" class="qa-token-expiry">
+            </div>
 
-        <div class="field-container field-container--hidden">
-            <label for="language_code">Language</label>
-            <select id="language_code" name="language_code" class="qa-language-code">
-                <option value="en">English (en)</option>
-                <option value="cy">Cymraeg (cy)</option>
-                <option value="ga">Gaeilge (ga)</option>
-                <option value="eo">Ulstér Scotch (eo)</option>
-                <option value="">&lt;not set&gt;</option>
-            </select>
-        </div>
+            <div class="field-container field-container--hidden">
+                <label for="language_code">Language</label>
+                <select id="language_code" name="language_code" class="qa-language-code">
+                    <option value="en">English (en)</option>
+                    <option value="cy">Cymraeg (cy)</option>
+                    <option value="ga">Gaeilge (ga)</option>
+                    <option value="eo">Ulstér Scotch (eo)</option>
+                    <option value="">&lt;not set&gt;</option>
+                </select>
+            </div>
 
-        <div class="field-container field-container--hidden">
-            <label for="roles">Roles</label>
-            <select id="roles" name="roles" multiple="multiple" class="qa-roles">
-                <option value="flusher">flusher</option>
-                <option value="dumper" selected>dumper</option>
-            </select>
-        </div>
+            <div class="field-container field-container--hidden">
+                <label for="roles">Roles</label>
+                <select id="roles" name="roles" multiple="multiple" class="qa-roles">
+                    <option value="flusher">flusher</option>
+                    <option value="dumper" selected>dumper</option>
+                </select>
+            </div>
 
-        <div class="field-container field-container--hidden">
-            <label for="account_service_url">Account Service URL</label>
-            <input id="account_service_url" name="account_service_url" type="text" value="{{.AccountServiceURL}}" class="qa-account_service_url">
-        </div>
+            <div class="field-container field-container--hidden">
+                <label for="account_service_url">Account Service URL</label>
+                <input id="account_service_url" name="account_service_url" type="text" value="{{.AccountServiceURL}}" class="qa-account_service_url">
+            </div>
 
-        <div class="field-container field-container--hidden">
-            <label for="account_service_log_out_url">Account Service Log Out URL</label>
-            <input id="account_service_log_out_url" name="account_service_log_out_url" type="text" value="{{.AccountServiceLogOutURL}}" class="qa-account_service_log_out_url">
-        </div>
+            <div class="field-container field-container--hidden">
+                <label for="account_service_log_out_url">Account Service Log Out URL</label>
+                <input id="account_service_log_out_url" name="account_service_log_out_url" type="text" value="{{.AccountServiceLogOutURL}}" class="qa-account_service_log_out_url">
+            </div>
 
-        <div class="field-container">
-            <input type="submit" name="action_launch" value="Open Survey" class="qa-btn-submit-dev btn button--hidden" id="submit-btn"/>
-            <input type="submit" name="action_flush" value="Flush Survey Data" class="qa-btn-submit-dev btn button--hidden" id="flush-btn"/>
-        </div>
+            <div class="field-container">
+                <input type="submit" name="action_launch" value="Open Survey" class="qa-btn-submit-dev btn button--hidden" id="submit-btn"/>
+                <input type="submit" name="action_flush" value="Flush Survey Data" class="qa-btn-submit-dev btn button--hidden" id="flush-btn"/>
+            </div>
 
-    </form>
-</div>
+        </form>
+    </div>
 </body>
 <script>
     // uuidv4: from https://github.com/kelektiv/node-uuid

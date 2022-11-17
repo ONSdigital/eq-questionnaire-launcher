@@ -696,7 +696,6 @@ func getMandatatoryClaims(surveyType string, defaults map[string]string) []Metad
 	if surveyType == "health" || surveyType == "social" {
 		claims = []Metadata{
 			{"qid", "false", defaults["qid"]},
-			{"case_ref", "false", defaults["case_ref"]},
 		}
 
 	} else {
