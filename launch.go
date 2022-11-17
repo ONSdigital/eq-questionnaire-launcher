@@ -171,7 +171,6 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("Quick launch request received", schemaURL)
 
-	urlValues.Add("ru_ref", defaultValues["ru_ref"])
 	collectionExerciseSid, _ := uuid.NewV4()
 	caseID, _ := uuid.NewV4()
 	urlValues.Add("collection_exercise_sid", collectionExerciseSid.String())
