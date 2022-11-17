@@ -149,6 +149,7 @@ func isRequiredMetadata(key string) bool {
 		"case_id",
 		"region_code",
 		"channel",
+		"language_code",
 		"collection_exercise_sid",
 		"response_expires_at",
 		"response_id",
