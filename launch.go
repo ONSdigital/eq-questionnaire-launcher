@@ -121,19 +121,28 @@ func getAccountServiceURL(r *http.Request) string {
 func redirectURL(w http.ResponseWriter, r *http.Request) {
 	hostURL := settings.Get("SURVEY_RUNNER_URL")
 
-	token, err := authentication.GenerateTokenFromPost(r.PostForm)
+	launchVersion := r.FormValue("launch_version")
+
+	token := ""
+	err := ""
+
+	if launchVersion == "v2" {
+		token, err = authentication.GenerateTokenFromPost(r.PostForm, true)
+	} else {
+		token, err = authentication.GenerateTokenFromPost(r.PostForm, false)
+	}
+
 	if err != "" {
 		http.Error(w, err, 500)
 		return
 	}
 
-	launchAction := r.PostForm.Get("action_launch")
 	flushAction := r.PostForm.Get("action_flush")
 	log.Println("Request: " + r.PostForm.Encode())
 
 	if flushAction != "" {
 		http.Redirect(w, r, hostURL+"/flush?token="+token, 307)
-	} else if launchAction != "" {
+	} else if launchVersion != "" {
 		http.Redirect(w, r, hostURL+"/session?token="+token, 301)
 	} else {
 		http.Error(w, fmt.Sprintf("Invalid Action"), 500)
@@ -146,10 +155,22 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	AccountServiceLogOutURL := getAccountServiceURL(r)
 	urlValues := r.URL.Query()
 	schemaURL := urlValues.Get("url")
+	version := urlValues.Get("version")
+	launchVersion2 := true
+
 	defaultValues := authentication.GetDefaultValues()
+
+	if version == "" {
+		urlValues.Add("version", defaultValues["version"])
+	} else if version == "v1" {
+		delete(urlValues, "version")
+		launchVersion2 = false
+	} else {
+		urlValues.Add("version", version)
+	}
+
 	log.Println("Quick launch request received", schemaURL)
 
-	urlValues.Add("ru_ref", defaultValues["ru_ref"])
 	collectionExerciseSid, _ := uuid.NewV4()
 	caseID, _ := uuid.NewV4()
 	urlValues.Add("collection_exercise_sid", collectionExerciseSid.String())
@@ -158,7 +179,15 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	urlValues.Add("language_code", defaultValues["language_code"])
 	urlValues.Add("response_expires_at", time.Now().AddDate(0, 0, 7).Format("2006-01-02T15:04:05+00:00"))
 
-	token, err := authentication.GenerateTokenFromDefaults(schemaURL, accountServiceURL, AccountServiceLogOutURL, urlValues)
+	token := ""
+	err := ""
+
+	if launchVersion2 {
+		token, err = authentication.GenerateTokenFromDefaultsV2(schemaURL, accountServiceURL, urlValues)
+	} else {
+		token, err = authentication.GenerateTokenFromDefaults(schemaURL, accountServiceURL, AccountServiceLogOutURL, urlValues)
+	}
+
 	if err != "" {
 		http.Error(w, err, 400)
 		return

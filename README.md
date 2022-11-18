@@ -54,6 +54,12 @@ Now run Go launcher and navigate to "http://localhost:8000/quick-launch?url=" pa
 e.g."http://localhost:8000/quick-launch?url=http://localhost:7777/1_0001.json"
 ```
 
+The optional query parameter `version` can be added to the quick launch url which allows for the launch payload structure to be specified. If the parameter is not set then the default launch payload structure `v2` will be used.
+Documentation on the `v2` structure can be found [here](https://github.com/ONSdigital/ons-schema-definitions/blob/v3/docs/rm_to_eq_runner_payload_v2.rst)
+```
+e.g."http://localhost:8000/quick-launch?url=http://localhost:7777/1_0001.json&version=v1"
+```
+
 ### Notes
 * There are no unit tests yet
 * JWT spec based on http://ons-schema-definitions.readthedocs.io/en/latest/jwt_profile.html
