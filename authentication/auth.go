@@ -124,27 +124,25 @@ type Metadata struct {
 func isSurveyMetadata(key string) bool {
 	switch key {
 	case
-		"case_ref",
-		"case_type",
-		"display_address",
-		"employment_date",
-		"form_type",
-		"period_id",
-		"period_str",
-		"ref_p_end_date",
-		"ref_p_start_date",
-		"ru_name",
-		"ru_ref",
-		"trad_as",
-		"user_id",
-		"qid",
-		"PARTICIPANT_ID",
-		"COLLEX_OPEN_DATE",
-	    "COLLEX_END_DATE",
-	    "FIRST_NAME",
-	    "BLOOD_TEST_BARCODE",
-	    "SWAB_TEST_BARCODE",
-	    "TEST_QUESTIONS":
+        "case_ref",
+        "case_type",
+        "display_address",
+        "employment_date",
+        "form_type",
+        "period_id",
+        "period_str",
+        "ref_p_end_date",
+        "ref_p_start_date",
+        "ru_name",
+        "ru_ref",
+        "trad_as",
+        "user_id",
+        "qid",
+        "PARTICIPANT_ID",
+        "FIRST_NAME",
+        "BLOOD_TEST_BARCODE",
+        "SWAB_TEST_BARCODE",
+        "TEST_QUESTIONS":
 
 		return true
 	}
@@ -773,8 +771,6 @@ func GetDefaultValues() map[string]string {
 	defaults["display_address"] = "68 Abingdon Road, Goathill"
 	defaults["country"] = "E"
 	defaults["PARTICIPANT_ID"] = "ABC-" + fmt.Sprintf("%011d", rand.Int63n(1e11))
-	defaults["COLLEX_OPEN_DATE"] = "17 Oct 2022"
-	defaults["COLLEX_END_DATE"] = "17 Oct 2022"
 	defaults["FIRST_NAME"] = "John"
 	defaults["TEST_QUESTIONS"] = "F"
 
