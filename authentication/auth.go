@@ -776,7 +776,7 @@ func GetDefaultValues() map[string]string {
 	defaults["postcode"] = "PE12 4GH"
 	defaults["display_address"] = "68 Abingdon Road, Goathill"
 	defaults["country"] = "E"
-	defaults["PARTICIPANT_ID"] = "ABC-" + ID
+	defaults["PARTICIPANT_ID"] = PARTICIPANT_ID
 	defaults["FIRST_NAME"] = "John"
 	defaults["TEST_QUESTIONS"] = "F"
 	defaults["WINDOW_START_DATE"] = "2023-03-01"
