@@ -749,7 +749,7 @@ func GetDefaultValues() map[string]string {
 	defaults := make(map[string]string)
 	collectionExerciseSid, _ := uuid.NewV4()
 
-	var ID = fmt.Sprintf("%011d", rand.Int63n(1e11))
+	var PARTICIPANT_ID = "ABC-" + fmt.Sprintf("%011d", rand.Int63n(1e11))
 
 	defaults["collection_exercise_sid"] = collectionExerciseSid.String()
 	defaults["qid"] = fmt.Sprintf("%016d", rand.Int63n(1e16))
