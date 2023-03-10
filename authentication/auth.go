@@ -782,7 +782,7 @@ func GetDefaultValues() map[string]string {
 	defaults["WINDOW_START_DATE"] = "2023-03-01"
 	defaults["WINDOW_END_DATE"] = "2023-03-31"
 	defaults["PORTAL_ID"] = fmt.Sprintf("%07d", rand.Int63n(1e7))
-	defaults["PARTICIPANT_WINDOW_ID"] = "ABC-" + ID + "-" + fmt.Sprintf("%03d", rand.Int63n(1e3))
+	defaults["PARTICIPANT_WINDOW_ID"] = PARTICIPANT_ID + "-" + fmt.Sprintf("%03d", rand.Int63n(1e3))
 
 	return defaults
 }
