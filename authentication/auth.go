@@ -124,25 +124,29 @@ type Metadata struct {
 func isSurveyMetadata(key string) bool {
 	switch key {
 	case
-        "case_ref",
-        "case_type",
-        "display_address",
-        "employment_date",
-        "form_type",
-        "period_id",
-        "period_str",
-        "ref_p_end_date",
-        "ref_p_start_date",
-        "ru_name",
-        "ru_ref",
-        "trad_as",
-        "user_id",
-        "qid",
-        "PARTICIPANT_ID",
-        "FIRST_NAME",
-        "BLOOD_TEST_BARCODE",
-        "SWAB_TEST_BARCODE",
-        "TEST_QUESTIONS":
+		"case_ref",
+		"case_type",
+		"display_address",
+		"employment_date",
+		"form_type",
+		"period_id",
+		"period_str",
+		"ref_p_end_date",
+		"ref_p_start_date",
+		"ru_name",
+		"ru_ref",
+		"trad_as",
+		"user_id",
+		"qid",
+		"PARTICIPANT_ID",
+		"FIRST_NAME",
+		"BLOOD_TEST_BARCODE",
+		"SWAB_TEST_BARCODE",
+		"TEST_QUESTIONS",
+		"WINDOW_START_DATE",
+		"WINDOW_END_DATE",
+		"PORTAL_ID",
+		"PARTICIPANT_WINDOW_ID":
 
 		return true
 	}
@@ -634,11 +638,11 @@ func GetRequiredMetadata(launcherSchema surveys.LauncherSchema) ([]Metadata, str
 
 	for i, value := range schema.Metadata {
 
-	    if strings.Contains(value.Name, "BARCODE") {
-	       schema.Metadata[i].Default = "BAR" + fmt.Sprintf("%08d", rand.Int63n(1e8))
-	    } else {
-	        schema.Metadata[i].Default = defaults[value.Name]
-	    }
+		if strings.Contains(value.Name, "BARCODE") {
+			schema.Metadata[i].Default = "BAR" + fmt.Sprintf("%08d", rand.Int63n(1e8))
+		} else {
+			schema.Metadata[i].Default = defaults[value.Name]
+		}
 
 		if value.Validator == "boolean" {
 			schema.Metadata[i].Default = "false"
@@ -745,6 +749,8 @@ func GetDefaultValues() map[string]string {
 	defaults := make(map[string]string)
 	collectionExerciseSid, _ := uuid.NewV4()
 
+	var PARTICIPANT_ID = "ABC-" + fmt.Sprintf("%011d", rand.Int63n(1e11))
+
 	defaults["collection_exercise_sid"] = collectionExerciseSid.String()
 	defaults["qid"] = fmt.Sprintf("%016d", rand.Int63n(1e16))
 	defaults["version"] = "v2"
@@ -770,10 +776,13 @@ func GetDefaultValues() map[string]string {
 	defaults["postcode"] = "PE12 4GH"
 	defaults["display_address"] = "68 Abingdon Road, Goathill"
 	defaults["country"] = "E"
-	defaults["PARTICIPANT_ID"] = "ABC-" + fmt.Sprintf("%011d", rand.Int63n(1e11))
+	defaults["PARTICIPANT_ID"] = PARTICIPANT_ID
 	defaults["FIRST_NAME"] = "John"
 	defaults["TEST_QUESTIONS"] = "F"
-
+	defaults["WINDOW_START_DATE"] = "2023-03-01"
+	defaults["WINDOW_END_DATE"] = "2023-03-31"
+	defaults["PORTAL_ID"] = fmt.Sprintf("%07d", rand.Int63n(1e7))
+	defaults["PARTICIPANT_WINDOW_ID"] = PARTICIPANT_ID + "-" + fmt.Sprintf("%03d", rand.Int63n(1e3))
 
 	return defaults
 }
