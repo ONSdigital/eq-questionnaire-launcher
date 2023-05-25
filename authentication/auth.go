@@ -124,25 +124,26 @@ type Metadata struct {
 func isSurveyMetadata(key string) bool {
 	switch key {
 	case
-        "case_ref",
-        "case_type",
-        "display_address",
-        "employment_date",
-        "form_type",
-        "period_id",
-        "period_str",
-        "ref_p_end_date",
-        "ref_p_start_date",
-        "ru_name",
-        "ru_ref",
-        "trad_as",
-        "user_id",
-        "qid",
-        "PARTICIPANT_ID",
-        "FIRST_NAME",
-        "BLOOD_TEST_BARCODE",
-        "SWAB_TEST_BARCODE",
-        "TEST_QUESTIONS":
+		"case_ref",
+		"case_type",
+		"display_address",
+		"employment_date",
+		"form_type",
+		"period_id",
+		"period_str",
+		"ref_p_end_date",
+		"ref_p_start_date",
+		"ru_name",
+		"ru_ref",
+		"trad_as",
+		"user_id",
+		"qid",
+		"PARTICIPANT_ID",
+		"FIRST_NAME",
+		"BLOOD_TEST_BARCODE",
+		"SWAB_TEST_BARCODE",
+		"TEST_QUESTIONS",
+		"sds_dataset_id":
 
 		return true
 	}
@@ -634,11 +635,11 @@ func GetRequiredMetadata(launcherSchema surveys.LauncherSchema) ([]Metadata, str
 
 	for i, value := range schema.Metadata {
 
-	    if strings.Contains(value.Name, "BARCODE") {
-	       schema.Metadata[i].Default = "BAR" + fmt.Sprintf("%08d", rand.Int63n(1e8))
-	    } else {
-	        schema.Metadata[i].Default = defaults[value.Name]
-	    }
+		if strings.Contains(value.Name, "BARCODE") {
+			schema.Metadata[i].Default = "BAR" + fmt.Sprintf("%08d", rand.Int63n(1e8))
+		} else {
+			schema.Metadata[i].Default = defaults[value.Name]
+		}
 
 		if value.Validator == "boolean" {
 			schema.Metadata[i].Default = "false"
@@ -714,6 +715,7 @@ func getMandatatoryClaims(surveyType string, defaults map[string]string) []Metad
 			{"ru_ref", "false", defaults["ru_ref"]},
 			{"period_id", "false", defaults["period_id"]},
 			{"user_id", "false", defaults["user_id"]},
+			{"sds_dataset_id", "false", defaults["sds_dataset_id"]},
 		}
 	}
 
@@ -773,7 +775,7 @@ func GetDefaultValues() map[string]string {
 	defaults["PARTICIPANT_ID"] = "ABC-" + fmt.Sprintf("%011d", rand.Int63n(1e11))
 	defaults["FIRST_NAME"] = "John"
 	defaults["TEST_QUESTIONS"] = "F"
-
+	defaults["sds_dataset_id"] = "001"
 
 	return defaults
 }
