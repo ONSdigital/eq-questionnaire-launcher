@@ -143,7 +143,7 @@ func isSurveyMetadata(key string) bool {
 		"BLOOD_TEST_BARCODE",
 		"SWAB_TEST_BARCODE",
 		"TEST_QUESTIONS",
-		"sds_dataset_id":
+		"sds_dataset_id",
 		"WINDOW_START_DATE",
 		"WINDOW_END_DATE",
 		"PORTAL_ID",
