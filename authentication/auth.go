@@ -720,7 +720,6 @@ func getMandatatoryClaims(surveyType string, defaults map[string]string) []Metad
 			{"ru_ref", "false", defaults["ru_ref"]},
 			{"period_id", "false", defaults["period_id"]},
 			{"user_id", "false", defaults["user_id"]},
-			{"sds_dataset_id", "false", defaults["sds_dataset_id"]},
 		}
 	}
 
@@ -751,6 +750,7 @@ func stringInSlice(a string, list []string) bool {
 func GetDefaultValues() map[string]string {
 	defaults := make(map[string]string)
 	collectionExerciseSid, _ := uuid.NewV4()
+	sdsDatasetId, _ := uuid.NewV4()
 
 	var PARTICIPANT_ID = "ABC-" + fmt.Sprintf("%011d", rand.Int63n(1e11))
 
@@ -782,7 +782,7 @@ func GetDefaultValues() map[string]string {
 	defaults["PARTICIPANT_ID"] = PARTICIPANT_ID
 	defaults["FIRST_NAME"] = "John"
 	defaults["TEST_QUESTIONS"] = "F"
-	defaults["sds_dataset_id"] = "001"
+	defaults["sds_dataset_id"] = sdsDatasetId.String()
 	defaults["survey_id"] = "123"
 	defaults["WINDOW_START_DATE"] = "2023-03-01"
 	defaults["WINDOW_END_DATE"] = "2023-03-31"
