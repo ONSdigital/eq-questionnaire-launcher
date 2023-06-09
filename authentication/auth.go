@@ -138,11 +138,13 @@ func isSurveyMetadata(key string) bool {
 		"trad_as",
 		"user_id",
 		"qid",
+		"survey_id",
 		"PARTICIPANT_ID",
 		"FIRST_NAME",
 		"BLOOD_TEST_BARCODE",
 		"SWAB_TEST_BARCODE",
 		"TEST_QUESTIONS",
+		"sds_dataset_id",
 		"WINDOW_START_DATE",
 		"WINDOW_END_DATE",
 		"PORTAL_ID",
@@ -748,6 +750,7 @@ func stringInSlice(a string, list []string) bool {
 func GetDefaultValues() map[string]string {
 	defaults := make(map[string]string)
 	collectionExerciseSid, _ := uuid.NewV4()
+	sdsDatasetId, _ := uuid.NewV4()
 
 	var PARTICIPANT_ID = "ABC-" + fmt.Sprintf("%011d", rand.Int63n(1e11))
 
@@ -779,6 +782,8 @@ func GetDefaultValues() map[string]string {
 	defaults["PARTICIPANT_ID"] = PARTICIPANT_ID
 	defaults["FIRST_NAME"] = "John"
 	defaults["TEST_QUESTIONS"] = "F"
+	defaults["sds_dataset_id"] = sdsDatasetId.String()
+	defaults["survey_id"] = "123"
 	defaults["WINDOW_START_DATE"] = "2023-03-01"
 	defaults["WINDOW_END_DATE"] = "2023-03-31"
 	defaults["PORTAL_ID"] = fmt.Sprintf("%07d", rand.Int63n(1e7))
