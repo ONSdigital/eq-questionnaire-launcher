@@ -2,6 +2,8 @@ package main // import "github.com/ONSdigital/eq-questionnaire-launcher"
 
 import (
 	"fmt"
+	"github.com/ONSdigital/eq-questionnaire-launcher/clients"
+	"io/ioutil"
 	"time"
 
 	"html/template"
@@ -20,6 +22,10 @@ import (
 	"github.com/gorilla/mux"
 	"gopkg.in/square/go-jose.v2/json"
 )
+
+type DatasetMetadata struct {
+	dataset_id string
+}
 
 func randomNumericString(n int) string {
 	var letter = []rune("0123456789")
@@ -102,6 +108,36 @@ func getMetadataHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(metadataJSON))
 
 	return
+}
+
+func getSupplementaryDataHandler(w http.ResponseWriter, r *http.Request) {
+	surveyId := r.URL.Query().Get("survey_id")
+	periodId := r.URL.Query().Get("period_id")
+
+	// datasetList := []DatasetMetadata{}
+
+	apiUrl := settings.Get("SDS_API_URL")
+
+	log.Printf("SDS Api URL: %s", apiUrl)
+
+	url := fmt.Sprintf("%s/v1/dataset_metadata?survey_id=%s&period_id=%s", apiUrl, surveyId, periodId)
+
+	resp, err := clients.GetHTTPClient().Get(url)
+
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Fetching supplementary datasets err: %v", err), 500)
+		return
+	}
+
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	resp.Body.Close()
+
+	var datasets DatasetMetadata
+	if err := json.Unmarshal(responseBody, &datasets); err != nil {
+		log.Print(err)
+		//return datasets
+	}
+	//return responseBody
 }
 
 func getAccountServiceURL(r *http.Request) string {
@@ -207,6 +243,7 @@ func main() {
 	r.HandleFunc("/", getLaunchHandler).Methods("GET")
 	r.HandleFunc("/", postLaunchHandler).Methods("POST")
 	r.HandleFunc("/metadata", getMetadataHandler).Methods("GET")
+	r.HandleFunc("/supplementary-data", getSupplementaryDataHandler).Methods("GET")
 
 	//Author Launcher with passed parameters in Url
 	r.HandleFunc("/quick-launch", quickLauncherHandler).Methods("GET")
