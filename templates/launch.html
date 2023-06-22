@@ -329,14 +329,14 @@
                 console.log(JSON.stringify(survey_id))
                 console.log(JSON.stringify(period_id))
                 if (survey_id && period_id) {
-                    const sds_dataset_metadata_url = `http://localhost:5003/v1/dataset_metadata?survey_id=${survey_id}&period_id=${period_id}`
+                    const sds_dataset_metadata_url = `/supplementary-data?survey_id=${survey_id}&period_id=${period_id}`
                     return Promise.all([schema_response, getDataAsync(sds_dataset_metadata_url)])
                 } else {
                     // error
                 }
             })
             .then(([schema_response, sds_metadata_response]) => {
-                console.log(`Got ${sds_metadata_response}`)
+                console.log(sds_metadata_response)
                 document.querySelector("#survey_metadata").innerHTML = ""
 
                 if (schema_response.length > 0) {
@@ -375,7 +375,7 @@
                             metadataFieldHtml = `<div class="field-container">` +
                                 `<label for="${metadataField['name']}">${metadataField['name']}</label>` +
                                 `<select id="${metadataField['name']}" name="${metadataField['name']}" class="qa-${metadataField['name']}">` +
-                                sds_metadata_response.map(dataset_id => `<option value="${dataset_id}">${dataset_id}</option>`).join("") +
+                                sds_metadata_response.map(dataset => `<option value="${dataset.dataset_id}">${dataset.dataset_id}</option>`).join("") +
                                 "</select></div>"
                             console.log(metadataFieldHtml)
                         } else {
