@@ -20,6 +20,7 @@ func init() {
 	setSetting("SURVEY_RUNNER_SCHEMA_URL", Get("SURVEY_RUNNER_URL"))
 	setSetting("SCHEMA_VALIDATOR_URL", "")
 	setSetting("SURVEY_REGISTER_URL", "")
+	setSetting("SDS_API_URL", "http://localhost:5003")
 	setSetting("JWT_ENCRYPTION_KEY_PATH", "jwt-test-keys/sdc-user-authentication-encryption-sr-public-key.pem")
 	setSetting("JWT_SIGNING_KEY_PATH", "jwt-test-keys/sdc-user-authentication-signing-launcher-private-key.pem")
 }

@@ -278,6 +278,21 @@
         }
     }
 
+    function loadSurveySupplementaryDatasets(schema_name, survey_id, period_id) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4) {
+                if (this.status == 200) {
+                    var response = JSON.parse(this.responseText);
+                    console.log(response);
+                }
+            }
+        }
+        let queryParam = `survey_id=${survey_id}&period_id=${period_id}`
+        xhttp.open("GET", `/v1/dataset_metadata?${queryParam}`, true);
+        xhttp.send();
+    }
+
     function loadSchemaMetadata(schemaName, schemaUrl) {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
@@ -320,6 +335,13 @@
                                     "</span>" +
                                     "</div>"
 
+                            } else if (metadataField['name'] == "sds_dataset_id"){
+                                metadataFieldHtml = `<div class="field-container">` +
+                                    `<label for="${metadataField['name']}">${metadataField['name']}</label>` +
+                                    `<select id="${metadataField['name']}" name="${metadataField['name']}" class="qa-${metadataField['name']}">` +
+                                    [1, 2, 3].map(dataset_id => `<option value="${dataset_id}">${dataset_id}</option>`).join("") +
+                                    "</select></div>"
+                                console.log(metadataFieldHtml)
                             } else {
                                 metadataFieldHtml = "<div class=\"field-container\">" +
                                     "<label for=\"" + metadataField['name'] + "\">" + metadataField['name'] + "</label>" +
