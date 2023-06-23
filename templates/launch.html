@@ -70,6 +70,11 @@
                 <p>--- Metadata fields will be loaded when you select a version and load a schema ---</p>
             </div>
 
+            <h3 class="group-title--hidden">Supplementary Data</h3>
+            <div id="supplementary_data" class="supplementary-data-fields--hidden">
+                <p>--- Supplementary data fields will be loaded when you select a version, schema and supplementary dataset ---</p>
+            </div>
+
             <h3 class="group-title--hidden">Required Data</h3>
 
             <div class="field-container field-container--hidden">
@@ -152,12 +157,21 @@
     // uuidv4: from https://github.com/kelektiv/node-uuid
     !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var n;n="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this,n.uuidv4=e()}}(function(){return function e(n,r,o){function t(f,u){if(!r[f]){if(!n[f]){var a="function"==typeof require&&require;if(!u&&a)return a(f,!0);if(i)return i(f,!0);var d=new Error("Cannot find module '"+f+"'");throw d.code="MODULE_NOT_FOUND",d}var p=r[f]={exports:{}};n[f][0].call(p.exports,function(e){var r=n[f][1][e];return t(r?r:e)},p,p.exports,e,n,r,o)}return r[f].exports}for(var i="function"==typeof require&&require,f=0;f<o.length;f++)t(o[f]);return t}({1:[function(e,n,r){function o(e,n){var r=n||0,o=t;return[o[e[r++]],o[e[r++]],o[e[r++]],o[e[r++]],"-",o[e[r++]],o[e[r++]],"-",o[e[r++]],o[e[r++]],"-",o[e[r++]],o[e[r++]],"-",o[e[r++]],o[e[r++]],o[e[r++]],o[e[r++]],o[e[r++]],o[e[r++]]].join("")}for(var t=[],i=0;i<256;++i)t[i]=(i+256).toString(16).substr(1);n.exports=o},{}],2:[function(e,n,r){var o="undefined"!=typeof crypto&&crypto.getRandomValues&&crypto.getRandomValues.bind(crypto)||"undefined"!=typeof msCrypto&&"function"==typeof window.msCrypto.getRandomValues&&msCrypto.getRandomValues.bind(msCrypto);if(o){var t=new Uint8Array(16);n.exports=function(){return o(t),t}}else{var i=new Array(16);n.exports=function(){for(var e,n=0;n<16;n++)0===(3&n)&&(e=4294967296*Math.random()),i[n]=e>>>((3&n)<<3)&255;return i}}},{}],3:[function(e,n,r){function o(e,n,r){var o=n&&r||0;"string"==typeof e&&(n="binary"===e?new Array(16):null,e=null),e=e||{};var f=e.random||(e.rng||t)();if(f[6]=15&f[6]|64,f[8]=63&f[8]|128,n)for(var u=0;u<16;++u)n[o+u]=f[u];return n||i(f)}var t=e("./lib/rng"),i=e("./lib/bytesToUuid");n.exports=o},{"./lib/bytesToUuid":1,"./lib/rng":2}]},{},[3])(3)});
 
+    //debugger
+    // store fetch so it only needs to be re-done if the survey changes
+    let supplementaryDataSets = null;
+
     function clearSurveyMetadataFields() {
         document.querySelector('#survey_metadata_fields').innerHTML = ""
+        document.querySelector('#supplementary_data').innerHTML = ""
     }
 
     function showAllDivs() {
         document.querySelectorAll("#survey_metadata, .field-container--hidden, .group-title--hidden").forEach(function (element) {
+            element.style.display = 'block';
+        });
+        // TODO only render if selected survey uses supplementary data?
+        document.querySelectorAll("#supplementary_data, .field-container--hidden, .group-title--hidden").forEach(function (element) {
             element.style.display = 'block';
         });
 
@@ -176,6 +190,7 @@
         let formTypeValue = schema_name.split("_").slice(1).join("_")
 
         document.querySelector('#survey_metadata_fields').style.display = "block";
+        document.querySelector('#supplementary_data').style.display = "block";
 
         if (launchPattern === "v1") {
             document.querySelector('#survey_metadata_fields').innerHTML = `
@@ -280,16 +295,12 @@
 
     async function getDataAsync(queryParam) {
         return new Promise((resolve, reject) => {
-            console.log(`GETing ${queryParam}`)
-            var xhttp = new XMLHttpRequest();
+            let xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
-                if (this.readyState == 4) {
-                    console.log(`Ready state 4`)
-                    if (this.status == 200) {
-                        console.log(`Status 200`)
+                if (this.readyState === 4) {
+                    if (this.status === 200) {
                         resolve(JSON.parse(this.responseText))
                     } else {
-                        console.log(this.responseText)
                         reject(`Request failed. ${this.responseText}`)
                     }
                 }
@@ -302,12 +313,10 @@
     function getLabelFor(fieldName){
         return `<label for="${fieldName}">${fieldName}</label>`
     }
-    function getInputField(fieldName, type, defaultValue=null){
+    function getInputField(fieldName, type, defaultValue=null, isReadOnly=false){
         const value = defaultValue ? `value=${defaultValue}` : ''
-        return `<input id="${fieldName}" name="${fieldName}" type="${type}" ${value} class="qa-${fieldName}">`
-    }
-    function getDropDownField(fieldName, options) {
-        return `<select id="${fieldName}" name="${fieldName}" class="qa-${fieldName}">${options.join("")}</select>`
+        const readOnly = isReadOnly ? 'readonly' : ''
+        return `<input ${readOnly} id="${fieldName}" name="${fieldName}" type="${type}" ${value} class="qa-${fieldName}">`
     }
 
     function loadSchemaMetadata(schemaName, schemaUrl) {
@@ -317,11 +326,9 @@
         }
         getDataAsync(survey_data_url)
             .then(schema_response => {
-                console.log(schema_response)
                 const survey_id = schema_response.find(f => f["name"] === "survey_id")?.["default"]
                 const period_id = schema_response.find(f => f["name"] === "period_id")?.["default"]
-                console.log(JSON.stringify(survey_id))
-                console.log(JSON.stringify(period_id))
+
                 if (survey_id && period_id) {
                     const sds_dataset_metadata_url = `/supplementary-data?survey_id=${survey_id}&period_id=${period_id}`
                     return Promise.all([schema_response, getDataAsync(sds_dataset_metadata_url)])
@@ -331,24 +338,22 @@
                 }
             })
             .then(([schema_response, sds_metadata_response]) => {
-                console.log(sds_metadata_response)
-                document.querySelector("#survey_metadata").innerHTML = ""
+                document.querySelector("#survey_metadata").innerHTML = "";
+                document.querySelector("#survey_metadata").innerHTML = "";
 
                 if (schema_response.length > 0) {
-                    for (var i = 0; i < schema_response.length; i++) {
-                        metadataField = schema_response[i]
+                    document.querySelector("#survey_metadata").innerHTML = schema_response.map(metadataField => {
 
-                        var defaultValue = metadataField['name'];
+                        const fieldName = metadataField["name"]
+                        let defaultValue = metadataField['default'];
 
                         if (metadataField['type'] === "date") {
-                            var currentDate = new Date()
-                            defaultValue = currentDate.getFullYear() + "-" + ('0' + (currentDate.getMonth() + 1)).slice(-2) + "-" + ('0' + currentDate.getDate()).slice(-2)
+                            const currentDate = new Date()
+                            // format as yyyy-MM-dd
+                            defaultValue = currentDate.toLocaleDateString().split("/").reverse().join("-")
                         }
 
-                        defaultValue = metadataField['default']
-                        const fieldName = metadataField["name"]
-
-                        const metadataFieldHtml = `<div class="field-container">${getLabelFor(fieldName)}${
+                        return `<div class="field-container">${getLabelFor(fieldName)}${
                             (() => {
                                 if (metadataField['type'] === "boolean") {
                                     return getInputField(fieldName, "checkbox");
@@ -361,20 +366,25 @@
                                     );
                                 }
                                 else if (fieldName === "sds_dataset_id") {
-                                    return getDropDownField(fieldName, sds_metadata_response.map(dataset =>
-                                        `<option value="${dataset.dataset_id}">${dataset.dataset_id}</option>`
-                                    ));
+                                    return (
+                                        `<select onchange="loadSupplementaryDataInfo()" id="${fieldName}" name="${fieldName}" class="qa-${fieldName}">` +
+                                        sds_metadata_response.map(dataset => `<option value="${dataset.dataset_id}">${dataset.dataset_id}</option>`) +
+                                        `</select>`
+                                    )
                                 }
                                 else {
                                     return getInputField(fieldName, "text", defaultValue)
                                 }
                             })()
                         }</div>`
-
-                        document.querySelector("#survey_metadata").innerHTML = document.querySelector("#survey_metadata").innerHTML + metadataFieldHtml;
-                    }
+                    }).join("")
                 } else {
                     document.querySelector("#survey_metadata").innerHTML = "No metadata required for this survey";
+                }
+
+                if (sds_metadata_response) {
+                    supplementaryDataSets = sds_metadata_response
+                    loadSupplementaryDataInfo()
                 }
 
                 document.querySelector("#flush-btn").style.display = 'inline-block';
@@ -385,21 +395,33 @@
             })
     }
 
+    function loadSupplementaryDataInfo () {
+        const selectedDatasetId = document.getElementById("sds_dataset_id").value;
+        const selectedDataset = supplementaryDataSets?.find(d => d["dataset_id"] === selectedDatasetId)
+
+        selectedDataset && (
+            // TODO might want to only show some of these
+            document.querySelector("#supplementary_data").innerHTML = Object.keys(selectedDataset).map(
+                key => `<div class="field-container">${getLabelFor(key)}${getInputField(selectedDataset[key], "text", selectedDataset[key], true)}</div>`
+            ).join('')
+        )
+    }
+
     function uuid(el_id) {
         document.querySelector(`#${el_id}`).value = uuidv4();
     }
 
     function numericId() {
-        var result = '';
-        var chars = '0123456789';
-        for (var i = 16; i > 0; --i) {
+        let result = '';
+        let chars = '0123456789';
+        for (let i = 16; i > 0; --i) {
             result += chars[Math.round(Math.random() * (chars.length - 1))];
         }
         document.querySelector(`#response_id`).value = result;
     }
 
     function setResponseExpiry(days_offset=7) {
-        var dt = new Date();
+        let dt = new Date();
         dt.setDate(dt.getDate()+days_offset)
         document.querySelector('#response_expires_at').value=dt.toISOString().replace(/(\.\d*)/, '').replace(/Z/, '+00:00');
     }

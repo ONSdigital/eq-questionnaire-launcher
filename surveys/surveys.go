@@ -208,7 +208,6 @@ func GetSupplementaryDataSets(surveyId string, periodId string) []DatasetMetadat
 		log.Print(err)
 		return datasetList
 	}
-	log.Print(response)
 	return response
 }
 

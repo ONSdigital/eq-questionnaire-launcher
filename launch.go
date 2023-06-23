@@ -107,9 +107,10 @@ func getMetadataHandler(w http.ResponseWriter, r *http.Request) {
 func getSupplementaryDataHandler(w http.ResponseWriter, r *http.Request) {
 	surveyId := r.URL.Query().Get("survey_id")
 	periodId := r.URL.Query().Get("period_id")
+
 	datasets := surveys.GetSupplementaryDataSets(surveyId, periodId)
-	log.Print(datasets)
 	datasetJSON, _ := json.Marshal(datasets)
+
 	w.Write([]byte(datasetJSON))
 }
 
