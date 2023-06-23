@@ -21,10 +21,6 @@ import (
 	"gopkg.in/square/go-jose.v2/json"
 )
 
-type DatasetMetadata struct {
-	dataset_id string
-}
-
 func randomNumericString(n int) string {
 	var letter = []rune("0123456789")
 
