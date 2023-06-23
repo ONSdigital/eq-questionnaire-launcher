@@ -70,9 +70,8 @@
                 <p>--- Metadata fields will be loaded when you select a version and load a schema ---</p>
             </div>
 
-            <h3 class="group-title--hidden">Supplementary Data</h3>
-            <div id="supplementary_data" class="supplementary-data-fields--hidden">
-                <p>--- Supplementary data fields will be loaded when you select a version, schema and supplementary dataset ---</p>
+            <h3 class="supplementary-data--hidden">Supplementary Data</h3>
+            <div class="supplementary-data--hidden" id="supplementary_data">
             </div>
 
             <h3 class="group-title--hidden">Required Data</h3>
@@ -162,15 +161,19 @@
 
     function clearSurveyMetadataFields() {
         document.querySelector('#survey_metadata_fields').innerHTML = ""
-        document.querySelector('#supplementary_data').innerHTML = ""
+        hideSupplementaryData()
+    }
+
+    function showSupplementaryData () {
+        document.querySelectorAll(".supplementary-data--hidden").forEach(element => element.style.display = 'block');
+    }
+
+    function hideSupplementaryData () {
+        document.querySelectorAll(".supplementary-data--hidden").forEach(element => element.style.display = 'none');
     }
 
     function showAllDivs() {
         document.querySelectorAll("#survey_metadata, .field-container--hidden, .group-title--hidden").forEach(function (element) {
-            element.style.display = 'block';
-        });
-        // TODO only render if selected survey uses supplementary data?
-        document.querySelectorAll("#supplementary_data, .field-container--hidden, .group-title--hidden").forEach(function (element) {
             element.style.display = 'block';
         });
 
@@ -323,6 +326,7 @@
         if (schemaUrl ){
             survey_data_url += `&schema_url=${schemaUrl}`
         }
+        hideSupplementaryData()
         getDataAsync(survey_data_url)
             .then(schema_response => {
                 const survey_id = schema_response.find(f => f["name"] === "survey_id")?.["default"]
@@ -383,6 +387,7 @@
 
                 if (sds_metadata_response) {
                     supplementaryDataSets = sds_metadata_response
+                    showSupplementaryData()
                     loadSupplementaryDataInfo()
                 }
 
