@@ -2,6 +2,7 @@ package surveys
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"regexp"
 
@@ -185,30 +186,27 @@ func FindSurveyByName(name string) LauncherSchema {
 	panic("Schema not found")
 }
 
-func GetSupplementaryDataSets(surveyId string, periodId string) []DatasetMetadata {
+func GetSupplementaryDataSets(surveyId string, periodId string) ([]DatasetMetadata, error) {
 	datasetList := []DatasetMetadata{}
 	hostURL := settings.Get("SDS_API_URL")
 	log.Printf("SDS Api URL: %s", hostURL)
 	url := fmt.Sprintf("%s/v1/dataset_metadata?survey_id=%s&period_id=%s", hostURL, surveyId, periodId)
 	resp, err := clients.GetHTTPClient().Get(url)
 
-	if err != nil {
-		return datasetList
-	}
-	if resp.StatusCode != 200 {
-		return datasetList
+	if err != nil || resp.StatusCode != 200 {
+		return datasetList, errors.New("unable to fetch supplementary data")
 	}
 	responseBody, err := ioutil.ReadAll(resp.Body)
-	resp.Body.Close()
+	defer resp.Body.Close()
 	if err != nil {
-		return datasetList
+		return datasetList, errors.New("unable to read response body of supplementary data")
 	}
-	var response = []DatasetMetadata{}
-	if err := json.Unmarshal(responseBody, &response); err != nil {
+
+	if err := json.Unmarshal(responseBody, &datasetList); err != nil {
 		log.Print(err)
-		return datasetList
+		return datasetList, errors.New(fmt.Sprintf("%v", err))
 	}
-	return response
+	return datasetList, nil
 }
 
 // Return a LauncherSchema instance by loading schema from name or URL

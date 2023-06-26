@@ -394,8 +394,8 @@
                 document.querySelector("#flush-btn").style.display = 'inline-block';
             })
             .catch(err => {
-                document.querySelector("#survey_metadata").innerHTML = "Failed to load Schema Metadata";
-                alert("Failed to load Schema Metadata")
+                document.querySelector("#survey_metadata").innerHTML = "Failed to load Schema or SDS Dataset Metadata";
+                alert(`Failed to load Schema Metadata or SDS Dataset\n${err}`)
             })
     }
 
