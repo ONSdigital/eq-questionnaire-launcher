@@ -193,8 +193,11 @@ func GetSupplementaryDataSets(surveyId string, periodId string) ([]DatasetMetada
 	url := fmt.Sprintf("%s/v1/dataset_metadata?survey_id=%s&period_id=%s", hostURL, surveyId, periodId)
 	resp, err := clients.GetHTTPClient().Get(url)
 
-	if err != nil || resp.StatusCode != 200 {
+	if err != nil || (resp.StatusCode != 200 && resp.StatusCode != 404){
 		return datasetList, errors.New("unable to fetch supplementary data")
+	}
+	if resp.StatusCode == 404 {
+		return datasetList, nil
 	}
 	responseBody, err := ioutil.ReadAll(resp.Body)
 	defer resp.Body.Close()

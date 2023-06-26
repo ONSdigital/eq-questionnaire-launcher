@@ -84,22 +84,22 @@ func postLaunchHandler(w http.ResponseWriter, r *http.Request) {
 	redirectURL(w, r)
 }
 
-func getMetadataHandler(w http.ResponseWriter, r *http.Request) {
+func getSurveyDataHandler(w http.ResponseWriter, r *http.Request) {
 	schemaName := r.URL.Query().Get("schema_name")
 	schemaUrl := r.URL.Query().Get("schema_url")
 
 	launcherSchema := surveys.GetLauncherSchema(schemaName, schemaUrl)
 
-	metadata, err := authentication.GetRequiredMetadata(launcherSchema)
+	surveyData, err := authentication.GetSurveyData(launcherSchema)
 
 	if err != "" {
 		http.Error(w, fmt.Sprintf("GetRequiredMetadata err: %v", err), 500)
 		return
 	}
 
-	metadataJSON, _ := json.Marshal(metadata)
+	surveyDataJSON, _ := json.Marshal(surveyData)
 
-	w.Write([]byte(metadataJSON))
+	w.Write([]byte(surveyDataJSON))
 
 	return
 }
@@ -220,7 +220,7 @@ func main() {
 	// Launch handlers
 	r.HandleFunc("/", getLaunchHandler).Methods("GET")
 	r.HandleFunc("/", postLaunchHandler).Methods("POST")
-	r.HandleFunc("/metadata", getMetadataHandler).Methods("GET")
+	r.HandleFunc("/survey-data", getSurveyDataHandler).Methods("GET")
 	r.HandleFunc("/supplementary-data", getSupplementaryDataHandler).Methods("GET")
 
 	//Author Launcher with passed parameters in Url

@@ -322,25 +322,29 @@
     }
 
     function loadSchemaMetadata(schemaName, schemaUrl) {
-        let survey_data_url = `/metadata?schema_name=${schemaName}`
+        let survey_data_url = `/survey-data?schema_name=${schemaName}`
         if (schemaUrl ){
             survey_data_url += `&schema_url=${schemaUrl}`
         }
         hideSupplementaryData()
         getDataAsync(survey_data_url)
             .then(schema_response => {
-                const survey_id = schema_response.find(f => f["name"] === "survey_id")?.["default"]
-                const period_id = schema_response.find(f => f["name"] === "period_id")?.["default"]
+                console.log(schema_response)
+                const survey_id = schema_response.survey_id
+                const period_id = schema_response.metadata.find(f => f["name"] === "period_id")?.["default"]
 
                 if (survey_id && period_id) {
                     const sds_dataset_metadata_url = `/supplementary-data?survey_id=${survey_id}&period_id=${period_id}`
-                    return Promise.all([schema_response, getDataAsync(sds_dataset_metadata_url)])
+                    return Promise.all([schema_response.metadata, getDataAsync(sds_dataset_metadata_url)])
                 } else {
                     // not all metadata has survey_id & period_id
-                    return [schema_response, null]
+                    return [schema_response.metadata, null]
                 }
             })
             .then(([schema_response, sds_metadata_response]) => {
+                debugger
+                console.log(schema_response)
+                console.log(sds_metadata_response)
                 document.querySelector("#survey_metadata").innerHTML = "";
                 document.querySelector("#survey_metadata").innerHTML = "";
 
@@ -400,7 +404,7 @@
     }
 
     function loadSupplementaryDataInfo () {
-        const selectedDatasetId = document.getElementById("sds_dataset_id").value;
+        const selectedDatasetId = document.getElementById("sds_dataset_id")?.value;
         const selectedDataset = supplementaryDataSets?.find(d => d["dataset_id"] === selectedDatasetId)
         selectedDataset && (
             // TODO might want to only show some of these
