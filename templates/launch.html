@@ -333,7 +333,6 @@
     function updateSDSDropdown() {
         const surveyId = document.getElementById("survey_id")?.value;
         const periodId = document.getElementById("period_id")?.value;
-        hideSupplementaryData()
         loadSDSDatasetMetadata(surveyId, periodId)
             .then(sds_metadata_response => {
                 if (sds_metadata_response?.length) {
@@ -343,6 +342,12 @@
                         `<option value="${dataset.dataset_id}">${dataset.dataset_id}</option>`)
                         .join("");
                     loadSupplementaryDataInfo()
+                    displayLaunchButton(false)
+                } else {
+                    hideSupplementaryData()
+                    document.querySelector("#sds_dataset_id").innerHTML = null
+                    document.querySelector(`#submit-btn`).style.display = 'none';
+                    document.querySelector("#flush-btn").style.display = 'none';
                 }
             })
     }
