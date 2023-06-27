@@ -112,7 +112,7 @@ type QuestionnaireSchema struct {
 	Metadata   []Metadata `json:"metadata"`
 	SchemaName string     `json:"schema_name"`
 	SurveyType string     `json:"theme"`
-	SurveyId   string 	  `json:"survey_id"`
+	SurveyId   string     `json:"survey_id"`
 }
 
 // Metadata is a representation of the metadata within the schema with an additional `Default` value
@@ -630,7 +630,6 @@ func GenerateTokenFromPost(postValues url.Values, launchVersion2 bool) (string, 
 	return token, ""
 }
 
-// GetRequiredMetadata Gets the required metadata from a schema
 func GetSurveyData(launcherSchema surveys.LauncherSchema) (QuestionnaireSchema, string) {
 	schema, error := getSchema(launcherSchema)
 	if error != "" {
@@ -668,6 +667,7 @@ func GetSurveyData(launcherSchema surveys.LauncherSchema) (QuestionnaireSchema, 
 	return schema, ""
 }
 
+// GetRequiredMetadata Gets the required metadata from a schema
 func GetRequiredMetadata(launcherSchema surveys.LauncherSchema) ([]Metadata, string) {
 	surveyData, err := GetSurveyData(launcherSchema)
 	return surveyData.Metadata, err
