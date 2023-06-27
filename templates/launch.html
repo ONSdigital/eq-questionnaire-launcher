@@ -315,10 +315,36 @@
     function getLabelFor(fieldName){
         return `<label for="${fieldName}">${fieldName}</label>`
     }
-    function getInputField(fieldName, type, defaultValue=null, isReadOnly=false){
+
+    function getInputField(fieldName, type, defaultValue=null, isReadOnly=false, onChangeCallback=null){
         const value = defaultValue ? `value="${defaultValue}"` : ''
         const readOnly = isReadOnly ? 'readonly' : ''
-        return `<input ${readOnly} id="${fieldName}" name="${fieldName}" type="${type}" ${value} class="qa-${fieldName}">`
+        return `<input ${readOnly} id="${fieldName}" name="${fieldName}" type="${type}" ${value} class="qa-${fieldName}" onchange="${onChangeCallback}">`
+    }
+
+    async function loadSDSDatasetMetadata(survey_id, period_id) {
+        if (survey_id && period_id) {
+            const sds_dataset_metadata_url = `/supplementary-data?survey_id=${survey_id}&period_id=${period_id}`
+            return await getDataAsync(sds_dataset_metadata_url)
+        }
+        return null
+    }
+
+    function updateSDSDropdown() {
+        const surveyId = document.getElementById("survey_id")?.value;
+        const periodId = document.getElementById("period_id")?.value;
+        hideSupplementaryData()
+        loadSDSDatasetMetadata(surveyId, periodId)
+            .then(sds_metadata_response => {
+                if (sds_metadata_response?.length) {
+                    supplementaryDataSets = sds_metadata_response
+                    showSupplementaryData()
+                    document.querySelector("#sds_dataset_id").innerHTML = sds_metadata_response.map(dataset =>
+                        `<option value="${dataset.dataset_id}">${dataset.dataset_id}</option>`)
+                        .join("");
+                    loadSupplementaryDataInfo()
+                }
+            })
     }
 
     function loadSchemaMetadata(schemaName, schemaUrl) {
@@ -329,18 +355,6 @@
         hideSupplementaryData()
         getDataAsync(survey_data_url)
             .then(schema_response => {
-                const survey_id = schema_response.survey_id
-                const period_id = schema_response.metadata.find(f => f["name"] === "period_id")?.["default"]
-
-                if (survey_id && period_id) {
-                    const sds_dataset_metadata_url = `/supplementary-data?survey_id=${survey_id}&period_id=${period_id}`
-                    return Promise.all([schema_response, getDataAsync(sds_dataset_metadata_url)])
-                } else {
-                    // not all metadata has survey_id & period_id
-                    return [schema_response, null]
-                }
-            })
-            .then(([schema_response, sds_metadata_response]) => {
                 document.querySelector("#survey_metadata").innerHTML = "";
                 document.querySelector("#survey_metadata").innerHTML = "";
 
@@ -368,15 +382,11 @@
                                         `</span>`
                                     );
                                 }
-                                else if (fieldName === "survey_id" && sds_metadata_response) {
-                                    return getInputField(fieldName, "text", schema_response.survey_id);
+                                else if (fieldName === "survey_id" || fieldName === "period_id") {
+                                    return getInputField(fieldName, "text", fieldName === "survey_id" ? schema_response.survey_id : defaultValue, false, "updateSDSDropdown()");
                                 }
                                 else if (fieldName === "sds_dataset_id") {
-                                    return (
-                                        `<select onchange="loadSupplementaryDataInfo()" id="${fieldName}" name="${fieldName}" class="qa-${fieldName}">` +
-                                        sds_metadata_response.map(dataset => `<option value="${dataset.dataset_id}">${dataset.dataset_id}</option>`) +
-                                        `</select>`
-                                    )
+                                    return `<select id="${fieldName}" name="${fieldName}" class="qa-${fieldName}" onchange="loadSupplementaryDataInfo()"></select>`
                                 }
                                 else {
                                     return getInputField(fieldName, "text", defaultValue)
@@ -384,14 +394,9 @@
                             })()
                         }</div>`
                     }).join("")
+                    updateSDSDropdown()
                 } else {
                     document.querySelector("#survey_metadata").innerHTML = "No metadata required for this survey";
-                }
-
-                if (sds_metadata_response) {
-                    supplementaryDataSets = sds_metadata_response
-                    showSupplementaryData()
-                    loadSupplementaryDataInfo()
                 }
 
                 document.querySelector("#flush-btn").style.display = 'inline-block';
