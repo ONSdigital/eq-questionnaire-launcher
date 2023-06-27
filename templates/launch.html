@@ -334,18 +334,18 @@
 
                 if (survey_id && period_id) {
                     const sds_dataset_metadata_url = `/supplementary-data?survey_id=${survey_id}&period_id=${period_id}`
-                    return Promise.all([schema_response.metadata, getDataAsync(sds_dataset_metadata_url)])
+                    return Promise.all([schema_response, getDataAsync(sds_dataset_metadata_url)])
                 } else {
                     // not all metadata has survey_id & period_id
-                    return [schema_response.metadata, null]
+                    return [schema_response, null]
                 }
             })
             .then(([schema_response, sds_metadata_response]) => {
                 document.querySelector("#survey_metadata").innerHTML = "";
                 document.querySelector("#survey_metadata").innerHTML = "";
 
-                if (schema_response.length > 0) {
-                    document.querySelector("#survey_metadata").innerHTML = schema_response.map(metadataField => {
+                if (schema_response.metadata.length > 0) {
+                    document.querySelector("#survey_metadata").innerHTML = schema_response.metadata.map(metadataField => {
 
                         const fieldName = metadataField["name"]
                         let defaultValue = metadataField['default'];
@@ -355,6 +355,7 @@
                             // format as yyyy-MM-dd
                             defaultValue = currentDate.toLocaleDateString().split("/").reverse().join("-")
                         }
+                        debugger
 
                         return `<div class="field-container">${getLabelFor(fieldName)}${
                             (() => {
@@ -367,6 +368,9 @@
                                         `<img class="field-container__img" onclick="uuid('${fieldName}')" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg==">` +
                                         `</span>`
                                     );
+                                }
+                                else if (fieldName === "survey_id" && sds_metadata_response) {
+                                    return getInputField(fieldName, "text", schema_response.survey_id);
                                 }
                                 else if (fieldName === "sds_dataset_id") {
                                     return (
