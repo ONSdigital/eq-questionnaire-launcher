@@ -93,7 +93,7 @@ func getSurveyDataHandler(w http.ResponseWriter, r *http.Request) {
 	surveyData, err := authentication.GetSurveyData(launcherSchema)
 
 	if err != "" {
-		http.Error(w, fmt.Sprintf("GetRequiredMetadata err: %v", err), 500)
+		http.Error(w, fmt.Sprintf("GetSurveyData err: %v", err), 500)
 		return
 	}
 

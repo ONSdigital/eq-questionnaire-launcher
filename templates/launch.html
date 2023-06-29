@@ -303,6 +303,7 @@
                     if (this.status === 200) {
                         resolve(JSON.parse(this.responseText))
                     } else {
+                        alert(`Request failed. ${this.responseText}`)
                         reject(`Request failed. ${this.responseText}`)
                     }
                 }
@@ -330,6 +331,15 @@
         return null
     }
 
+    function handleNoSupplementaryData() {
+
+        hideSupplementaryData()
+        document.querySelector("#sds_dataset_id").innerHTML = null
+        document.querySelector(`#submit-btn`).style.display = 'none';
+        document.querySelector("#flush-btn").style.display = 'none';
+
+    }
+
     function updateSDSDropdown() {
         const surveyId = document.getElementById("survey_id")?.value;
         const periodId = document.getElementById("period_id")?.value;
@@ -344,12 +354,10 @@
                     loadSupplementaryDataInfo()
                     displayLaunchButton(false)
                 } else {
-                    hideSupplementaryData()
-                    document.querySelector("#sds_dataset_id").innerHTML = null
-                    document.querySelector(`#submit-btn`).style.display = 'none';
-                    document.querySelector("#flush-btn").style.display = 'none';
+                    handleNoSupplementaryData()
                 }
             })
+            .catch(_ => handleNoSupplementaryData())
     }
 
     function loadSchemaMetadata(schemaName, schemaUrl) {
@@ -406,9 +414,8 @@
 
                 document.querySelector("#flush-btn").style.display = 'inline-block';
             })
-            .catch(err => {
-                document.querySelector("#survey_metadata").innerHTML = "Failed to load Schema or SDS Dataset Metadata";
-                alert(`Failed to load Schema Metadata or SDS Dataset\n${err}`)
+            .catch(_ => {
+                document.querySelector("#survey_metadata").innerHTML = "Failed to load Survey Metadata";
             })
     }
 
