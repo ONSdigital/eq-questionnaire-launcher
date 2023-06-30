@@ -11,7 +11,7 @@ label { display:inline-block; font-weight: 600; margin-bottom: 0.25rem; width:20
     position: relative;
 }
 
-.field-container--hidden, .metadata-fields--hidden, .button--hidden, .group-title--hidden {
+.field-container--hidden, .metadata-fields--hidden, .button--hidden, .group-title--hidden, .supplementary-data--hidden {
     display:none;
 }
 

@@ -2,6 +2,7 @@ package surveys
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"regexp"
 
@@ -20,6 +21,19 @@ type LauncherSchema struct {
 	Name       string
 	SurveyType string
 	URL        string
+}
+
+type DatasetMetadata struct {
+	SurveyID            string `json:"survey_id"`
+	PeriodID            string `json:"period_id"`
+	Title               string `json:"title"`
+	SdsSchemaVersion    int    `json:"sds_schema_version"`
+	SdsPublishedAt      string `json:"sds_published_at"`
+	TotalReportingUnits int    `json:"total_reporting_units"`
+	SchemaVersion       string `json:"schema_version"`
+	SdsDatasetVersion   int    `json:"sds_dataset_version"`
+	Filename            string `json:"filename"`
+	DatasetID           string `json:"dataset_id"`
 }
 
 // RegisterResponse is the response from the eq-survey-register request
@@ -170,6 +184,32 @@ func FindSurveyByName(name string) LauncherSchema {
 	}
 
 	panic("Schema not found")
+}
+
+func GetSupplementaryDataSets(surveyId string, periodId string) ([]DatasetMetadata, error) {
+	datasetList := []DatasetMetadata{}
+	hostURL := settings.Get("SDS_API_URL")
+	log.Printf("SDS Api URL: %s", hostURL)
+	url := fmt.Sprintf("%s/v1/dataset_metadata?survey_id=%s&period_id=%s", hostURL, surveyId, periodId)
+	resp, err := clients.GetHTTPClient().Get(url)
+
+	if err != nil || (resp.StatusCode != 200 && resp.StatusCode != 404){
+		return datasetList, errors.New("unable to fetch supplementary data")
+	}
+	if resp.StatusCode == 404 {
+		return datasetList, nil
+	}
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	defer resp.Body.Close()
+	if err != nil {
+		return datasetList, errors.New("unable to read response body of supplementary data")
+	}
+
+	if err := json.Unmarshal(responseBody, &datasetList); err != nil {
+		log.Print(err)
+		return datasetList, errors.New(fmt.Sprintf("%v", err))
+	}
+	return datasetList, nil
 }
 
 // Return a LauncherSchema instance by loading schema from name or URL

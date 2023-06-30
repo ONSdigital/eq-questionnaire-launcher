@@ -70,6 +70,10 @@
                 <p>--- Metadata fields will be loaded when you select a version and load a schema ---</p>
             </div>
 
+            <h3 class="supplementary-data--hidden">Supplementary Data</h3>
+            <div class="supplementary-data--hidden" id="supplementary_data">
+            </div>
+
             <h3 class="group-title--hidden">Required Data</h3>
 
             <div class="field-container field-container--hidden">
@@ -152,8 +156,20 @@
     // uuidv4: from https://github.com/kelektiv/node-uuid
     !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var n;n="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this,n.uuidv4=e()}}(function(){return function e(n,r,o){function t(f,u){if(!r[f]){if(!n[f]){var a="function"==typeof require&&require;if(!u&&a)return a(f,!0);if(i)return i(f,!0);var d=new Error("Cannot find module '"+f+"'");throw d.code="MODULE_NOT_FOUND",d}var p=r[f]={exports:{}};n[f][0].call(p.exports,function(e){var r=n[f][1][e];return t(r?r:e)},p,p.exports,e,n,r,o)}return r[f].exports}for(var i="function"==typeof require&&require,f=0;f<o.length;f++)t(o[f]);return t}({1:[function(e,n,r){function o(e,n){var r=n||0,o=t;return[o[e[r++]],o[e[r++]],o[e[r++]],o[e[r++]],"-",o[e[r++]],o[e[r++]],"-",o[e[r++]],o[e[r++]],"-",o[e[r++]],o[e[r++]],"-",o[e[r++]],o[e[r++]],o[e[r++]],o[e[r++]],o[e[r++]],o[e[r++]]].join("")}for(var t=[],i=0;i<256;++i)t[i]=(i+256).toString(16).substr(1);n.exports=o},{}],2:[function(e,n,r){var o="undefined"!=typeof crypto&&crypto.getRandomValues&&crypto.getRandomValues.bind(crypto)||"undefined"!=typeof msCrypto&&"function"==typeof window.msCrypto.getRandomValues&&msCrypto.getRandomValues.bind(msCrypto);if(o){var t=new Uint8Array(16);n.exports=function(){return o(t),t}}else{var i=new Array(16);n.exports=function(){for(var e,n=0;n<16;n++)0===(3&n)&&(e=4294967296*Math.random()),i[n]=e>>>((3&n)<<3)&255;return i}}},{}],3:[function(e,n,r){function o(e,n,r){var o=n&&r||0;"string"==typeof e&&(n="binary"===e?new Array(16):null,e=null),e=e||{};var f=e.random||(e.rng||t)();if(f[6]=15&f[6]|64,f[8]=63&f[8]|128,n)for(var u=0;u<16;++u)n[o+u]=f[u];return n||i(f)}var t=e("./lib/rng"),i=e("./lib/bytesToUuid");n.exports=o},{"./lib/bytesToUuid":1,"./lib/rng":2}]},{},[3])(3)});
 
+    // store fetch so it only needs to be re-done if the survey changes
+    let supplementaryDataSets = null;
+
     function clearSurveyMetadataFields() {
         document.querySelector('#survey_metadata_fields').innerHTML = ""
+        hideSupplementaryData()
+    }
+
+    function showSupplementaryData () {
+        document.querySelectorAll(".supplementary-data--hidden").forEach(element => element.style.display = 'block');
+    }
+
+    function hideSupplementaryData () {
+        document.querySelectorAll(".supplementary-data--hidden").forEach(element => element.style.display = 'none');
     }
 
     function showAllDivs() {
@@ -176,6 +192,7 @@
         let formTypeValue = schema_name.split("_").slice(1).join("_")
 
         document.querySelector('#survey_metadata_fields').style.display = "block";
+        document.querySelector('#supplementary_data').style.display = "block";
 
         if (launchPattern === "v1") {
             document.querySelector('#survey_metadata_fields').innerHTML = `
@@ -278,77 +295,140 @@
         }
     }
 
-    function loadSchemaMetadata(schemaName, schemaUrl) {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4) {
-                if (this.status == 200) {
-
-                    document.querySelector("#survey_metadata").innerHTML = ""
-
-                    var response = JSON.parse(this.responseText);
-
-                    if (response.length > 0) {
-                        for (var i = 0; i < response.length; i++) {
-                            metadataField = response[i]
-
-                            var defaultValue = metadataField['name'];
-
-                            if (metadataField['type'] == "date") {
-                                var currentDate = new Date()
-                                var defaultValue = currentDate.getFullYear() + "-" + ('0' + (currentDate.getMonth() + 1)).slice(-2) + "-" + ('0' + currentDate.getDate()).slice(-2)
-                            }
-
-                            defaultValue = metadataField['default']
-
-                            var metadataFieldHtml = "";
-
-                            if (metadataField['type'] == "boolean") {
-
-                                metadataFieldHtml = "<div class=\"field-container\">" +
-                                    "<label for=\"" + metadataField['name'] + "\">" + metadataField['name'] + "</label>" +
-                                    "<input id=\"" + metadataField['name'] + "\" name=\"" + metadataField['name'] + "\" type=\"checkbox\" name=\"" + metadataField['name'] + "\" class=\"qa-" + metadataField['name'] + "\">" +
-                                    "</div>"
-
-                            } else if (metadataField['type'] == "uuid") {
-
-                                metadataFieldHtml = "<div class=\"field-container\">" +
-                                    "<label for=\"" + metadataField['name'] + "\">" + metadataField['name'] + "</label>" +
-                                    "<span  class=\"field-container__span\">" +
-                                    "<input id=\"" + metadataField['name'] + "\" name=\"" + metadataField['name'] + "\" type=\"text\" value=\"" + uuidv4() + "\" class=\"" + metadataField['name'] + "\">" +
-                                    "<img class=\"field-container__img\" onclick=\"uuid('" + metadataField['name'] + "')\" src=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg==\">" +
-                                    "</span>" +
-                                    "</div>"
-
-                            } else {
-                                metadataFieldHtml = "<div class=\"field-container\">" +
-                                    "<label for=\"" + metadataField['name'] + "\">" + metadataField['name'] + "</label>" +
-                                    "<input id=\"" + metadataField['name'] + "\" name=\"" + metadataField['name'] + "\" type=\"text\" value=\"" + defaultValue + "\" class=\"qa-" + metadataField['name'] + "\">" +
-                                    "</div>"
-                            }
-
-                            document.querySelector("#survey_metadata").innerHTML = document.querySelector("#survey_metadata").innerHTML + metadataFieldHtml;
-                        }
+    async function getDataAsync(queryParam) {
+        return new Promise((resolve, reject) => {
+            let xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState === 4) {
+                    if (this.status === 200) {
+                        resolve(JSON.parse(this.responseText))
                     } else {
-                        document.querySelector("#survey_metadata").innerHTML = "No metadata required for this survey";
+                        alert(`Request failed. ${this.responseText}`)
+                        reject(`Request failed. ${this.responseText}`)
                     }
-
-                    document.querySelector("#flush-btn").style.display = 'inline-block';
-
-                } else {
-                    document.querySelector("#survey_metadata").innerHTML = "Failed to load Schema Metadata";
-                    alert("Failed to load Schema Metadata")
                 }
-            }
-        };
+            };
+            xhttp.open("GET", queryParam, true);
+            xhttp.send();
+        })
+    }
 
-        let queryParam = `schema_name=${schemaName}`
-        if (schemaUrl)  {
-            queryParam += `&schema_url=${schemaUrl}`
+    function getLabelFor(fieldName){
+        return `<label for="${fieldName}">${fieldName}</label>`
+    }
+
+    function getInputField(fieldName, type, defaultValue=null, isReadOnly=false, onChangeCallback=null){
+        const value = defaultValue ? `value="${defaultValue}"` : ''
+        const readOnly = isReadOnly ? 'readonly' : ''
+        return `<input ${readOnly} id="${fieldName}" name="${fieldName}" type="${type}" ${value} class="qa-${fieldName}" onchange="${onChangeCallback}">`
+    }
+
+    async function loadSDSDatasetMetadata(survey_id, period_id) {
+        if (survey_id && period_id) {
+            const sds_dataset_metadata_url = `/supplementary-data?survey_id=${survey_id}&period_id=${period_id}`
+            return await getDataAsync(sds_dataset_metadata_url)
         }
+        return null
+    }
 
-        xhttp.open("GET", `/metadata?${queryParam}`, true);
-        xhttp.send();
+    function handleNoSupplementaryData() {
+
+        hideSupplementaryData()
+        document.querySelector("#sds_dataset_id").innerHTML = null
+        document.querySelector(`#submit-btn`).style.display = 'none';
+        document.querySelector("#flush-btn").style.display = 'none';
+
+    }
+
+    function updateSDSDropdown() {
+        const surveyId = document.getElementById("survey_id")?.value;
+        const periodId = document.getElementById("period_id")?.value;
+        loadSDSDatasetMetadata(surveyId, periodId)
+            .then(sds_metadata_response => {
+                if (sds_metadata_response?.length) {
+                    supplementaryDataSets = sds_metadata_response
+                    showSupplementaryData()
+                    document.querySelector("#sds_dataset_id").innerHTML = sds_metadata_response.map(dataset =>
+                        `<option value="${dataset.dataset_id}">${dataset.dataset_id}</option>`)
+                        .join("");
+                    loadSupplementaryDataInfo()
+                    displayLaunchButton(false)
+                } else {
+                    handleNoSupplementaryData()
+                }
+            })
+            .catch(_ => handleNoSupplementaryData())
+    }
+
+    function loadSchemaMetadata(schemaName, schemaUrl) {
+        let survey_data_url = `/survey-data?schema_name=${schemaName}`
+        if (schemaUrl ){
+            survey_data_url += `&schema_url=${schemaUrl}`
+        }
+        hideSupplementaryData()
+        getDataAsync(survey_data_url)
+            .then(schema_response => {
+                document.querySelector("#survey_metadata").innerHTML = "";
+                document.querySelector("#survey_metadata").innerHTML = "";
+
+                if (schema_response.metadata.length > 0) {
+                    document.querySelector("#survey_metadata").innerHTML = schema_response.metadata.map(metadataField => {
+
+                        const fieldName = metadataField["name"]
+                        let defaultValue = metadataField['default'];
+
+                        if (metadataField['type'] === "date") {
+                            const currentDate = new Date()
+                            // format as yyyy-MM-dd
+                            defaultValue = currentDate.toLocaleDateString().split("/").reverse().join("-")
+                        }
+
+                        return `<div class="field-container">${getLabelFor(fieldName)}${
+                            (() => {
+                                if (metadataField['type'] === "boolean") {
+                                    return getInputField(fieldName, "checkbox");
+                                }
+                                else if (metadataField['type'] === "uuid") {
+                                    return (
+                                        `<span  class="field-container__span">${getInputField(fieldName, "text", uuidv4())}` +
+                                        `<img class="field-container__img" onclick="uuid('${fieldName}')" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg==">` +
+                                        `</span>`
+                                    );
+                                }
+                                else if (fieldName === "survey_id" || fieldName === "period_id") {
+                                    return getInputField(fieldName, "text", fieldName === "survey_id" ? schema_response.survey_id : defaultValue, false, "updateSDSDropdown()");
+                                }
+                                else if (fieldName === "sds_dataset_id") {
+                                    return `<select id="${fieldName}" name="${fieldName}" class="qa-${fieldName}" onchange="loadSupplementaryDataInfo()"></select>`
+                                }
+                                else {
+                                    return getInputField(fieldName, "text", defaultValue)
+                                }
+                            })()
+                        }</div>`
+                    }).join("")
+                    updateSDSDropdown()
+                } else {
+                    document.querySelector("#survey_metadata").innerHTML = "No metadata required for this survey";
+                }
+
+                document.querySelector("#flush-btn").style.display = 'inline-block';
+            })
+            .catch(_ => {
+                document.querySelector("#survey_metadata").innerHTML = "Failed to load Survey Metadata";
+            })
+    }
+
+    function loadSupplementaryDataInfo () {
+        const selectedDatasetId = document.getElementById("sds_dataset_id")?.value;
+        const selectedDataset = supplementaryDataSets?.find(d => d["dataset_id"] === selectedDatasetId)
+        if (selectedDataset) {
+            const sdsDatasetMetadataKeys = ["title", "sds_schema_version", "total_reporting_units", "schema_version", "sds_dataset_version"];
+
+            document.querySelector("#supplementary_data").innerHTML = sdsDatasetMetadataKeys.map(
+                key => `<div class="field-container">${getLabelFor(key)}${getInputField(key, "text", selectedDataset[key], true)}</div>`
+            ).join('')
+        }
     }
 
     function uuid(el_id) {
@@ -356,16 +436,16 @@
     }
 
     function numericId() {
-        var result = '';
-        var chars = '0123456789';
-        for (var i = 16; i > 0; --i) {
+        let result = '';
+        let chars = '0123456789';
+        for (let i = 16; i > 0; --i) {
             result += chars[Math.round(Math.random() * (chars.length - 1))];
         }
         document.querySelector(`#response_id`).value = result;
     }
 
     function setResponseExpiry(days_offset=7) {
-        var dt = new Date();
+        let dt = new Date();
         dt.setDate(dt.getDate()+days_offset)
         document.querySelector('#response_expires_at').value=dt.toISOString().replace(/(\.\d*)/, '').replace(/Z/, '+00:00');
     }
