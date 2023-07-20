@@ -350,13 +350,11 @@
                         loadSupplementaryDataInfo();
                         displayLaunchButton(false);
                     } else if (document.querySelector("#sds_dataset_id")) {
-                        document.querySelector("#sds_dataset_id").innerHTML = "";
-                        toggleSubmitFlushButtons("hide");
+                        handleNoSupplementaryData();
                     }
                 })
                 .catch(_ => {
                     handleNoSupplementaryData();
-                    toggleSubmitFlushButtons("hide");
                 })
         }
 
