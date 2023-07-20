@@ -330,6 +330,31 @@
             return null
         }
 
+        function handleNoSupplementaryData() {
+
+            toggleSupplementaryData("hide");
+            toggleSubmitFlushButtons("hide");
+
+        }
+
+        function updateSDSDropdown() {
+            const surveyId = document.getElementById("survey_id")?.value;
+            const periodId = document.getElementById("period_id")?.value;
+            loadSDSDatasetMetadata(surveyId, periodId)
+                .then(sds_metadata_response => {
+                    if (sds_metadata_response?.length) {
+                        supplementaryDataSets = sds_metadata_response
+                        toggleSupplementaryData("show");
+                        document.querySelector("#sds_dataset_id").innerHTML = sds_metadata_response.map(dataset =>
+                            `<option value="${dataset.dataset_id}">${dataset.dataset_id}</option>`)
+                            .join("");
+                        loadSupplementaryDataInfo()
+                        displayLaunchButton(false)
+                    }
+                })
+                .catch(_ => handleNoSupplementaryData())
+        }
+
         function loadSchemaMetadata(schemaName, schemaUrl) {
             let survey_data_url = `/survey-data?schema_name=${schemaName}`
             if (schemaUrl ){
@@ -345,7 +370,7 @@
                         document.querySelector("#survey_metadata").innerHTML = schema_response.metadata.map(metadataField => {
 
                             const fieldName = metadataField["name"]
-                            defaultValue = metadataField['default'];
+                            const defaultValue = metadataField['default'];
 
                             return `<div class="field-container">${getLabelFor(fieldName)}${
                                 (() => {
@@ -360,7 +385,7 @@
                                         );
                                     }
                                     else if (fieldName === "survey_id" || fieldName === "period_id") {
-                                        return getInputField(fieldName, "text", fieldName === "survey_id" ? schema_response.survey_id : defaultValue, false);
+                                        return getInputField(fieldName, "text", fieldName === "survey_id" ? schema_response.survey_id : defaultValue, false, "updateSDSDropdown()");
                                     }
                                     else if (fieldName === "sds_dataset_id") {
                                         return `<select id="${fieldName}" name="${fieldName}" class="qa-${fieldName}" onchange="loadSupplementaryDataInfo()"></select>`
@@ -371,6 +396,7 @@
                                 })()
                             }</div>`
                         }).join("")
+                        updateSDSDropdown()
                     } else {
                         document.querySelector("#survey_metadata").innerHTML = "No metadata required for this survey";
                     }
