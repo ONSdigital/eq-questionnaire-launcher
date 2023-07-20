@@ -10,7 +10,7 @@
                 <strong><u>Launch Pattern</u></strong>
                 <div class="field-container">
                     <label for="launch_pattern">Version</label>
-                    <select id="launch_pattern" name="launch_version" class="qa-select-launch-version">
+                    <select id="launch_pattern" name="launch_version" class="qa-select-launch-version" onchange="loadMetadataForSchemaName();">
                         <option value="v1">v1</option>
                         <option value="v2" selected="selected">v2</option>
                     </select>
@@ -35,7 +35,6 @@
                 <p>----------</p>
 
                 <strong><u>Launch by Schema URL</u></strong>
-
                 <div class="field-container">
                     <span class="field-container__span">
                         <label for="schema-url-survey-type">Survey Type</label>
@@ -175,14 +174,6 @@
             document.querySelectorAll("#survey_metadata, .field-container--hidden, .group-title--hidden").forEach(function (element) {
                 element.style.display = 'block';
             });
-
-            let launchPattern = document.querySelector("#launch_pattern").value
-
-            if (launchPattern === "v1") {
-                document.querySelectorAll(".Social").forEach(function(element) {element.setAttribute("disabled", "disabled")})
-            } else {
-                document.querySelectorAll(".Social").forEach(function(element) {element.removeAttribute("disabled")})
-            }
         }
 
         function includeSurveyMetadataFields(schema_name, survey_type) {
@@ -203,16 +194,14 @@
                     <div class="field-container">
                         <label for="form_type">form_type</label>
                         <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="qa-form_type">
-                    </div>
-                `
+                    </div>`
             } else {
                 document.querySelector('#survey_metadata_fields').innerHTML = `
                     <h3>${survey_type} Survey Metadata</h3>
                     <div class="field-container">
                         <label for="form_type">form_type</label>
                         <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="qa-form_type">
-                    </div>
-                `
+                    </div>`
             }
 
         }
@@ -250,13 +239,17 @@
         }
 
         function loadMetadataForSchemaName() {
-            clearAndDisableSchemaUrlSelection()
+            let schema_name = document.querySelector("#schema_name").value
 
-            const schemaName = document.querySelector("#schema_name").value
-            const surveyType = document.querySelector(`#schema_name option[value="${schemaName}"]`).dataset.surveyType
+            if (schema_name !== "Select Schema") {
+                clearAndDisableSchemaUrlSelection()
 
-            loadSurveyMetadata(schemaName, surveyType)
-            loadSchemaMetadata(schemaName, null)
+                const schemaName = document.querySelector("#schema_name").value
+                const surveyType = document.querySelector(`#schema_name option[value="${schemaName}"]`).dataset.surveyType
+
+                loadSurveyMetadata(schemaName, surveyType)
+                loadSchemaMetadata(schemaName, null)
+            }
         }
 
         function loadMetadataForSchemaUrl() {
@@ -332,7 +325,6 @@
         function handleNoSupplementaryData() {
 
             hideSupplementaryData()
-            document.querySelector("#sds_dataset_id").innerHTML = null
             document.querySelector(`#submit-btn`).style.display = 'none';
             document.querySelector("#flush-btn").style.display = 'none';
 
