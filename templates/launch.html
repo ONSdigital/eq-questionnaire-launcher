@@ -373,13 +373,14 @@
                         document.querySelector("#survey_metadata").innerHTML = schema_response.metadata.map(metadataField => {
 
                             const fieldName = metadataField["name"]
-                            let defaultValue = metadataField['default'];
 
                             if (metadataField['type'] === "date") {
                                 const currentDate = new Date()
                                 // format as yyyy-MM-dd
                                 defaultValue = currentDate.toLocaleDateString().split("/").reverse().join("-")
                             }
+
+                            defaultValue = metadataField['default'];
 
                             return `<div class="field-container">${getLabelFor(fieldName)}${
                                 (() => {
