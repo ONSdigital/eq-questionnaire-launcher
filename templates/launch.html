@@ -331,10 +331,8 @@
         }
 
         function handleNoSupplementaryData() {
-
             toggleSupplementaryData("hide");
             toggleSubmitFlushButtons("hide");
-
         }
 
         function updateSDSDropdown() {
@@ -352,7 +350,10 @@
                         displayLaunchButton(false)
                     }
                 })
-                .catch(_ => handleNoSupplementaryData())
+                .catch(_ => {
+                    handleNoSupplementaryData();
+                    toggleSubmitFlushButtons("hide");
+                })
         }
 
         function loadSchemaMetadata(schemaName, schemaUrl) {
