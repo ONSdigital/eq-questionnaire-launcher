@@ -343,11 +343,15 @@
                     if (sds_metadata_response?.length) {
                         supplementaryDataSets = sds_metadata_response
                         toggleSupplementaryData("show");
+                        toggleSubmitFlushButtons("show");
                         document.querySelector("#sds_dataset_id").innerHTML = sds_metadata_response.map(dataset =>
                             `<option value="${dataset.dataset_id}">${dataset.dataset_id}</option>`)
                             .join("");
-                        loadSupplementaryDataInfo()
-                        displayLaunchButton(false)
+                        loadSupplementaryDataInfo();
+                        displayLaunchButton(false);
+                    } else if (document.querySelector("#sds_dataset_id")) {
+                        document.querySelector("#sds_dataset_id").innerHTML = "";
+                        toggleSubmitFlushButtons("hide");
                     }
                 })
                 .catch(_ => {
