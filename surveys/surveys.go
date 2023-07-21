@@ -188,12 +188,12 @@ func FindSurveyByName(name string) LauncherSchema {
 
 func GetSupplementaryDataSets(surveyId string, periodId string) ([]DatasetMetadata, error) {
 	datasetList := []DatasetMetadata{}
-	hostURL := settings.Get("SDS_API_URL")
-	log.Printf("SDS Api URL: %s", hostURL)
+	hostURL := settings.Get("SDS_API_BASE_URL")
+	log.Printf("SDS API Base URL: %s", hostURL)
 	url := fmt.Sprintf("%s/v1/dataset_metadata?survey_id=%s&period_id=%s", hostURL, surveyId, periodId)
 	resp, err := clients.GetHTTPClient().Get(url)
 
-	if err != nil || (resp.StatusCode != 200 && resp.StatusCode != 404){
+	if err != nil || (resp.StatusCode != 200 && resp.StatusCode != 404) {
 		return datasetList, errors.New("unable to fetch supplementary data")
 	}
 	if resp.StatusCode == 404 {
@@ -214,21 +214,20 @@ func GetSupplementaryDataSets(surveyId string, periodId string) ([]DatasetMetada
 
 // Return a LauncherSchema instance by loading schema from name or URL
 func GetLauncherSchema(schemaName string, schemaUrl string) LauncherSchema {
-    var launcherSchema LauncherSchema
+	var launcherSchema LauncherSchema
 
-    if schemaUrl != "" {
-        log.Println("Getting schema by URL: " + schemaUrl)
-        launcherSchema = LauncherSchema {
-            URL: schemaUrl,
-            Name: schemaName,
-        }
-    } else if schemaName != "" {
-        log.Println("Searching for schema by name: " + schemaName)
-        launcherSchema = FindSurveyByName(schemaName)
-    } else {
-        panic("Either `schema_name` or `schema_url` must be provided.")
-    }
+	if schemaUrl != "" {
+		log.Println("Getting schema by URL: " + schemaUrl)
+		launcherSchema = LauncherSchema{
+			URL:  schemaUrl,
+			Name: schemaName,
+		}
+	} else if schemaName != "" {
+		log.Println("Searching for schema by name: " + schemaName)
+		launcherSchema = FindSurveyByName(schemaName)
+	} else {
+		panic("Either `schema_name` or `schema_url` must be provided.")
+	}
 
-    return launcherSchema
+	return launcherSchema
 }
-
