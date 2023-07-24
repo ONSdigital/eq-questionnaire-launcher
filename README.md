@@ -65,11 +65,13 @@ e.g."http://localhost:8000/quick-launch?url=http://localhost:7777/1_0001.json&ve
 * JWT spec based on http://ons-schema-definitions.readthedocs.io/en/latest/jwt_profile.html
 
 ### Settings
-Environment Variable | Meaning | Default
----------------------|---------|--------
-GO_LAUNCH_A_SURVEY_LISTEN_HOST|Host address  to listen on|0.0.0.0
-GO_LAUNCH_A_SURVEY_LISTEN_PORT|Host port to listen on|8000
-SURVEY_RUNNER_URL|URL of Survey Runner to re-direct to when launching a survey|http://localhost:5000
-SURVEY_REGISTER_URL|URL of eq-survey-register to load schema list from |http://localhost:8080
-JWT_ENCRYPTION_KEY_PATH|Path to the JWT Encryption Key (PEM format)|jwt-test-keys/sdc-user-authentication-encryption-sr-public-key.pem
-JWT_SIGNING_KEY_PATH|Path to the JWT Signing Key (PEM format)|jwt-test-keys/sdc-user-authentication-signing-launcher-private-key.pem
+
+| Environment Variable           | Meaning                                                             | Default                                                                |
+|--------------------------------|---------------------------------------------------------------------|------------------------------------------------------------------------|
+| GO_LAUNCH_A_SURVEY_LISTEN_HOST | Host address  to listen on                                          | 0.0.0.0                                                                |
+| GO_LAUNCH_A_SURVEY_LISTEN_PORT | Host port to listen on                                              | 8000                                                                   |
+| SURVEY_RUNNER_URL              | URL of Questionnaire Runner to re-direct to when launching a survey | http://localhost:5000                                                  |
+| SURVEY_REGISTER_URL            | URL of eq-survey-register to load schema list from                  | http://localhost:8080                                                  |
+| SDS_API_BASE_URL               | URL of the SDS API to fetch supplementary data from                 | http://localhost:5003                                                  |
+| JWT_ENCRYPTION_KEY_PATH        | Path to the JWT Encryption Key (PEM format)                         | jwt-test-keys/sdc-user-authentication-encryption-sr-public-key.pem     |
+| JWT_SIGNING_KEY_PATH           | Path to the JWT Signing Key (PEM format)                            | jwt-test-keys/sdc-user-authentication-signing-launcher-private-key.pem |
