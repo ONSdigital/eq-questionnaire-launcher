@@ -190,13 +190,16 @@ func GetSupplementaryDataSets(surveyId string, periodId string) ([]DatasetMetada
 
 	client := clients.GetHTTPClient()
 	tokenSource, err := oidc.GenerateIdToken()
-	client.Transport = &oauth2.Transport{
-		Source: tokenSource,
-	}
 
 	if err != nil {
 		log.Print(err)
 		return datasetList, errors.New("unable to generate authentication credentials")
+	}
+
+	if tokenSource != nil {
+		client.Transport = &oauth2.Transport{
+			Source: tokenSource,
+		}
 	}
 
 	log.Printf("SDS API Base URL: %s", hostURL)

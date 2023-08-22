@@ -25,7 +25,7 @@ func init() {
 	setSetting("JWT_SIGNING_KEY_PATH", "jwt-test-keys/sdc-user-authentication-signing-launcher-private-key.pem")
 	setSetting("OIDC_TOKEN_VALIDITY_IN_SECONDS", "3600")
 	setSetting("OIDC_TOKEN_LEEWAY_IN_SECONDS", "300")
-	setSetting("OIDC_TOKEN_BACKEND", "gcp")
+	setSetting("OIDC_TOKEN_BACKEND", "local")
 	setSetting("SDS_OAUTH2_CLIENT_ID", "")
 }
 
