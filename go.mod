@@ -4,12 +4,12 @@ go 1.21
 
 require (
 	github.com/AreaHQ/jsonhal v0.0.0-20160928112100-715ffaec982b
-	github.com/gofrs/uuid v3.2.0+incompatible
-	github.com/gorilla/mux v1.4.0
+	github.com/gofrs/uuid v4.4.0+incompatible
+	github.com/gorilla/mux v1.8.0
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	golang.org/x/oauth2 v0.11.0
 	google.golang.org/api v0.138.0
-	gopkg.in/square/go-jose.v2 v2.1.2
+	gopkg.in/square/go-jose.v2 v2.6.0
 )
 
 require (
@@ -19,14 +19,13 @@ require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/s2a-go v0.1.5 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.5 // indirect
-	github.com/gorilla/context v0.0.0-20160226214623-1ea25387ff6f // indirect
 	go.opencensus.io v0.24.0 // indirect
 	golang.org/x/crypto v0.12.0 // indirect
 	golang.org/x/net v0.14.0 // indirect
 	golang.org/x/sys v0.11.0 // indirect
 	golang.org/x/text v0.12.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20230807174057-1744710a1577 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20230821184602-ccc8af3d0e93 // indirect
 	google.golang.org/grpc v1.57.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 )
