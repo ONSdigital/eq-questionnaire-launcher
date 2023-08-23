@@ -19,6 +19,9 @@ func GenerateIdToken() (oauth2.TokenSource, error) {
 	oidcBackend := settings.Get("OIDC_TOKEN_BACKEND")
 	if oidcBackend == "gcp" {
 		audience := settings.Get("SDS_OAUTH2_CLIENT_ID")
+		if audience == "" {
+			return nil, fmt.Errorf("SDS_OAUTH2_CLIENT_ID not set")
+		}
 		return getGCPIdToken(audience)
 	}
 	return nil, nil
@@ -35,7 +38,7 @@ func cachedWithTTL(fn func(audience string) (oauth2.TokenSource, error)) func(au
 	cachedFunc := func(audience string) (oauth2.TokenSource, error) {
 		cachedSource, found := ttlCache.Get(audience)
 		if found {
-			log.Print("Found cached GCP ID token source")
+			log.Printf("Found cached GCP ID token source for audience: %s", audience)
 			return cachedSource.(oauth2.TokenSource), nil
 		}
 		tokenSource, err := fn(audience)
@@ -49,6 +52,7 @@ func cachedWithTTL(fn func(audience string) (oauth2.TokenSource, error)) func(au
 }
 
 // uses the Google Cloud metadata server environment to create an identity token that can be added to a HTTP request
+// based off https://cloud.google.com/docs/authentication/get-id-token#go
 func getIdTokenFromMetadataServer(audience string) (oauth2.TokenSource, error) {
 	ctx := context.Background()
 	// Construct the GoogleCredentials object which obtains the default configuration from your working environment.
@@ -67,7 +71,7 @@ func getIdTokenFromMetadataServer(audience string) (oauth2.TokenSource, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to receive token: %w", err)
 	}
-	log.Print("Succesfully generated GCP ID token")
+	log.Printf("Succesfully generated GCP ID token for audience: %s", audience)
 
 	return ts, nil
 }
