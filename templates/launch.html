@@ -148,6 +148,7 @@
                 <input type="submit" name="action_launch" value="Open Survey" class="qa-btn-submit-dev btn btn--hidden" id="submit-btn" onclick="saveResponseId()"/>
                 <input type="submit" name="action_flush" value="Flush Survey Data" class="qa-btn-submit-dev btn btn--hidden" id="flush-btn"/>
                 <input type="button" value="Load Response ID" class="qa-btn-submit-dev btn btn--hidden" id="response-id-btn" onclick="loadResponseId()"/>
+                <input type="button" value="Clear Local Storage" class="qa-btn-submit-dev btn btn--hidden" id="local-storage-btn" onclick="clearLocalStorage()"/>
             </div>
 
         </form>
@@ -474,6 +475,10 @@
 
             loadSurveyMetadata(schemaName, surveyType)
             loadSchemaMetadata(schemaName, null)
+            document.querySelector("#local-storage-btn").classList.remove("btn--hidden");
+        }
+        else {
+            document.querySelector("#local-storage-btn").classList.add("btn--hidden");
         }
     }
 
@@ -494,6 +499,19 @@
 
     function saveResponseId() {
         localStorage.setItem("response_id", document.querySelector("#response_id").value)
+    }
+
+    function clearLocalStorage() {
+        localStorage.removeItem("response_id");
+        localStorage.removeItem("schema_name");
+        document.querySelector("#launch_pattern").selectedIndex = 1;
+        document.querySelector("#schema_name").selectedIndex = 0;
+        let surveyTypeElement = document.querySelector("#schema-url-survey-type")
+        surveyTypeElement.selectedIndex = 0;
+        surveyTypeElement.disabled = false;
+        document.querySelector("#schema-url-btn").disabled = false;
+        document.querySelector("#response-id-btn").classList.add("btn--hidden");
+        document.querySelector("#local-storage-btn").classList.add("btn--hidden");
     }
 
     uuid('collection_exercise_sid');
