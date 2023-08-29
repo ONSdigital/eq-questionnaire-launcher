@@ -2,7 +2,7 @@
 
 {{ define "body" }}
 
-<body onbeforeunload='resetDropdowns();'>
+<body onbeforeunload="resetDropdowns();" onload="retrieveSchemaName();retrieveResponseId();">
     <h1>Launch a survey</h1>
     <div>
         <form action="" method="POST" xmlns="http://www.w3.org/1999/html" onsubmit="validateForm()">
@@ -145,8 +145,9 @@
             </div>
 
             <div class="field-container">
-                <input type="submit" name="action_launch" value="Open Survey" class="qa-btn-submit-dev btn btn--hidden" id="submit-btn"/>
+                <input type="submit" name="action_launch" value="Open Survey" class="qa-btn-submit-dev btn btn--hidden" id="submit-btn" onclick="saveResponseId()"/>
                 <input type="submit" name="action_flush" value="Flush Survey Data" class="qa-btn-submit-dev btn btn--hidden" id="flush-btn"/>
+                <input type="button" value="Load Response ID" class="qa-btn-submit-dev btn btn--hidden" id="response-id-btn" onclick="loadResponseId()"/>
             </div>
 
         </form>
@@ -247,16 +248,17 @@
     }
 
     function loadMetadataForSchemaName() {
-        let schema_name = document.querySelector("#schema_name").value
+        let schemaName = document.querySelector("#schema_name").value
+        localStorage.setItem("schema_name", schemaName)
 
-        if (schema_name !== "Select Schema") {
+        if (schemaName !== "Select Schema") {
             clearAndDisableSchemaUrlSelection()
 
-            const schemaName = document.querySelector("#schema_name").value
-            const surveyType = document.querySelector(`#schema_name option[value="${schemaName}"]`).dataset.surveyType
+            const schemaNameValue = document.querySelector("#schema_name").value
+            const surveyType = document.querySelector(`#schema_name option[value="${schemaNameValue}"]`).dataset.surveyType
 
-            loadSurveyMetadata(schemaName, surveyType)
-            loadSchemaMetadata(schemaName, null)
+            loadSurveyMetadata(schemaNameValue, surveyType)
+            loadSchemaMetadata(schemaNameValue, null)
         }
     }
 
@@ -458,6 +460,40 @@
         document.getElementById('launch_pattern').selectedIndex = -1;
         document.getElementById('schema_name').selectedIndex = -1;
         document.getElementById('schema-url-survey-type').selectedIndex = -1;
+    }
+
+    function retrieveSchemaName() {
+        let schemaName = localStorage.getItem("schema_name");
+        if (schemaName) {
+            document.getElementById('schema_name').value = schemaName;
+
+            toggleSubmitFlushButtons("show");
+            clearAndDisableSchemaUrlSelection()
+
+            const surveyType = document.querySelector(`#schema_name option[value="${schemaName}"]`).dataset.surveyType
+
+            loadSurveyMetadata(schemaName, surveyType)
+            loadSchemaMetadata(schemaName, null)
+        }
+    }
+
+    function retrieveResponseId() {
+        let responseId = localStorage.getItem("response_id");
+
+        if (responseId) {
+            document.querySelector("#response-id-btn").classList.remove("btn--hidden");
+        }
+        else {
+            document.querySelector("#response-id-btn").classList.add("btn--hidden");
+        }
+    }
+
+    function loadResponseId() {
+        document.getElementById("response_id").value = localStorage.getItem("response_id");
+    }
+
+    function saveResponseId() {
+        localStorage.setItem("response_id", document.querySelector("#response_id").value)
     }
 
     uuid('collection_exercise_sid');
