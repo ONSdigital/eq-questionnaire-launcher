@@ -3,17 +3,18 @@ package surveys
 import (
 	"encoding/json"
 	"errors"
+	"io"
 	"log"
-	"regexp"
 
 	"fmt"
-	"io/ioutil"
 	"sort"
 	"strings"
 
 	"github.com/AreaHQ/jsonhal"
 	"github.com/ONSdigital/eq-questionnaire-launcher/clients"
+	"github.com/ONSdigital/eq-questionnaire-launcher/oidc"
 	"github.com/ONSdigital/eq-questionnaire-launcher/settings"
+	"golang.org/x/oauth2"
 )
 
 // LauncherSchema is a representation of a schema in the Launcher
@@ -50,8 +51,6 @@ type Schema struct {
 	Name string `json:"name"`
 }
 
-var eqIDFormTypeRegex = regexp.MustCompile(`^(?P<eq_id>[a-z0-9]+)_(?P<form_type>\w+)`)
-
 // LauncherSchemaFromFilename creates a LauncherSchema record from a schema filename
 func LauncherSchemaFromFilename(filename string, surveyType string) LauncherSchema {
 	return LauncherSchema{
@@ -65,8 +64,7 @@ func GetAvailableSchemas() map[string][]LauncherSchema {
 	runnerSchemas := getAvailableSchemasFromRunner()
 	registerSchemas := getAvailableSchemasFromRegister()
 
-	allSchemas := []LauncherSchema{}
-	allSchemas = append(runnerSchemas, registerSchemas...)
+	allSchemas := append(runnerSchemas, registerSchemas...)
 
 	sort.Sort(ByFilename(allSchemas))
 
@@ -96,7 +94,7 @@ func getAvailableSchemasFromRegister() []LauncherSchema {
 			return []LauncherSchema{}
 		}
 
-		responseBody, err := ioutil.ReadAll(resp.Body)
+		responseBody, err := io.ReadAll(resp.Body)
 		resp.Body.Close()
 		if err != nil {
 			return schemaList
@@ -149,7 +147,7 @@ func getAvailableSchemasFromRunner() []LauncherSchema {
 		return []LauncherSchema{}
 	}
 
-	responseBody, err := ioutil.ReadAll(resp.Body)
+	responseBody, err := io.ReadAll(resp.Body)
 	resp.Body.Close()
 	if err != nil {
 		return []LauncherSchema{}
@@ -189,9 +187,24 @@ func FindSurveyByName(name string) LauncherSchema {
 func GetSupplementaryDataSets(surveyId string, periodId string) ([]DatasetMetadata, error) {
 	datasetList := []DatasetMetadata{}
 	hostURL := settings.Get("SDS_API_BASE_URL")
+
+	client := clients.GetHTTPClient()
+	tokenSource, err := oidc.GenerateIdToken()
+
+	if err != nil {
+		log.Print(err)
+		return datasetList, errors.New("unable to generate authentication credentials")
+	}
+
+	if tokenSource != nil {
+		client.Transport = &oauth2.Transport{
+			Source: tokenSource,
+		}
+	}
+
 	log.Printf("SDS API Base URL: %s", hostURL)
 	url := fmt.Sprintf("%s/v1/dataset_metadata?survey_id=%s&period_id=%s", hostURL, surveyId, periodId)
-	resp, err := clients.GetHTTPClient().Get(url)
+	resp, err := client.Get(url)
 
 	if err != nil || (resp.StatusCode != 200 && resp.StatusCode != 404) {
 		return datasetList, errors.New("unable to fetch supplementary data")
@@ -199,7 +212,7 @@ func GetSupplementaryDataSets(surveyId string, periodId string) ([]DatasetMetada
 	if resp.StatusCode == 404 {
 		return datasetList, nil
 	}
-	responseBody, err := ioutil.ReadAll(resp.Body)
+	responseBody, err := io.ReadAll(resp.Body)
 	defer resp.Body.Close()
 	if err != nil {
 		return datasetList, errors.New("unable to read response body of supplementary data")
@@ -207,7 +220,7 @@ func GetSupplementaryDataSets(surveyId string, periodId string) ([]DatasetMetada
 
 	if err := json.Unmarshal(responseBody, &datasetList); err != nil {
 		log.Print(err)
-		return datasetList, errors.New(fmt.Sprintf("%v", err))
+		return datasetList, fmt.Errorf("%v", err)
 	}
 	return datasetList, nil
 }
