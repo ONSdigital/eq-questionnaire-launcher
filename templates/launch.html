@@ -249,17 +249,16 @@
     }
 
     function loadMetadataForSchemaName() {
-        let schemaName = document.querySelector("#schema_name").value
-        localStorage.setItem("schema_name", schemaName)
+        let schemaName = document.querySelector("#schema_name").value;
+        localStorage.setItem("schema_name", schemaName);
 
         if (schemaName !== "Select Schema") {
-            clearAndDisableSchemaUrlSelection()
+            clearAndDisableSchemaUrlSelection();
 
-            const schemaNameValue = document.querySelector("#schema_name").value
-            const surveyType = document.querySelector(`#schema_name option[value="${schemaNameValue}"]`).dataset.surveyType
+            const surveyType = document.querySelector(`#schema_name option[value="${schemaName}"]`).dataset.surveyType;
 
-            loadSurveyMetadata(schemaNameValue, surveyType)
-            loadSchemaMetadata(schemaNameValue, null)
+            loadSurveyMetadata(schemaName, surveyType);
+            loadSchemaMetadata(schemaName, null);
         }
     }
 
@@ -466,31 +465,34 @@
     function retrieveSchemaName() {
         const availableSchemas = [...document.querySelector("#schema_name").options].map(x => x.value)
         let schemaName = localStorage.getItem("schema_name");
+        let localStorageButton = document.querySelector("#local-storage-btn")
+
         if (schemaName && availableSchemas.includes(schemaName)) {
             document.querySelector("#schema_name").value = schemaName;
 
             toggleSubmitFlushButtons("show");
-            clearAndDisableSchemaUrlSelection()
+            clearAndDisableSchemaUrlSelection();
 
-            const surveyType = document.querySelector(`#schema_name option[value="${schemaName}"]`).dataset.surveyType
+            const surveyType = document.querySelector(`#schema_name option[value="${schemaName}"]`).dataset.surveyType;
 
-            loadSurveyMetadata(schemaName, surveyType)
-            loadSchemaMetadata(schemaName, null)
-            document.querySelector("#local-storage-btn").classList.remove("btn--hidden");
+            loadSurveyMetadata(schemaName, surveyType);
+            loadSchemaMetadata(schemaName, null);
+            localStorageButton.classList.remove("btn--hidden");
         }
         else {
-            document.querySelector("#local-storage-btn").classList.add("btn--hidden");
+            localStorageButton.classList.add("btn--hidden");
         }
     }
 
     function retrieveResponseId() {
         let responseId = localStorage.getItem("response_id");
+        let responseIdButton = document.querySelector("#response-id-btn");
 
         if (responseId) {
-            document.querySelector("#response-id-btn").classList.remove("btn--hidden");
+            responseIdButton.classList.remove("btn--hidden");
         }
         else {
-            document.querySelector("#response-id-btn").classList.add("btn--hidden");
+            responseIdButton.classList.add("btn--hidden");
         }
     }
 
@@ -499,20 +501,13 @@
     }
 
     function saveResponseId() {
-        localStorage.setItem("response_id", document.querySelector("#response_id").value)
+        localStorage.setItem("response_id", document.querySelector("#response_id").value);
     }
 
     function clearLocalStorage() {
         localStorage.removeItem("response_id");
         localStorage.removeItem("schema_name");
-        document.querySelector("#launch_pattern").selectedIndex = 1;
-        document.querySelector("#schema_name").selectedIndex = 0;
-        let surveyTypeElement = document.querySelector("#schema-url-survey-type")
-        surveyTypeElement.selectedIndex = 0;
-        surveyTypeElement.disabled = false;
-        document.querySelector("#schema-url-btn").disabled = false;
-        document.querySelector("#response-id-btn").classList.add("btn--hidden");
-        document.querySelector("#local-storage-btn").classList.add("btn--hidden");
+        location.reload();
     }
 
     uuid('collection_exercise_sid');
