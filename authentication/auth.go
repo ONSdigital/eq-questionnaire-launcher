@@ -147,7 +147,7 @@ func isSurveyMetadata(key string) bool {
 		"TEST_QUESTIONS",
 		"sds_dataset_id",
 		"WINDOW_START_DATE",
-		"WINDOW_END_DATE",
+		"WINDOW_CLOSE_DATE",
 		"PORTAL_ID",
 		"PARTICIPANT_WINDOW_ID":
 
@@ -791,7 +791,7 @@ func GetDefaultValues() map[string]string {
 	defaults["sds_dataset_id"] = sdsDatasetId.String()
 	defaults["survey_id"] = "123"
 	defaults["WINDOW_START_DATE"] = "2023-03-01"
-	defaults["WINDOW_END_DATE"] = "2023-03-31"
+	defaults["WINDOW_CLOSE_DATE"] = "2023-03-31"
 	defaults["PORTAL_ID"] = fmt.Sprintf("%07d", rand.Int63n(1e7))
 	defaults["PARTICIPANT_WINDOW_ID"] = PARTICIPANT_ID + "-" + fmt.Sprintf("%03d", rand.Int63n(1e3))
 
