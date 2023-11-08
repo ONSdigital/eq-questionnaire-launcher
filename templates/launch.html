@@ -59,6 +59,9 @@
                     <label for="cir-schemas">CIR Schema</label>
                     <select id="cir-schemas" name="cir_instrument_id" class="qa-cir_instrument_id" onchange="setCirSchema(this);">
                         <option selected disabled>Select Schema</option>
+                        {{ range $cirSchema := .CirSchemas }}
+                        <option value="{{ $cirSchema.ID }}" data-form-type="{{ $cirSchema.FormType }}" data-version="{{ $cirSchema.CIVersion }}" data-language="{{ $cirSchema.Language }}">{{ $cirSchema.FormType }} ({{ $cirSchema.Language }})</option>      
+                        {{ end }}
                     </select>
                 </span>
             </div>
@@ -173,14 +176,12 @@
     // uuidv4: from https://github.com/kelektiv/node-uuid
     !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var n;n="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this,n.uuidv4=e()}}(function(){return function e(n,r,o){function t(f,u){if(!r[f]){if(!n[f]){var a="function"==typeof require&&require;if(!u&&a)return a(f,!0);if(i)return i(f,!0);var d=new Error("Cannot find module '"+f+"'");throw d.code="MODULE_NOT_FOUND",d}var p=r[f]={exports:{}};n[f][0].call(p.exports,function(e){var r=n[f][1][e];return t(r?r:e)},p,p.exports,e,n,r,o)}return r[f].exports}for(var i="function"==typeof require&&require,f=0;f<o.length;f++)t(o[f]);return t}({1:[function(e,n,r){function o(e,n){var r=n||0,o=t;return[o[e[r++]],o[e[r++]],o[e[r++]],o[e[r++]],"-",o[e[r++]],o[e[r++]],"-",o[e[r++]],o[e[r++]],"-",o[e[r++]],o[e[r++]],"-",o[e[r++]],o[e[r++]],o[e[r++]],o[e[r++]],o[e[r++]],o[e[r++]]].join("")}for(var t=[],i=0;i<256;++i)t[i]=(i+256).toString(16).substr(1);n.exports=o},{}],2:[function(e,n,r){var o="undefined"!=typeof crypto&&crypto.getRandomValues&&crypto.getRandomValues.bind(crypto)||"undefined"!=typeof msCrypto&&"function"==typeof window.msCrypto.getRandomValues&&msCrypto.getRandomValues.bind(msCrypto);if(o){var t=new Uint8Array(16);n.exports=function(){return o(t),t}}else{var i=new Array(16);n.exports=function(){for(var e,n=0;n<16;n++)0===(3&n)&&(e=4294967296*Math.random()),i[n]=e>>>((3&n)<<3)&255;return i}}},{}],3:[function(e,n,r){function o(e,n,r){var o=n&&r||0;"string"==typeof e&&(n="binary"===e?new Array(16):null,e=null),e=e||{};var f=e.random||(e.rng||t)();if(f[6]=15&f[6]|64,f[8]=63&f[8]|128,n)for(var u=0;u<16;++u)n[o+u]=f[u];return n||i(f)}var t=e("./lib/rng"),i=e("./lib/bytesToUuid");n.exports=o},{"./lib/bytesToUuid":1,"./lib/rng":2}]},{},[3])(3)});
 
-    // store results of external api calls so they only need to be made once
+    // store fetch so it only needs to be re-done if the survey changes
     let supplementaryDataSets = null;
-    let cirSchemas = null;
 
     function clearSurveyMetadataFields() {
         document.querySelector('#survey_metadata_fields').innerHTML = ""
         toggleSupplementaryData("hide");
-        toggleCIRMetadata("hide")
     }
 
     function setSurveyType(event) {
@@ -208,10 +209,9 @@
             if (schemaName.selectedIndex) {
                 clearSurveyMetadataFields();
                 toggleSubmitFlushButtons("hide");
-            }
-                
-            schemaName.selectedIndex = 0
-            localStorage.removeItem("schema_name")
+                schemaName.selectedIndex = 0
+                localStorage.removeItem("schema_name")                
+            }                            
 
             if (launchType === "cir") {
                 schemaUrl.value = ""  
@@ -219,7 +219,7 @@
             }
             else if (launchType === "url") {
                 cirSchemas.selectedIndex = 0
-                localStorage.removeItem("cir_schema")
+                localStorage.removeItem("cir_schema")                
             }
         }
         if (launchType === "name") {
@@ -229,6 +229,7 @@
             localStorage.removeItem("schema_url")
             localStorage.removeItem("cir_schema")
             localStorage.removeItem("survey_type")
+            document.querySelector("#language_code").disabled = false;            
         }
     }
 
@@ -306,8 +307,8 @@
         let schemaUrl = document.querySelector("#schema-url").value
         let surveyType = document.querySelector("#remote-schema-survey-type")
 
-        let cirSchema = document.querySelector("#cir-schemas")
-        let cirInstrumentId = cirSchema.selectedIndex ? cirSchema.value : null
+        let cirSchemaDropdown = document.querySelector("#cir-schemas")        
+        let cirInstrumentId = cirSchemaDropdown.selectedIndex ? cirSchemaDropdown.value : null
         
         let schemaName = null
 
@@ -321,20 +322,25 @@
             return false
         }
 
-        if (!schemaUrl && !cirSchema.selectedIndex) {
+        if (!schemaUrl && !cirInstrumentId) {
             alert("Enter a Schema URL or select a CIR Schema.")
             return false
         }
 
         if (schemaUrl){
             schemaName = schemaUrl.split("/").slice(-1)[0].split(".json")[0]
+            document.querySelector("#language_code").disabled = false;
         }
         else {
-            ciMetadata = cirSchemas.find(schema => schema.id === cirInstrumentId)
-            schemaName = ciMetadata.form_type
-            showCIRMetdata(ciMetadata);
-            // cir schemas already include language
-            populateDropDownWithValue("#language_code", ciMetadata.language)
+            let cirSchema = cirSchemaDropdown.options[cirSchemaDropdown.selectedIndex]
+            schemaName = cirSchema.getAttribute("data-form-type")
+            let ciVersion = cirSchema.getAttribute("data-version")
+            let language = cirSchema.getAttribute("data-language")
+
+            showCIRMetdata(cirInstrumentId, ciVersion);
+        
+            // cir schemas are for a specific language, so populate and disable choosing it
+            populateDropDownWithValue("#language_code", language)
             document.querySelector("#language_code").disabled = true;
         }
         
@@ -392,12 +398,12 @@
         toggleSubmitFlushButtons("hide");
     }
 
-    function showCIRMetdata(metadata) {
+    function showCIRMetdata(cirInstrumentId, ciVersion) {
         toggleCIRMetadata("show");
-        const ciMetadataKeys = ["id", "ci_version"];
-        document.querySelector("#cir_metadata").innerHTML = ciMetadataKeys.map(
-            key => `<div class="field-container">${getLabelFor(key)}${getInputField(key, "text", metadata[key], true)}</div>`
-        ).join('')
+        document.querySelector("#cir_metadata").innerHTML = `
+            <div class="field-container">${getLabelFor("id")}${getInputField("id", "text", cirInstrumentId, true)}</div>
+            <div class="field-container">${getLabelFor("ci_version")}${getInputField("ci_version", "text", ciVersion, true)}</div>
+        `
     }
 
     function updateSDSDropdown() {
@@ -420,20 +426,6 @@
             })
             .catch(_ => {
                 handleNoSupplementaryData();
-            })
-    }
-
-    async function loadCIRSchemas() {
-        let cir_url = `/collection-instrument-registry`
-        await getDataAsync(cir_url)
-            .then(cir_response => {
-                cirSchemas = cir_response.sort((a, b) => a.form_type < b.form_type ? -1 : 1)
-                document.querySelector("#cir-schemas").innerHTML += cirSchemas.map(schema =>
-                    `<option value="${schema.id}">${schema.form_type} (${schema.language})</option>`)
-                    .join("");
-            })
-            .catch(_ => {
-                document.querySelector("#cir-schemas").disabled = true
             })
     }
 
@@ -576,13 +568,12 @@
         }
     }
 
-    async function onLoad() {
+    function onLoad() {
         uuid('collection_exercise_sid');
         uuid('case_id');
         numericId();
         setResponseExpiry();
         retrieveResponseId();
-        await loadCIRSchemas();
 
         if (schemaName = localStorage.getItem("schema_name")){
             populateDropDownWithValue("#schema_name", schemaName)

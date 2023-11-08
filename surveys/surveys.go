@@ -143,7 +143,7 @@ func getAvailableSchemasFromRegister() []LauncherSchema {
 	return schemaList
 }
 
-func GetAvailableSchemasFromCIR() ([]CIMetadata, error) {
+func GetAvailableSchemasFromCIR() []CIMetadata {
 
 	ciMetadataList := []CIMetadata{}
 
@@ -155,20 +155,25 @@ func GetAvailableSchemasFromCIR() ([]CIMetadata, error) {
 
 	resp, err := clients.GetHTTPClient().Get(url)
 	if err != nil || resp.StatusCode != 200 {
-		return ciMetadataList, errors.New("unable to fetch Collection Instruments")
+		log.Print(err)
+		return ciMetadataList
 	}
 
 	responseBody, err := io.ReadAll(resp.Body)
 	resp.Body.Close()
 	if err != nil {
-		return ciMetadataList, errors.New("unable to read response body of Collection Instruments")
+		log.Print(err)
+		return ciMetadataList
 	}
 
 	if err := json.Unmarshal(responseBody, &ciMetadataList); err != nil {
 		log.Print(err)
-		return []CIMetadata{}, fmt.Errorf("%v", err)
+		return ciMetadataList
 	}
-	return ciMetadataList, nil
+	// Easier to navigate schemas in alphabetical order
+	sort.Slice(ciMetadataList, func(i, j int) bool { return ciMetadataList[i].FormType < ciMetadataList[j].FormType })
+
+	return ciMetadataList
 }
 
 func getAvailableSchemasFromRunner() []LauncherSchema {

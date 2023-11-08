@@ -58,6 +58,7 @@ func serveTemplate(templateName string, data interface{}, w http.ResponseWriter,
 
 type page struct {
 	Schemas                 map[string][]surveys.LauncherSchema
+	CirSchemas              []surveys.CIMetadata
 	AccountServiceURL       string
 	AccountServiceLogOutURL string
 }
@@ -69,6 +70,7 @@ func getStatusPage(w http.ResponseWriter, r *http.Request) {
 func getLaunchHandler(w http.ResponseWriter, r *http.Request) {
 	p := page{
 		Schemas:                 surveys.GetAvailableSchemas(),
+		CirSchemas:              surveys.GetAvailableSchemasFromCIR(),
 		AccountServiceURL:       getAccountServiceURL(r),
 		AccountServiceLogOutURL: getAccountServiceURL(r),
 	}
@@ -115,17 +117,6 @@ func getSupplementaryDataHandler(w http.ResponseWriter, r *http.Request) {
 	datasetJSON, _ := json.Marshal(datasets)
 
 	w.Write([]byte(datasetJSON))
-}
-
-func getCIRHandler(w http.ResponseWriter, r *http.Request) {
-	ciMetadata, err := surveys.GetAvailableSchemasFromCIR()
-	if err != nil {
-		http.Error(w, fmt.Sprintf("GetAvailableSchemasFromCIR err: %v", err), 500)
-		return
-	}
-	ciMetadataJSON, _ := json.Marshal(ciMetadata)
-
-	w.Write([]byte(ciMetadataJSON))
 }
 
 func getAccountServiceURL(r *http.Request) string {
@@ -232,7 +223,6 @@ func main() {
 	r.HandleFunc("/", postLaunchHandler).Methods("POST")
 	r.HandleFunc("/survey-data", getSurveyDataHandler).Methods("GET")
 	r.HandleFunc("/supplementary-data", getSupplementaryDataHandler).Methods("GET")
-	r.HandleFunc("/collection-instrument-registry", getCIRHandler).Methods("GET")
 
 	//Author Launcher with passed parameters in Url
 	r.HandleFunc("/quick-launch", quickLauncherHandler).Methods("GET")
