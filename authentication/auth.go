@@ -365,6 +365,8 @@ func getSchemaClaims(LauncherSchema surveys.LauncherSchema) map[string]interface
 	schemaClaims := make(map[string]interface{})
 	if LauncherSchema.URL != "" {
 		schemaClaims["schema_url"] = LauncherSchema.URL
+	} else if LauncherSchema.CIRInstrumentID != "" {
+		schemaClaims["cir_instrument_id"] = LauncherSchema.CIRInstrumentID
 	}
 
 	return schemaClaims
@@ -580,8 +582,9 @@ func GenerateTokenFromPost(postValues url.Values, launchVersion2 bool) (string, 
 
 	schemaName := TransformSchemaParamsToName(postValues)
 	schemaUrl := postValues.Get("schema_url")
+	cirInstrumentId := postValues.Get("cir_instrument_id")
 
-	launcherSchema := surveys.GetLauncherSchema(schemaName, schemaUrl)
+	launcherSchema := surveys.GetLauncherSchema(schemaName, schemaUrl, cirInstrumentId)
 
 	schema, error := getSchema(launcherSchema)
 	if error != "" {
@@ -678,6 +681,11 @@ func getSchema(launcherSchema surveys.LauncherSchema) (QuestionnaireSchema, stri
 
 	if launcherSchema.URL != "" {
 		url = launcherSchema.URL
+	} else if launcherSchema.CIRInstrumentID != "" {
+		hostURL := settings.Get("CIR_API_BASE_URL")
+
+		log.Println("Collection Instrument ID: ", launcherSchema.CIRInstrumentID)
+		url = fmt.Sprintf("%s/v2/retrieve_collection_instrument?guid=%s", hostURL, launcherSchema.CIRInstrumentID)
 	} else {
 		hostURL := settings.Get("SURVEY_RUNNER_SCHEMA_URL")
 

@@ -87,8 +87,9 @@ func postLaunchHandler(w http.ResponseWriter, r *http.Request) {
 func getSurveyDataHandler(w http.ResponseWriter, r *http.Request) {
 	schemaName := r.URL.Query().Get("schema_name")
 	schemaUrl := r.URL.Query().Get("schema_url")
+	cirInstrumentId := r.URL.Query().Get("cir_instrument_id")
 
-	launcherSchema := surveys.GetLauncherSchema(schemaName, schemaUrl)
+	launcherSchema := surveys.GetLauncherSchema(schemaName, schemaUrl, cirInstrumentId)
 
 	surveyData, err := authentication.GetSurveyData(launcherSchema)
 
@@ -100,8 +101,6 @@ func getSurveyDataHandler(w http.ResponseWriter, r *http.Request) {
 	surveyDataJSON, _ := json.Marshal(surveyData)
 
 	w.Write([]byte(surveyDataJSON))
-
-	return
 }
 
 func getSupplementaryDataHandler(w http.ResponseWriter, r *http.Request) {
@@ -116,6 +115,17 @@ func getSupplementaryDataHandler(w http.ResponseWriter, r *http.Request) {
 	datasetJSON, _ := json.Marshal(datasets)
 
 	w.Write([]byte(datasetJSON))
+}
+
+func getCIRHandler(w http.ResponseWriter, r *http.Request) {
+	ciMetadata, err := surveys.GetAvailableSchemasFromCIR()
+	if err != nil {
+		http.Error(w, fmt.Sprintf("GetAvailableSchemasFromCIR err: %v", err), 500)
+		return
+	}
+	ciMetadataJSON, _ := json.Marshal(ciMetadata)
+
+	w.Write([]byte(ciMetadataJSON))
 }
 
 func getAccountServiceURL(r *http.Request) string {
@@ -222,6 +232,7 @@ func main() {
 	r.HandleFunc("/", postLaunchHandler).Methods("POST")
 	r.HandleFunc("/survey-data", getSurveyDataHandler).Methods("GET")
 	r.HandleFunc("/supplementary-data", getSupplementaryDataHandler).Methods("GET")
+	r.HandleFunc("/collection-instrument-registry", getCIRHandler).Methods("GET")
 
 	//Author Launcher with passed parameters in Url
 	r.HandleFunc("/quick-launch", quickLauncherHandler).Methods("GET")
