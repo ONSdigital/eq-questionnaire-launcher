@@ -147,7 +147,7 @@ func isSurveyMetadata(key string) bool {
 		"TEST_QUESTIONS",
 		"sds_dataset_id",
 		"WINDOW_START_DATE",
-		"WINDOW_END_DATE",
+		"WINDOW_CLOSE_DATE",
 		"PORTAL_ID",
 		"PARTICIPANT_WINDOW_ID":
 
@@ -365,6 +365,8 @@ func getSchemaClaims(LauncherSchema surveys.LauncherSchema) map[string]interface
 	schemaClaims := make(map[string]interface{})
 	if LauncherSchema.URL != "" {
 		schemaClaims["schema_url"] = LauncherSchema.URL
+	} else if LauncherSchema.CIRInstrumentID != "" {
+		schemaClaims["cir_instrument_id"] = LauncherSchema.CIRInstrumentID
 	}
 
 	return schemaClaims
@@ -580,8 +582,9 @@ func GenerateTokenFromPost(postValues url.Values, launchVersion2 bool) (string, 
 
 	schemaName := TransformSchemaParamsToName(postValues)
 	schemaUrl := postValues.Get("schema_url")
+	cirInstrumentId := postValues.Get("cir_instrument_id")
 
-	launcherSchema := surveys.GetLauncherSchema(schemaName, schemaUrl)
+	launcherSchema := surveys.GetLauncherSchema(schemaName, schemaUrl, cirInstrumentId)
 
 	schema, error := getSchema(launcherSchema)
 	if error != "" {
@@ -678,6 +681,11 @@ func getSchema(launcherSchema surveys.LauncherSchema) (QuestionnaireSchema, stri
 
 	if launcherSchema.URL != "" {
 		url = launcherSchema.URL
+	} else if launcherSchema.CIRInstrumentID != "" {
+		hostURL := settings.Get("CIR_API_BASE_URL")
+
+		log.Println("Collection Instrument ID: ", launcherSchema.CIRInstrumentID)
+		url = fmt.Sprintf("%s/v2/retrieve_collection_instrument?guid=%s", hostURL, launcherSchema.CIRInstrumentID)
 	} else {
 		hostURL := settings.Get("SURVEY_RUNNER_SCHEMA_URL")
 
@@ -791,7 +799,7 @@ func GetDefaultValues() map[string]string {
 	defaults["sds_dataset_id"] = sdsDatasetId.String()
 	defaults["survey_id"] = "123"
 	defaults["WINDOW_START_DATE"] = "2023-03-01"
-	defaults["WINDOW_END_DATE"] = "2023-03-31"
+	defaults["WINDOW_CLOSE_DATE"] = "2023-03-31"
 	defaults["PORTAL_ID"] = fmt.Sprintf("%07d", rand.Int63n(1e7))
 	defaults["PARTICIPANT_WINDOW_ID"] = PARTICIPANT_ID + "-" + fmt.Sprintf("%03d", rand.Int63n(1e3))
 

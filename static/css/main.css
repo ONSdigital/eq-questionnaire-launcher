@@ -11,7 +11,7 @@ label { display:inline-block; font-weight: 600; margin-bottom: 0.25rem; width:20
     position: relative;
 }
 
-.btn--hidden, .supplementary-data--hidden {
+.btn--hidden, .supplementary-data--hidden, .cir-metadata--hidden {
     display:none;
 }
 
