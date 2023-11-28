@@ -19,9 +19,25 @@ import (
 
 // LauncherSchema is a representation of a schema in the Launcher
 type LauncherSchema struct {
-	Name       string
-	SurveyType string
-	URL        string
+	Name            string
+	SurveyType      string
+	URL             string
+	CIRInstrumentID string
+}
+
+type CIMetadata struct {
+	CIVersion     int    `json:"ci_version"`
+	DataVersion   string `json:"data_version"`
+	FormType      string `json:"form_type"`
+	ID            string `json:"id"`
+	Language      string `json:"language"`
+	PublishedAt   string `json:"published_at"`
+	SchemaVersion string `json:"schema_version"`
+	Status        string `json:"status"`
+	SurveyID      string `json:"survey_id"`
+	Title         string `json:"title"`
+	Description   string `json:"description"`
+	SDSSchema     string `json:"sds_schema"`
 }
 
 type DatasetMetadata struct {
@@ -127,6 +143,39 @@ func getAvailableSchemasFromRegister() []LauncherSchema {
 	return schemaList
 }
 
+func GetAvailableSchemasFromCIR() []CIMetadata {
+
+	ciMetadataList := []CIMetadata{}
+
+	hostURL := settings.Get("CIR_API_BASE_URL")
+
+	log.Printf("CIR API Base URL: %s", hostURL)
+
+	url := fmt.Sprintf("%s/v2/ci_metadata", hostURL)
+
+	resp, err := clients.GetHTTPClient().Get(url)
+	if err != nil || resp.StatusCode != 200 {
+		log.Print(err)
+		return ciMetadataList
+	}
+
+	responseBody, err := io.ReadAll(resp.Body)
+	resp.Body.Close()
+	if err != nil {
+		log.Print(err)
+		return ciMetadataList
+	}
+
+	if err := json.Unmarshal(responseBody, &ciMetadataList); err != nil {
+		log.Print(err)
+		return ciMetadataList
+	}
+	// Easier to navigate schemas in alphabetical order
+	sort.Slice(ciMetadataList, func(i, j int) bool { return ciMetadataList[i].FormType < ciMetadataList[j].FormType })
+
+	return ciMetadataList
+}
+
 func getAvailableSchemasFromRunner() []LauncherSchema {
 
 	schemaList := []LauncherSchema{}
@@ -226,7 +275,7 @@ func GetSupplementaryDataSets(surveyId string, periodId string) ([]DatasetMetada
 }
 
 // Return a LauncherSchema instance by loading schema from name or URL
-func GetLauncherSchema(schemaName string, schemaUrl string) LauncherSchema {
+func GetLauncherSchema(schemaName string, schemaUrl string, cirInstrumentId string) LauncherSchema {
 	var launcherSchema LauncherSchema
 
 	if schemaUrl != "" {
@@ -235,11 +284,16 @@ func GetLauncherSchema(schemaName string, schemaUrl string) LauncherSchema {
 			URL:  schemaUrl,
 			Name: schemaName,
 		}
+	} else if cirInstrumentId != "" {
+		log.Println("Searching for schema by CIR Instrument ID: " + cirInstrumentId)
+		launcherSchema = LauncherSchema{
+			CIRInstrumentID: cirInstrumentId,
+		}
 	} else if schemaName != "" {
 		log.Println("Searching for schema by name: " + schemaName)
 		launcherSchema = FindSurveyByName(schemaName)
 	} else {
-		panic("Either `schema_name` or `schema_url` must be provided.")
+		panic("Either `schema_name` or `schema_url` or `cir_instrument_id` must be provided.")
 	}
 
 	return launcherSchema

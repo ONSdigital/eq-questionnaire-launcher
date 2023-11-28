@@ -58,6 +58,7 @@ func serveTemplate(templateName string, data interface{}, w http.ResponseWriter,
 
 type page struct {
 	Schemas                 map[string][]surveys.LauncherSchema
+	CirSchemas              []surveys.CIMetadata
 	AccountServiceURL       string
 	AccountServiceLogOutURL string
 }
@@ -69,6 +70,7 @@ func getStatusPage(w http.ResponseWriter, r *http.Request) {
 func getLaunchHandler(w http.ResponseWriter, r *http.Request) {
 	p := page{
 		Schemas:                 surveys.GetAvailableSchemas(),
+		CirSchemas:              surveys.GetAvailableSchemasFromCIR(),
 		AccountServiceURL:       getAccountServiceURL(r),
 		AccountServiceLogOutURL: getAccountServiceURL(r),
 	}
@@ -87,8 +89,9 @@ func postLaunchHandler(w http.ResponseWriter, r *http.Request) {
 func getSurveyDataHandler(w http.ResponseWriter, r *http.Request) {
 	schemaName := r.URL.Query().Get("schema_name")
 	schemaUrl := r.URL.Query().Get("schema_url")
+	cirInstrumentId := r.URL.Query().Get("cir_instrument_id")
 
-	launcherSchema := surveys.GetLauncherSchema(schemaName, schemaUrl)
+	launcherSchema := surveys.GetLauncherSchema(schemaName, schemaUrl, cirInstrumentId)
 
 	surveyData, err := authentication.GetSurveyData(launcherSchema)
 
@@ -100,8 +103,6 @@ func getSurveyDataHandler(w http.ResponseWriter, r *http.Request) {
 	surveyDataJSON, _ := json.Marshal(surveyData)
 
 	w.Write([]byte(surveyDataJSON))
-
-	return
 }
 
 func getSupplementaryDataHandler(w http.ResponseWriter, r *http.Request) {
