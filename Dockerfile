@@ -12,12 +12,7 @@ RUN go get
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -mod mod -o /go/bin/eq-questionnaire-launcher .
 
 ######## Start a new stage from scratch #######
-FROM alpine:latest  
-
-RUN apk --no-cache update && \
-    apk --no-cache add python3 py-pip py-setuptools ca-certificates && \
-    pip --no-cache-dir install awscli && \
-    rm -rf /var/cache/apk/*
+FROM alpine:latest
 
 # Copy the Pre-built binary file and entry point from the previous stage
 COPY --from=builder /go/bin/eq-questionnaire-launcher .
