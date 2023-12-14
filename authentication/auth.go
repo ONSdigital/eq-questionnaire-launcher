@@ -776,7 +776,7 @@ func GetDefaultValues() map[string]string {
 	defaults["period_id"] = "201605"
 	defaults["period_str"] = "May 2017"
 	defaults["collection_exercise_sid"] = collectionExerciseSid.String()
-	defaults["ru_ref"] = "12346789012A"
+	defaults["ru_ref"] = "12345678901A"
 	defaults["ru_name"] = "ESSENTIAL ENTERPRISE LTD."
 	defaults["ref_p_start_date"] = "2016-05-01"
 	defaults["ref_p_end_date"] = "2016-05-31"
