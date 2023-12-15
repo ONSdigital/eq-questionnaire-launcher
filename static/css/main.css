@@ -4,11 +4,20 @@ body {
     color: #222;
 }
 
-label { display:inline-block; font-weight: 600; margin-bottom: 0.25rem; width:200px; font-size:0.9rem; }
+label {
+    display:inline-block;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    width:200px;
+    font-size:0.9rem;
+}
 
 .field-container {
     margin: 0 0 0.2rem 0;
-    position: relative;
+}
+
+.field-container--inline {
+    display: inline-block;
 }
 
 .btn--hidden, .supplementary-data--hidden, .cir-metadata--hidden {
@@ -20,9 +29,9 @@ label { display:inline-block; font-weight: 600; margin-bottom: 0.25rem; width:20
 }
 
 .btn--small {
-    font-size: 0.9rem  !important;
-    padding:0.50rem 2rem  !important;
-    margin: 0.1rem  !important;
+    font-size: 0.9rem !important;
+    padding:0.50rem 2rem !important;
+    margin: 0.1rem !important;
 }
 
 input[type=text] {
