@@ -214,11 +214,6 @@ func generateClaims(claimValues map[string][]string, launcherSchema surveys.Laun
 	if len(claimValues["form_type"]) > 0 && len(claimValues["eq_id"]) > 0 {
 		log.Println("Deleting schema name from claims")
 		delete(claims, "schema_name")
-	} else {
-		// When quicklaunching, schema_name will not be set, but launcherSchema will have the schema_name.
-		if len(claimValues["schema_name"]) == 0 && launcherSchema.Name != "" {
-			claims["schema_name"] = launcherSchema.Name
-		}
 	}
 
 	log.Printf("Using claims: %s", claims)
@@ -251,11 +246,6 @@ func generateClaimsV2(claimValues map[string][]string, launcherSchema surveys.La
 	}
 
 	getSurveyMetadataFromClaims(claimValues, data, claims, surveyMetadata)
-
-	// When quicklaunching, schema_name will not be set, but launcherSchema will have the schema_name.
-	if len(claimValues["schema_name"]) == 0 && launcherSchema.Name != "" {
-		claims["schema_name"] = launcherSchema.Name
-	}
 
 	log.Printf("Using claims: %s", claims)
 
