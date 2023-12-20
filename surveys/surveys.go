@@ -281,7 +281,7 @@ func GetLauncherSchema(schemaName string, schemaUrl string, cirInstrumentId stri
 	if schemaUrl != "" {
 		log.Println("Getting schema by URL: " + schemaUrl)
 		launcherSchema = LauncherSchema{
-			URL: schemaUrl,
+			URL:  schemaUrl,
 			Name: schemaName,
 		}
 	} else if cirInstrumentId != "" {
