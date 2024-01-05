@@ -174,13 +174,22 @@ func isRequiredMetadata(key string) bool {
 }
 
 func getSurveyMetadataFromClaims(claimValues map[string][]string, data map[string]interface{}, claims map[string]interface{}, surveyMetadata map[string]interface{}) {
+	//for key, value := range claimValues {
+	//	if isSurveyMetadata(key) {
+	//		data[key] = value[0]
+	//	} else if key != "roles" && isRequiredMetadata(key) && value[0] != "" {
+	//		claims[key] = value[0]
+	//	} else if key == "roles" {
+	//		claims[key] = value
+	//	}
+	//}
 	for key, value := range claimValues {
-		if isSurveyMetadata(key) {
-			data[key] = value[0]
-		} else if key != "roles" && isRequiredMetadata(key) && value[0] != "" {
+		if isRequiredMetadata(key) {
 			claims[key] = value[0]
 		} else if key == "roles" {
 			claims[key] = value
+		} else {
+			data[key] = value[0]
 		}
 	}
 	surveyMetadata["data"] = data
@@ -729,6 +738,7 @@ func getMandatatoryClaims(surveyType string, defaults map[string]string) []Metad
 			{"ru_ref", "false", defaults["ru_ref"]},
 			{"period_id", "false", defaults["period_id"]},
 			{"user_id", "false", defaults["user_id"]},
+			{"flag_1", "false", defaults["flag_1"]},
 		}
 	}
 
@@ -793,6 +803,7 @@ func GetDefaultValues() map[string]string {
 	defaults["TEST_QUESTIONS"] = "F"
 	defaults["sds_dataset_id"] = sdsDatasetId.String()
 	defaults["survey_id"] = "123"
+	defaults["flag_1"] = "false"
 	defaults["WINDOW_START_DATE"] = "2023-03-01"
 	defaults["WINDOW_CLOSE_DATE"] = "2023-03-31"
 	defaults["PORTAL_ID"] = fmt.Sprintf("%07d", rand.Int63n(1e7))
