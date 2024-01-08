@@ -122,40 +122,6 @@ type Metadata struct {
 	Default   string `json:"default"`
 }
 
-func isSurveyMetadata(key string) bool {
-	switch key {
-	case
-		"case_ref",
-		"case_type",
-		"display_address",
-		"employment_date",
-		"form_type",
-		"period_id",
-		"period_str",
-		"ref_p_end_date",
-		"ref_p_start_date",
-		"ru_name",
-		"ru_ref",
-		"trad_as",
-		"user_id",
-		"qid",
-		"survey_id",
-		"PARTICIPANT_ID",
-		"FIRST_NAME",
-		"BLOOD_TEST_BARCODE",
-		"SWAB_TEST_BARCODE",
-		"TEST_QUESTIONS",
-		"sds_dataset_id",
-		"WINDOW_START_DATE",
-		"WINDOW_CLOSE_DATE",
-		"PORTAL_ID",
-		"PARTICIPANT_WINDOW_ID":
-
-		return true
-	}
-	return false
-}
-
 func isRequiredMetadata(key string) bool {
 	switch key {
 	case
@@ -620,8 +586,9 @@ func GenerateTokenFromPost(postValues url.Values, launchVersion2 bool) (string, 
 
 	for _, metadata := range requiredMetadata {
 		if metadata.Validator == "boolean" {
-			_, isset := claims[metadata.Name]
-			claims[metadata.Name] = isset
+			surveyMetadata := claims["survey_metadata"].(map[string]interface{})["data"]
+			isset := surveyMetadata.(map[string]interface{})[metadata.Name]
+			surveyMetadata.(map[string]interface{})[metadata.Name] = isset
 		}
 	}
 
@@ -738,7 +705,6 @@ func getMandatatoryClaims(surveyType string, defaults map[string]string) []Metad
 			{"ru_ref", "false", defaults["ru_ref"]},
 			{"period_id", "false", defaults["period_id"]},
 			{"user_id", "false", defaults["user_id"]},
-			{"flag_1", "false", defaults["flag_1"]},
 		}
 	}
 
