@@ -578,7 +578,7 @@ func GenerateTokenFromPost(postValues url.Values, launchVersion2 bool) (string, 
 	for _, metadata := range requiredMetadata {
 		if metadata.Validator == "boolean" {
 			surveyMetadata := claims["survey_metadata"].(map[string]interface{})["data"]
-			isset := surveyMetadata.(map[string]interface{})[metadata.Name]
+			_, isset := surveyMetadata.(map[string]interface{})[metadata.Name]
 			surveyMetadata.(map[string]interface{})[metadata.Name] = isset
 		}
 	}
@@ -760,7 +760,6 @@ func GetDefaultValues() map[string]string {
 	defaults["TEST_QUESTIONS"] = "F"
 	defaults["sds_dataset_id"] = sdsDatasetId.String()
 	defaults["survey_id"] = "123"
-	defaults["flag_1"] = "false"
 	defaults["WINDOW_START_DATE"] = "2023-03-01"
 	defaults["WINDOW_CLOSE_DATE"] = "2023-03-31"
 	defaults["PORTAL_ID"] = fmt.Sprintf("%07d", rand.Int63n(1e7))
