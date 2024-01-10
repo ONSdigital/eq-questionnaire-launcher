@@ -575,6 +575,7 @@ func GenerateTokenFromPost(postValues url.Values, launchVersion2 bool) (string, 
 		return "", fmt.Sprintf("GetRequiredMetadata failed err: %v", error)
 	}
 
+	// Doesn't work for top level boolean metadata
 	for _, metadata := range requiredMetadata {
 		if metadata.Validator == "boolean" {
 			surveyMetadata := claims["survey_metadata"].(map[string]interface{})["data"]
@@ -615,6 +616,8 @@ func GetSurveyData(launcherSchema surveys.LauncherSchema) (QuestionnaireSchema, 
 			schema.Metadata[i].Default = "false"
 		}
 	}
+
+	fillNonDefaults(schema)
 
 	claims := make([]string, 0)
 	for _, v := range schema.Metadata {
@@ -722,6 +725,19 @@ func stringInSlice(a string, list []string) bool {
 	return false
 }
 
+func fillNonDefaults(schema QuestionnaireSchema) {
+	metadataValues := make(map[string]string)
+	metadataValues["date"] = "2016-05-11"
+	metadataValues["string"] = "Dummy text"
+	metadataValues["url"] = "https://example.com"
+
+	for i, value := range schema.Metadata {
+		if value.Default == "" {
+			schema.Metadata[i].Default = metadataValues[(value.Validator)]
+		}
+	}
+}
+
 // GetDefaultValues Returns a map of default values for metadata keys
 func GetDefaultValues() map[string]string {
 	defaults := make(map[string]string)
@@ -760,8 +776,8 @@ func GetDefaultValues() map[string]string {
 	defaults["TEST_QUESTIONS"] = "F"
 	defaults["sds_dataset_id"] = sdsDatasetId.String()
 	defaults["survey_id"] = "123"
-	defaults["WINDOW_START_DATE"] = "2023-03-01"
-	defaults["WINDOW_CLOSE_DATE"] = "2023-03-31"
+	defaults["WINDOW_START_DATE"] = "2016-05-01"
+	defaults["WINDOW_CLOSE_DATE"] = "2016-05-31"
 	defaults["PORTAL_ID"] = fmt.Sprintf("%07d", rand.Int63n(1e7))
 	defaults["PARTICIPANT_WINDOW_ID"] = PARTICIPANT_ID + "-" + fmt.Sprintf("%03d", rand.Int63n(1e3))
 
