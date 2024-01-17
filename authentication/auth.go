@@ -219,17 +219,29 @@ func generateClaimsV2(claimValues map[string][]string, schema QuestionnaireSchem
 		surveyMetadata["receipting_keys"] = receiptingKeys
 	}
 
-	defaults := GetDefaultValues()
 	/*
 		Combine the schema metadata with mandatory/required schema metadata that's not defined
 		in the schema itself in order to ensure the correct metadata is loaded into surveyMetadata
+		and prevent duplicates being entered.
 	*/
+	defaults := GetDefaultValues()
 	mandatoryClaims := getMandatatoryClaims(schema.SurveyType, defaults)
-	schemaMetadata := append(mandatoryClaims, schema.Metadata...)
+	schema.Metadata = append(mandatoryClaims, schema.Metadata...)
+	for _, mandatoryMetadata := range mandatoryClaims {
+		present := false
+		for _, schemaMetadata := range schema.Metadata {
+			if mandatoryMetadata.Name == schemaMetadata.Name {
+				present = true
+				break
+			}
+		}
+		schema.Metadata = append(schema.Metadata, mandatoryMetadata)
+		if !(present) {
+			schema.Metadata = append(schema.Metadata, mandatoryMetadata)
+		}
+	}
 
-	// Loop over mandatory metadata and add to schema.Metadata
-
-	getSurveyMetadataFromClaims(claimValues, data, claims, surveyMetadata, schemaMetadata)
+	getSurveyMetadataFromClaims(claimValues, data, claims, surveyMetadata, schema.Metadata)
 
 	log.Printf("Using claims: %s", claims)
 
