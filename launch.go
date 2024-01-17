@@ -137,6 +137,7 @@ func redirectURL(w http.ResponseWriter, r *http.Request) {
 	hostURL := settings.Get("SURVEY_RUNNER_URL")
 
 	launchVersion := r.FormValue("launch_version")
+	delete(r.PostForm, "launch_version")
 
 	token := ""
 	err := ""

@@ -135,7 +135,7 @@
             <h3>Runner Data</h3>
             <div class="field-container">
                 <label for="exp">Token Expiry (seconds)</label>
-                <input id="exp" name="exp" type="text" value="1800" class="qa-token-expiry">
+                <input id="exp" type="text" value="1800" class="qa-token-expiry">
             </div>
 
             <div class="field-container">
@@ -164,12 +164,12 @@
 
             <div class="field-container">
                 <label for="account_service_log_out_url">Account Service Log Out URL</label>
-                <input id="account_service_log_out_url" name="account_service_log_out_url" type="text" value="{{.AccountServiceLogOutURL}}" class="qa-account_service_log_out_url">
+                <input id="account_service_log_out_url" type="text" value="{{.AccountServiceLogOutURL}}" class="qa-account_service_log_out_url">
             </div>
 
             <div class="field-container">
-                <input type="submit" name="action_launch" value="Open Survey" class="qa-btn-submit-dev btn btn--hidden" id="submit-btn" onclick="saveResponseId()"/>
-                <input type="submit" name="action_flush" value="Flush Survey Data" class="qa-btn-submit-dev btn btn--hidden" id="flush-btn"/>
+                <input type="submit" value="Open Survey" class="qa-btn-submit-dev btn btn--hidden" id="submit-btn" onclick="saveResponseId()"/>
+                <input type="submit" value="Flush Survey Data" class="qa-btn-submit-dev btn btn--hidden" id="flush-btn"/>
                 <input type="button" value="Clear Local Storage" class="qa-btn-submit-dev btn" id="local-storage-btn" onclick="clearLocalStorage()"/>
             </div>
 
@@ -530,12 +530,22 @@
 
         function validateForm() {
             validateResponseExpiresAt();
+            removeUnwantedMetadata()
         }
-
         function validateResponseExpiresAt() {
             let responseExpiresAt = Date.parse(document.querySelector('#response_expires_at').value)
             if (isNaN(responseExpiresAt)) {
                 document.querySelector('#response_expires_at').remove()
+            }
+        }
+
+        // Inputs without a name will not be submitted
+        function removeUnwantedMetadata() {
+            const inputs = document.getElementsByTagName("input");
+            for (let input of inputs) {
+                if (!input.value) {
+                    input.removeAttribute('name');
+                }
             }
         }
 
