@@ -214,7 +214,7 @@ func generateClaimsV2(claimValues map[string][]string, schema QuestionnaireSchem
 	surveyMetadata := make(map[string]interface{})
 	data := make(map[string]interface{})
 
-	if schema.SurveyType == "social" || schema.SurveyType == "health" {
+	if isNonBusinessNonDefaultSurvey(schema.SurveyType) {
 		receiptingKeys := []string{"qid"}
 		surveyMetadata["receipting_keys"] = receiptingKeys
 	}
