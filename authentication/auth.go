@@ -512,6 +512,8 @@ func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, url
 		updatedData[key] = value
 	}
 
+	requiredSchemaMetadata = createMetadata(surveyMetadata, requiredSchemaMetadata)
+
 	for _, metadata := range requiredSchemaMetadata {
 		if metadata.Validator == "boolean" {
 			updatedData[metadata.Name] = getBooleanOrDefault(metadata.Name, urlValues, false)
@@ -540,6 +542,22 @@ func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, url
 	}
 
 	return token, ""
+}
+
+func createMetadata(surveyMetadata map[string]interface{}, requiredSchemaMetadata []Metadata) []Metadata {
+	for _, metadataVal := range surveyMetadata {
+		for key, value := range metadataVal.(map[string]interface{}) {
+			fmt.Println(value)
+			newMetadata := Metadata{}
+			if strings.Contains(value.(string), "True") || strings.Contains(value.(string), "False") {
+				newMetadata = Metadata{Name: key, Validator: "boolean", Default: "false"}
+			} else {
+				newMetadata = Metadata{Name: key, Validator: "string", Default: "test"}
+			}
+			requiredSchemaMetadata = append(requiredSchemaMetadata, newMetadata)
+		}
+	}
+	return requiredSchemaMetadata
 }
 
 // TransformSchemaParamsToName Returns a schema name from business schema parameters
