@@ -226,7 +226,6 @@ func generateClaimsV2(claimValues map[string][]string, schema QuestionnaireSchem
 	*/
 	defaults := GetDefaultValues()
 	mandatoryClaims := getMandatatoryClaims(schema.SurveyType, defaults)
-	schema.Metadata = append(mandatoryClaims, schema.Metadata...)
 	for _, mandatoryMetadata := range mandatoryClaims {
 		present := false
 		for _, schemaMetadata := range schema.Metadata {
@@ -235,7 +234,6 @@ func generateClaimsV2(claimValues map[string][]string, schema QuestionnaireSchem
 				break
 			}
 		}
-		schema.Metadata = append(schema.Metadata, mandatoryMetadata)
 		if !(present) {
 			schema.Metadata = append(schema.Metadata, mandatoryMetadata)
 		}
