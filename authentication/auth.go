@@ -512,7 +512,7 @@ func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, url
 		updatedData[key] = value
 	}
 
-	requiredSchemaMetadata = createMetadata(surveyMetadata, requiredSchemaMetadata)
+	requiredSchemaMetadata = addAdditionalMetadata(surveyMetadata, requiredSchemaMetadata)
 
 	for _, metadata := range requiredSchemaMetadata {
 		if metadata.Validator == "boolean" {
@@ -544,10 +544,9 @@ func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, url
 	return token, ""
 }
 
-func createMetadata(surveyMetadata map[string]interface{}, requiredSchemaMetadata []Metadata) []Metadata {
+func addAdditionalMetadata(surveyMetadata map[string]interface{}, requiredSchemaMetadata []Metadata) []Metadata {
 	for _, metadataVal := range surveyMetadata {
 		for key, value := range metadataVal.(map[string]interface{}) {
-			fmt.Println(value)
 			newMetadata := Metadata{}
 			if strings.Contains(value.(string), "True") || strings.Contains(value.(string), "False") {
 				newMetadata = Metadata{Name: key, Validator: "boolean", Default: "false"}
