@@ -122,6 +122,10 @@ type Metadata struct {
 	Default   string `json:"default"`
 }
 
+func (metadata *Metadata) updateMetadataDefault(newDefault string) {
+	metadata.Default = newDefault
+}
+
 func isTopLevelMetadata(key string) bool {
 	switch key {
 	case
@@ -512,6 +516,14 @@ func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, url
 		updatedData[key] = value
 	}
 
+	/*
+		This method below is used to add any metadata (that is a parameter) which is intended to be of type boolean to
+		requiredSchemaMetadata for the typing in "updatedData" to be correct. Without this method, a parameter added to
+		the URL set as a boolean for example, "&example=True", would be interpreted as a String hence the type in the
+		token would be incorrect. It doesn't apply to other types because those do not need to be updated/changed in
+		"updatedData". It's essential to ensure the values in "updatedData" are of the correct type for the types in
+		token to be correct.
+	*/
 	requiredSchemaMetadata = addAdditionalMetadata(surveyMetadata, requiredSchemaMetadata)
 
 	for _, metadata := range requiredSchemaMetadata {
@@ -547,16 +559,27 @@ func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, url
 func addAdditionalMetadata(surveyMetadata map[string]interface{}, requiredSchemaMetadata []Metadata) []Metadata {
 	for _, metadataVal := range surveyMetadata {
 		for key, value := range metadataVal.(map[string]interface{}) {
-			newMetadata := Metadata{}
-			if strings.Contains(value.(string), "True") || strings.Contains(value.(string), "False") {
-				newMetadata = Metadata{Name: key, Validator: "boolean", Default: "false"}
+			if isExistingRequiredSchemaMetadata(requiredSchemaMetadata, key) {
+				continue
 			} else {
-				newMetadata = Metadata{Name: key, Validator: "string", Default: "test"}
+				newMetadata := Metadata{}
+				if strings.Contains(value.(string), "True") || strings.Contains(value.(string), "False") {
+					newMetadata = Metadata{Name: key, Validator: "boolean", Default: "false"}
+					requiredSchemaMetadata = append(requiredSchemaMetadata, newMetadata)
+				}
 			}
-			requiredSchemaMetadata = append(requiredSchemaMetadata, newMetadata)
 		}
 	}
 	return requiredSchemaMetadata
+}
+
+func isExistingRequiredSchemaMetadata(requiredSchemaMetadata []Metadata, metadataName string) bool {
+	for _, value := range requiredSchemaMetadata {
+		if metadataName == value.Name {
+			return true
+		}
+	}
+	return false
 }
 
 // TransformSchemaParamsToName Returns a schema name from business schema parameters
