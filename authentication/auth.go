@@ -524,7 +524,7 @@ func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, url
 		"updatedData". It's essential to ensure the values in "updatedData" are of the correct type for the types in
 		token to be correct.
 	*/
-	requiredSchemaMetadata = addAdditionalMetadata(surveyMetadata, requiredSchemaMetadata)
+	requiredSchemaMetadata = addUrlBooleanMetadata(updatedData, requiredSchemaMetadata)
 
 	for _, metadata := range requiredSchemaMetadata {
 		if metadata.Validator == "boolean" {
@@ -556,30 +556,14 @@ func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, url
 	return token, ""
 }
 
-func addAdditionalMetadata(surveyMetadata map[string]interface{}, requiredSchemaMetadata []Metadata) []Metadata {
-	for _, metadataVal := range surveyMetadata {
-		for key, value := range metadataVal.(map[string]interface{}) {
-			if isExistingRequiredSchemaMetadata(requiredSchemaMetadata, key) {
-				continue
-			} else {
-				newMetadata := Metadata{}
-				if strings.Contains(value.(string), "True") || strings.Contains(value.(string), "False") {
-					newMetadata = Metadata{Name: key, Validator: "boolean", Default: "false"}
-					requiredSchemaMetadata = append(requiredSchemaMetadata, newMetadata)
-				}
-			}
+func addUrlBooleanMetadata(updatedMetadata map[string]interface{}, requiredSchemaMetadata []Metadata) []Metadata {
+	for key, value := range updatedMetadata {
+		if strings.Contains(value.(string), "True") || strings.Contains(value.(string), "False") {
+			newMetadata := Metadata{Name: key, Validator: "boolean", Default: "false"}
+			requiredSchemaMetadata = append(requiredSchemaMetadata, newMetadata)
 		}
 	}
 	return requiredSchemaMetadata
-}
-
-func isExistingRequiredSchemaMetadata(requiredSchemaMetadata []Metadata, metadataName string) bool {
-	for _, value := range requiredSchemaMetadata {
-		if metadataName == value.Name {
-			return true
-		}
-	}
-	return false
 }
 
 // TransformSchemaParamsToName Returns a schema name from business schema parameters
