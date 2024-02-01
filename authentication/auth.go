@@ -558,7 +558,8 @@ func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, url
 
 func addUrlBooleanMetadata(updatedMetadata map[string]interface{}, requiredSchemaMetadata []Metadata) []Metadata {
 	for key, value := range updatedMetadata {
-		if strings.Contains(value.(string), "True") || strings.Contains(value.(string), "False") {
+		strings.ToLower(value.(string))
+		if strings.Contains(value.(string), "true") || strings.Contains(value.(string), "false") {
 			newMetadata := Metadata{Name: key, Validator: "boolean", Default: "false"}
 			requiredSchemaMetadata = append(requiredSchemaMetadata, newMetadata)
 		}
