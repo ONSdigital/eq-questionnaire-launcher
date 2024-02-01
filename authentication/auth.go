@@ -142,7 +142,7 @@ func isTopLevelMetadata(key string) bool {
 	return false
 }
 
-func getSurveyMetadataFromClaims(claimValues map[string][]string, data map[string]interface{}, claims map[string]interface{}, surveyMetadata map[string]interface{}, schemaMetadata []Metadata) {
+func getSurveyMetadataFromClaims(claimValues map[string][]string, data map[string]interface{}, claims map[string]interface{}, surveyMetadata map[string]interface{}) {
 	for key, value := range claimValues {
 		if isTopLevelMetadata(key) {
 			claims[key] = value[0]
@@ -214,32 +214,12 @@ func generateClaimsV2(claimValues map[string][]string, schema QuestionnaireSchem
 	surveyMetadata := make(map[string]interface{})
 	data := make(map[string]interface{})
 
-	if isNonBusinessNonDefaultSurvey(schema.SurveyType) {
+	if isSocialSurvey(schema.SurveyType) {
 		receiptingKeys := []string{"qid"}
 		surveyMetadata["receipting_keys"] = receiptingKeys
 	}
 
-	/*
-		Combine the schema metadata with mandatory/required schema metadata that's not defined
-		in the schema itself in order to ensure the correct metadata is loaded into surveyMetadata
-		and prevent duplicates being entered.
-	*/
-	defaults := GetDefaultValues()
-	mandatoryClaims := getMandatatoryClaims(schema.SurveyType, defaults)
-	for _, mandatoryMetadata := range mandatoryClaims {
-		present := false
-		for _, schemaMetadata := range schema.Metadata {
-			if mandatoryMetadata.Name == schemaMetadata.Name {
-				present = true
-				break
-			}
-		}
-		if !(present) {
-			schema.Metadata = append(schema.Metadata, mandatoryMetadata)
-		}
-	}
-
-	getSurveyMetadataFromClaims(claimValues, data, claims, surveyMetadata, schema.Metadata)
+	getSurveyMetadataFromClaims(claimValues, data, claims, surveyMetadata)
 
 	log.Printf("Using claims: %s", claims)
 
@@ -707,7 +687,7 @@ func getSchema(launcherSchema surveys.LauncherSchema) (QuestionnaireSchema, stri
 
 func getMandatatoryClaims(surveyType string, defaults map[string]string) []Metadata {
 	claims := make([]Metadata, 0)
-	if isNonBusinessNonDefaultSurvey(surveyType) {
+	if isSocialSurvey(surveyType) {
 		claims = []Metadata{
 			{"qid", "false", defaults["qid"]},
 		}
@@ -723,7 +703,7 @@ func getMandatatoryClaims(surveyType string, defaults map[string]string) []Metad
 	return claims
 }
 
-func isNonBusinessNonDefaultSurvey(surveyType string) bool {
+func isSocialSurvey(surveyType string) bool {
 	return surveyType == "health" || surveyType == "social" || surveyType == "ukhsa-ons"
 }
 
