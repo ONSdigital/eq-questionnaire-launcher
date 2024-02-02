@@ -558,13 +558,24 @@ func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, url
 
 func addUrlBooleanMetadata(updatedMetadata map[string]interface{}, requiredSchemaMetadata []Metadata) []Metadata {
 	for key, value := range updatedMetadata {
-		strings.ToLower(value.(string))
-		if strings.Contains(value.(string), "true") || strings.Contains(value.(string), "false") {
-			newMetadata := Metadata{Name: key, Validator: "boolean", Default: "false"}
-			requiredSchemaMetadata = append(requiredSchemaMetadata, newMetadata)
+		if !(isExistingRequiredSchemaMetadata(requiredSchemaMetadata, key)) {
+			value = strings.ToLower(value.(string))
+			if strings.Contains(value.(string), "true") || strings.Contains(value.(string), "false") {
+				newMetadata := Metadata{Name: key, Validator: "boolean", Default: "false"}
+				requiredSchemaMetadata = append(requiredSchemaMetadata, newMetadata)
+			}
 		}
 	}
 	return requiredSchemaMetadata
+}
+
+func isExistingRequiredSchemaMetadata(requiredSchemaMetadata []Metadata, metadataName string) bool {
+	for _, value := range requiredSchemaMetadata {
+		if metadataName == value.Name {
+			return true
+		}
+	}
+	return false
 }
 
 // TransformSchemaParamsToName Returns a schema name from business schema parameters
