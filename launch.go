@@ -170,7 +170,6 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	AccountServiceLogOutURL := getAccountServiceURL(r)
 	urlValues := r.URL.Query()
 	schemaURL := urlValues.Get("schema_url")
-	delete(urlValues, "url")
 	version := urlValues.Get("version")
 	launchVersion2 := true
 
