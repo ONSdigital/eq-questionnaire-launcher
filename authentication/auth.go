@@ -519,7 +519,7 @@ func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, url
 	/*
 		This method below is used to add any metadata (that is a parameter) which is intended to be of type boolean to
 		requiredSchemaMetadata for the typing in "updatedData" to be correct. Without this method, a parameter added to
-		the URL set as a boolean for example, "&example=True", would be interpreted as a String hence the type in the
+		the URL set as a boolean for example, "&example_metadata=True", would be interpreted as a String hence the type in the
 		token would be incorrect. It doesn't apply to other types because those do not need to be updated/changed in
 		"updatedData". It's essential to ensure the values in "updatedData" are of the correct type for the types in
 		token to be correct.
@@ -557,11 +557,11 @@ func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, url
 }
 
 func addUrlBooleanMetadata(updatedMetadata map[string]interface{}, requiredSchemaMetadata []Metadata) []Metadata {
-	for key, value := range updatedMetadata {
-		if !(isExistingRequiredSchemaMetadata(requiredSchemaMetadata, key)) {
-			value = strings.ToLower(value.(string))
-			if strings.Contains(value.(string), "true") || strings.Contains(value.(string), "false") {
-				newMetadata := Metadata{Name: key, Validator: "boolean", Default: "false"}
+	for metadataName, metadataValue := range updatedMetadata {
+		if !(isExistingRequiredSchemaMetadata(requiredSchemaMetadata, metadataName)) {
+			convertedValue := strings.ToLower(metadataValue.(string))
+			if strings.EqualFold(convertedValue, "true") || strings.Contains(convertedValue, "false") {
+				newMetadata := Metadata{Name: metadataName, Validator: "boolean", Default: "false"}
 				requiredSchemaMetadata = append(requiredSchemaMetadata, newMetadata)
 			}
 		}
