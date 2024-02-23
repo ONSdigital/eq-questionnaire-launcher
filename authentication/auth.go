@@ -252,11 +252,6 @@ func generateClaimsV2(claimValues map[string][]string, launcherSchema surveys.La
 
 	getSurveyMetadataFromClaims(claimValues, data, claims, surveyMetadata)
 
-	// When quicklaunching, schema_name will not be set, but launcherSchema will have the schema_name.
-	if len(claimValues["schema_name"]) == 0 && launcherSchema.Name != "" {
-		claims["schema_name"] = launcherSchema.Name
-	}
-
 	log.Printf("Using claims: %s", claims)
 
 	return claims
@@ -776,7 +771,7 @@ func GetDefaultValues() map[string]string {
 	defaults["period_id"] = "201605"
 	defaults["period_str"] = "May 2017"
 	defaults["collection_exercise_sid"] = collectionExerciseSid.String()
-	defaults["ru_ref"] = "12346789012A"
+	defaults["ru_ref"] = "12345678901A"
 	defaults["ru_name"] = "ESSENTIAL ENTERPRISE LTD."
 	defaults["ref_p_start_date"] = "2016-05-01"
 	defaults["ref_p_end_date"] = "2016-05-31"
