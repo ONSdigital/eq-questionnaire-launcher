@@ -252,11 +252,6 @@ func generateClaimsV2(claimValues map[string][]string, launcherSchema surveys.La
 
 	getSurveyMetadataFromClaims(claimValues, data, claims, surveyMetadata)
 
-	// When quicklaunching, schema_name will not be set, but launcherSchema will have the schema_name.
-	if len(claimValues["schema_name"]) == 0 && launcherSchema.Name != "" {
-		claims["schema_name"] = launcherSchema.Name
-	}
-
 	log.Printf("Using claims: %s", claims)
 
 	return claims
