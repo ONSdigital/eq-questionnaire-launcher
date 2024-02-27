@@ -136,7 +136,7 @@ func getAccountServiceURL(r *http.Request) string {
 func redirectURL(w http.ResponseWriter, r *http.Request) {
 	hostURL := settings.Get("SURVEY_RUNNER_URL")
 
-	launchVersion := r.FormValue("launch_version")
+	launchVersion := r.FormValue("version")
 
 	token := ""
 	err := ""
@@ -169,16 +169,14 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	accountServiceURL := getAccountServiceURL(r)
 	AccountServiceLogOutURL := getAccountServiceURL(r)
 	urlValues := r.URL.Query()
-	schemaURL := urlValues.Get("url")
+	schemaURL := urlValues.Get("schema_url")
 	version := urlValues.Get("version")
 	launchVersion2 := true
 
 	defaultValues := authentication.GetDefaultValues()
-
 	if version == "" {
 		urlValues.Add("version", defaultValues["version"])
 	} else if version == "v1" {
-		delete(urlValues, "version")
 		launchVersion2 = false
 	} else {
 		urlValues.Add("version", version)
