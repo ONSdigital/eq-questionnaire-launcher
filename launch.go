@@ -169,8 +169,7 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	accountServiceURL := getAccountServiceURL(r)
 	AccountServiceLogOutURL := getAccountServiceURL(r)
 	urlValues := r.URL.Query()
-	schemaURL := urlValues.Get("url")
-	delete(urlValues, "url")
+	schemaURL := urlValues.Get("schema_url")
 	version := urlValues.Get("version")
 	launchVersion2 := true
 
@@ -178,7 +177,6 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	if version == "" {
 		urlValues.Add("version", defaultValues["version"])
 	} else if version == "v1" {
-		delete(urlValues, "version")
 		launchVersion2 = false
 	} else {
 		urlValues.Add("version", version)

@@ -385,6 +385,9 @@
         function getInputField(fieldName, type, defaultValue=null, isReadOnly=false, onChangeCallback=null){
             const value = defaultValue ? `value="${defaultValue}"` : ''
             const readOnly = isReadOnly ? 'readonly' : ''
+            if (readOnly) {
+                return `<input ${readOnly} id="${fieldName}" type="${type}" ${value} class="qa-${fieldName}" onchange="${onChangeCallback}">`
+            }
             return `<input ${readOnly} id="${fieldName}" name="${fieldName}" type="${type}" ${value} class="qa-${fieldName}" onchange="${onChangeCallback}">`
         }
 
