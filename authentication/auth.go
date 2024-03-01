@@ -493,13 +493,10 @@ func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, url
 	}
 
 	/*
-		This method below is used to add any metadata (that is a parameter) which is intended to be of type boolean to
-		requiredSchemaMetadata for the typing in "updatedData" to be correct. Without this method, a parameter added to
-		the URL set as a boolean for example, "&example_metadata=True", would be interpreted as a String hence the type in the
-		token would be incorrect. It doesn't apply to other types because those do not need to be updated/changed in
-		"updatedData". It's essential to ensure the values in "updatedData" are of the correct type for the types in
-		token to be correct.
+		The method call below is used to add boolean type URL parameters to requiredSchemaMetadata as without it,
+		it leads to improper typing, e.g. flag_1=true, 'true' would be considered a string rather than an boolean
 	*/
+
 	requiredSchemaMetadata = addUrlBooleanMetadata(updatedData, requiredSchemaMetadata)
 
 	for _, metadata := range requiredSchemaMetadata {
