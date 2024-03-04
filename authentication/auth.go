@@ -532,8 +532,7 @@ func addUrlBooleanMetadata(updatedMetadata map[string]interface{}, requiredSchem
 	for metadataName, metadataValue := range updatedMetadata {
 		convertedValue := strings.ToLower(metadataValue.(string))
 		if strings.EqualFold(convertedValue, "true") || strings.Contains(convertedValue, "false") {
-			newMetadata := Metadata{Name: metadataName, Validator: "boolean", Default: "false"}
-			requiredSchemaMetadata = append(requiredSchemaMetadata, newMetadata)
+			requiredSchemaMetadata = append(requiredSchemaMetadata, Metadata{Name: metadataName, Validator: "boolean", Default: "false"})
 		}
 	}
 	return requiredSchemaMetadata
