@@ -492,6 +492,12 @@ func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, url
 		updatedData[key] = value
 	}
 
+	/*
+		The method call below is used to add boolean type URL parameters to requiredSchemaMetadata as without it,
+		it leads to improper typing, e.g. flag_1=true, 'true' would be considered a string rather than an boolean
+	*/
+	requiredSchemaMetadata = addUrlBooleanMetadata(updatedData, requiredSchemaMetadata)
+
 	for _, metadata := range requiredSchemaMetadata {
 		if metadata.Validator == "boolean" {
 			updatedData[metadata.Name] = getBooleanOrDefault(metadata.Name, urlValues, false)
@@ -520,6 +526,16 @@ func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, url
 	}
 
 	return token, ""
+}
+
+func addUrlBooleanMetadata(updatedMetadata map[string]interface{}, requiredSchemaMetadata []Metadata) []Metadata {
+	for metadataName, metadataValue := range updatedMetadata {
+		convertedValue := strings.ToLower(metadataValue.(string))
+		if strings.EqualFold(convertedValue, "true") || strings.Contains(convertedValue, "false") {
+			requiredSchemaMetadata = append(requiredSchemaMetadata, Metadata{Name: metadataName, Validator: "boolean", Default: "false"})
+		}
+	}
+	return requiredSchemaMetadata
 }
 
 // TransformSchemaParamsToName Returns a schema name from business schema parameters
