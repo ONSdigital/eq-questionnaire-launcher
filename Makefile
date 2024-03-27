@@ -1,4 +1,4 @@
-lint: lint-static lint-templates
+lint: lint-go  lint-templates lint-static
 
 format: format-go format-static format-templates
 
