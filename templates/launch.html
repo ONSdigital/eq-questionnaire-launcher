@@ -419,18 +419,23 @@
 
         function updateSDSDropdown(surveyId) {
             const periodId = document.getElementById("period_id")?.value;
+
+            const supplementaryDataSection = document.querySelector("#supplementary_data");
+            const sdsDatasetIdElement = document.querySelector("#sds_dataset_id");
+
             loadSDSDatasetMetadata(surveyId, periodId)
                 .then(sds_metadata_response => {
                     if (sds_metadata_response?.length) {
+                        document.querySelector("#supplementary_data").innerHTML = ""
                         supplementaryDataSets = sds_metadata_response
                         showSupplementaryData(true);
                         showSubmitFlushButtons(true);
 
-                        const sdsDatasetElement = document.querySelector("#sds_dataset_id")
-                        if (!sdsDatasetElement) {
-                            const sdsDatasetIdField = `<div class="field-container">${getLabelFor("sds_dataset_id")}<select id="sds_dataset_id" name="sds_dataset_id" class="qa-sds_dataset_id" onchange="loadSupplementaryDataInfo()"></select></div>`;
-                            document.querySelector("#survey_metadata").innerHTML += sdsDatasetIdField;
+                        if (!document.querySelector("#survey_metadata").contains(sdsDatasetIdElement)) {
+                            // add sds_dataset_id field into the SDS metadata section if not already in survey metadata
+                            supplementaryDataSection.innerHTML = `<div class="field-container">${getLabelFor("sds_dataset_id")}<select id="sds_dataset_id" name="sds_dataset_id" class="qa-sds_dataset_id" onchange="loadSupplementaryDataInfo()"></select></div>`;
                         }
+
                         document.querySelector("#sds_dataset_id").innerHTML = sds_metadata_response.map(dataset =>
                             `<option value="${dataset.dataset_id}">${dataset.dataset_id}</option>`)
                             .join("");
@@ -508,12 +513,20 @@
         function loadSupplementaryDataInfo () {
             const selectedDatasetId = document.getElementById("sds_dataset_id")?.value;
             const selectedDataset = supplementaryDataSets?.find(d => d["dataset_id"] === selectedDatasetId)
-            if (selectedDataset) {
-                const sdsDatasetMetadataKeys = ["title", "total_reporting_units", "schema_version", "sds_dataset_version"];
 
-                document.querySelector("#supplementary_data").innerHTML = sdsDatasetMetadataKeys.map(
-                    key => `<div class="field-container">${getLabelFor(key)}${getInputField(key, "text", selectedDataset[key], true)}</div>`
-                ).join('')
+            if (!selectedDataset) {
+                return;
+            }
+
+            const sdsDatasetMetadataKeys = ["title", "total_reporting_units", "schema_version", "sds_dataset_version"];
+
+            const sdsMetadataSection = document.querySelector("#supplementary_data");
+            const sdsMetadataField = key => `<div class="field-container">${getLabelFor(key)}${getInputField(key, "text", selectedDataset[key], true)}</div>`
+
+            if (sdsMetadataSection.contains(document.querySelector("#sds_dataset_id"))) {
+                sdsMetadataSection.innerHTML += sdsDatasetMetadataKeys.map(sdsMetadataField).join('')
+            } else {
+                sdsMetadataSection.innerHTML = sdsDatasetMetadataKeys.map(sdsMetadataField).join('')
             }
         }
 
