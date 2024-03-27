@@ -553,7 +553,7 @@ function validateResponseExpiresAt() {
 }
 
 // Inputs without a name will not be submitted
-function removeUnwantedMetadata() {
+function        removeUnwantedMetadata() {
   const inputs = document.getElementsByTagName("input");
   for (let input of inputs) {
     if (!input.value) {
