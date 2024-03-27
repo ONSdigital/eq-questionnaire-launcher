@@ -218,7 +218,7 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	if schemaURL != "" {
 		http.Redirect(w, r, hostURL+"/session?token="+token, 302)
 	} else {
-		http.Error(w, "Not Found", 404)
+		http.Error(w, fmt.Sprintf("Not Found"), 404)
 	}
 }
 
