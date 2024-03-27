@@ -55,19 +55,6 @@ jobs:
           echo "Pushing to GAR with tag $TAG"
           docker push ${{ secrets.GAR_LOCATION }}/${{ secrets.GAR_PROJECT_ID }}/docker-images/eq-questionnaire-launcher:$TAG
   lint:
-    needs: [build]
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install npm deps
-        run: npm install
-      - name: Templates linting
-        run: make lint-templates
-      - name: Static linting
-        run: make lint-static
-  golangci:
-    needs: [build]
-    name: lint
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -79,3 +66,11 @@ jobs:
         uses: golangci/golangci-lint-action@v4
         with:
           version: v1.54
+      - run: make lint-go
+      - uses: actions/checkout@v3
+      - name: Install npm deps
+        run: npm install
+      - name: Templates linting
+        run: make lint-templates
+      - name: Static linting
+        run: make lint-static
