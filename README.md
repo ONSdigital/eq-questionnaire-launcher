@@ -60,6 +60,29 @@ Documentation on the `v2` structure can be found [here](https://github.com/ONSdi
 e.g."http://localhost:8000/quick-launch?schema_url=http://localhost:7777/1_0001.json&version=v1"
 ```
 
+### Commands for Formatting & Linting
+Install dependencies using `npm install` for formatting and linting
+
+| Command                 | Task                                                    |
+|-------------------------|---------------------------------------------------------|
+| `make format-static`    | Formats all static files (Javascipt and CSS)            |
+| `make format-templates` | Formats all HTML files and shows the changes to be made |
+| `make format-go`        | Formats all the Golang files                            |
+| `make format`           | Formats all files listed above                          |
+| `make lint-static`      | Lints all static files and reports any issues           |
+| `make lint-templates`   | Lints all HTML files and reports any issues             |
+| `make lint-go`          | Lints all Golang files using an external tool           |
+| `make lint`             | Lints all files listed above                            |
+
+**Note**: Before being able to run `lint-go`, you will need to install the external tool `golangci-lint`. The command to
+install the tool is `brew install golangci-lint` and to upgrade it use `brew upgrade golangci-lint`. Visit 
+https://golangci-lint.run/welcome/install/#local-installation to see additional ways to install the tool.
+
+To configure Prettier & djLint use the `package.json` (Using the prettier keyword) and `.djlintrc` respectively. To 
+ignore rules set by the linter use the `.prettierignore` file and add to the `ignore` option in the `.djlintrc` file. 
+
+
+
 ### Notes
 * There are no unit tests yet
 * JWT spec based on http://ons-schema-definitions.readthedocs.io/en/latest/jwt_profile.html

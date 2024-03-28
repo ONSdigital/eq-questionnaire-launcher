@@ -6,10 +6,11 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"math/rand"
 	"net/http"
 	"net/url"
+	"os"
 	"time"
 
 	"github.com/ONSdigital/eq-questionnaire-launcher/clients"
@@ -59,7 +60,7 @@ type PrivateKeyResult struct {
 func loadEncryptionKey() (*PublicKeyResult, *KeyLoadError) {
 	encryptionKeyPath := settings.Get("JWT_ENCRYPTION_KEY_PATH")
 
-	keyData, err := ioutil.ReadFile(encryptionKeyPath)
+	keyData, err := os.ReadFile(encryptionKeyPath)
 	if err != nil {
 		return nil, &KeyLoadError{Op: "read", Err: "Failed to read encryption key from file: " + encryptionKeyPath}
 	}
@@ -82,7 +83,7 @@ func loadEncryptionKey() (*PublicKeyResult, *KeyLoadError) {
 
 func loadSigningKey() (*PrivateKeyResult, *KeyLoadError) {
 	signingKeyPath := settings.Get("JWT_SIGNING_KEY_PATH")
-	keyData, err := ioutil.ReadFile(signingKeyPath)
+	keyData, err := os.ReadFile(signingKeyPath)
 	if err != nil {
 		return nil, &KeyLoadError{Op: "read", Err: "Failed to read signing key from file: " + signingKeyPath}
 	}
@@ -251,7 +252,7 @@ func launcherSchemaFromURL(url string) (launcherSchema surveys.LauncherSchema, e
 		return launcherSchema, fmt.Sprintf("Failed to load Schema from %s", url)
 	}
 
-	responseBody, err := ioutil.ReadAll(resp.Body)
+	responseBody, err := io.ReadAll(resp.Body)
 	resp.Body.Close()
 	if err != nil {
 		panic(err)
@@ -311,7 +312,7 @@ func validateSchema(payload []byte) (error string) {
 		return err.Error()
 	}
 
-	responseBody, err := ioutil.ReadAll(resp.Body)
+	responseBody, err := io.ReadAll(resp.Body)
 	resp.Body.Close()
 	if err != nil {
 		return err.Error()
@@ -421,10 +422,9 @@ func GenerateTokenFromDefaults(schemaURL string, accountServiceURL string, accou
 		return "", validationError
 	}
 
-	claims := make(map[string]interface{})
 	urlValues["account_service_url"] = []string{accountServiceURL}
 	urlValues["account_service_log_out_url"] = []string{accountServiceLogOutURL}
-	claims = generateClaims(urlValues, launcherSchema)
+	claims := generateClaims(urlValues, launcherSchema)
 
 	requiredMetadata, error := getRequiredSchemaMetadata(launcherSchema)
 	if error != "" {
@@ -469,10 +469,9 @@ func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, url
 		return "", fmt.Sprintf("getSchema failed err: %v", error)
 	}
 
-	claims := make(map[string]interface{})
 	urlValues["account_service_url"] = []string{accountServiceURL}
 
-	claims = generateClaimsV2(urlValues, schema)
+	claims := generateClaimsV2(urlValues, schema)
 
 	requiredSchemaMetadata, error := getRequiredSchemaMetadata(launcherSchema)
 	if error != "" {
@@ -566,7 +565,7 @@ func GenerateTokenFromPost(postValues url.Values, launchVersion2 bool) (string, 
 		return "", fmt.Sprintf("getSchema failed err: %v", error)
 	}
 
-	claims := make(map[string]interface{})
+	var claims map[string]interface{}
 
 	if launchVersion2 {
 		claims = generateClaimsV2(postValues, schema)
@@ -642,9 +641,10 @@ func GetSurveyData(launcherSchema surveys.LauncherSchema) (QuestionnaireSchema, 
 
 	missingClaims := getMissingMandatoryClaims(claims, mandatoryClaims)
 
-	for _, v := range missingClaims {
-		schema.Metadata = append(schema.Metadata, v)
-	}
+	//for _, v := range missingClaims {
+	//	schema.Metadata = append(schema.Metadata, v)
+	//}
+	schema.Metadata = append(schema.Metadata, missingClaims...)
 
 	return schema, ""
 }
@@ -686,7 +686,7 @@ func getSchema(launcherSchema surveys.LauncherSchema) (QuestionnaireSchema, stri
 		return schema, fmt.Sprintf("Failed to load Schema from %s", url)
 	}
 
-	responseBody, err := ioutil.ReadAll(resp.Body)
+	responseBody, err := io.ReadAll(resp.Body)
 	resp.Body.Close()
 	if err != nil {
 		log.Print(err)
@@ -702,7 +702,7 @@ func getSchema(launcherSchema surveys.LauncherSchema) (QuestionnaireSchema, stri
 }
 
 func getMandatatoryClaims(surveyType string, defaults map[string]string) []Metadata {
-	claims := make([]Metadata, 0)
+	var claims []Metadata
 	if isSocialSurvey(surveyType) {
 		claims = []Metadata{
 			{"qid", "false", defaults["qid"]},
