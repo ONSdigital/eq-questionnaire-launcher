@@ -543,6 +543,7 @@ function validateForm() {
   validateResponseExpiresAt();
   removeUnwantedMetadata();
 }
+
 function validateResponseExpiresAt() {
   let responseExpiresAt = Date.parse(
     document.querySelector("#response_expires_at").value,
