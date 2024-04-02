@@ -641,9 +641,6 @@ func GetSurveyData(launcherSchema surveys.LauncherSchema) (QuestionnaireSchema, 
 
 	missingClaims := getMissingMandatoryClaims(claims, mandatoryClaims)
 
-	//for _, v := range missingClaims {
-	//	schema.Metadata = append(schema.Metadata, v)
-	//}
 	schema.Metadata = append(schema.Metadata, missingClaims...)
 
 	return schema, ""
