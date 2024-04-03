@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  go-dependencies:
+  build:
     runs-on: ubuntu-22.04
     steps:
       - name: Install Go
@@ -26,18 +26,7 @@ jobs:
         run: go get
       - name: Build
         run: CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo
-  node-dependencies:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version-file : ".nvmrc"
-          cache: "npm"
-      - name: Install npm deps
-        run: npm install
   lint:
-    needs: [go-dependencies, node-dependencies]
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -49,12 +38,15 @@ jobs:
         uses: golangci/golangci-lint-action@v4
         with:
           version: v1.54
+      - name: Install npm deps
+        run: npm install
       - uses: actions/checkout@v3
-      - name: Static linting
-        run: make lint-static
       - name: Templates linting
         run: make lint-templates
+      - name: Static linting
+        run: make lint-static
   docker-push:
+    needs: [lint]
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
