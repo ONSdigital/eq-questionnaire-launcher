@@ -25,7 +25,7 @@ jobs:
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
         run: go get
       - name: Install npm deps
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v3 actions/checkout@v3
         with:
           node-version-file: ".nvmrc"
           cache: "npm"
@@ -33,7 +33,6 @@ jobs:
       - name: Build
         run: CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo
   lint:
-    needs: [build]
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
