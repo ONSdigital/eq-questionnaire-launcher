@@ -66,6 +66,7 @@ type page struct {
 func getStatusPage(w http.ResponseWriter, r *http.Request) {
 	_, err := w.Write([]byte("OK"))
 	if err != nil {
+		http.Error(w, fmt.Sprintf("Write err: %v", err), 500)
 		return
 	}
 }
@@ -107,6 +108,7 @@ func getSurveyDataHandler(w http.ResponseWriter, r *http.Request) {
 
 	_, err2 := w.Write([]byte(surveyDataJSON))
 	if err2 != nil {
+		http.Error(w, fmt.Sprintf("Write err: %v", err2), 500)
 		return
 	}
 }
@@ -124,6 +126,7 @@ func getSupplementaryDataHandler(w http.ResponseWriter, r *http.Request) {
 
 	_, err = w.Write([]byte(datasetJSON))
 	if err != nil {
+		http.Error(w, fmt.Sprintf("Write err: %v", err), 500)
 		return
 	}
 }

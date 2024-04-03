@@ -61,7 +61,10 @@ e.g."http://localhost:8000/quick-launch?schema_url=http://localhost:7777/1_0001.
 ```
 
 ### Commands for Formatting & Linting
-Install dependencies using `npm install` for formatting and linting
+Install dependencies using `npm install` for formatting and linting. **Note**: Before being able to run `lint-go`, 
+you will need to install the external tool `golangci-lint`. The command to install the tool is 
+`brew install golangci-lint` and to upgrade it use `brew upgrade golangci-lint`. Visit
+https://golangci-lint.run/welcome/install/#local-installation to see additional ways to install the tool.
 
 | Command                 | Task                                                    |
 |-------------------------|---------------------------------------------------------|
@@ -73,10 +76,6 @@ Install dependencies using `npm install` for formatting and linting
 | `make lint-templates`   | Lints all HTML files and reports any issues             |
 | `make lint-go`          | Lints all Golang files using an external tool           |
 | `make lint`             | Lints all files listed above                            |
-
-**Note**: Before being able to run `lint-go`, you will need to install the external tool `golangci-lint`. The command to
-install the tool is `brew install golangci-lint` and to upgrade it use `brew upgrade golangci-lint`. Visit 
-https://golangci-lint.run/welcome/install/#local-installation to see additional ways to install the tool.
 
 To configure Prettier & djLint use the `package.json` (Using the prettier keyword) and `.djlintrc` respectively. To 
 ignore rules set by the linter use the `.prettierignore` file and add to the `ignore` option in the `.djlintrc` file. 
