@@ -156,45 +156,6 @@ func getSurveyMetadataFromClaims(claimValues map[string][]string, data map[strin
 	claims["survey_metadata"] = surveyMetadata
 }
 
-func generateClaims(claimValues map[string][]string, launcherSchema surveys.LauncherSchema) (claims map[string]interface{}) {
-
-	var roles []string
-	if rolesValues, ok := claimValues["roles"]; ok {
-		roles = rolesValues
-	} else {
-		roles = []string{"dumper"}
-	}
-
-	claims = make(map[string]interface{})
-
-	claims["roles"] = roles
-	TxID, _ := uuid.NewV4()
-	claims["tx_id"] = TxID.String()
-
-	for key, value := range claimValues {
-		if key != "roles" {
-			if value[0] != "" {
-				claims[key] = value[0]
-			}
-		} else {
-			claims[key] = value
-		}
-	}
-	if len(claimValues["form_type"]) > 0 && len(claimValues["eq_id"]) > 0 {
-		log.Println("Deleting schema name from claims")
-		delete(claims, "schema_name")
-	} else {
-		// When quicklaunching, schema_name will not be set, but launcherSchema will have the schema_name.
-		if len(claimValues["schema_name"]) == 0 && launcherSchema.Name != "" {
-			claims["schema_name"] = launcherSchema.Name
-		}
-	}
-
-	log.Printf("Using claims: %s", claims)
-
-	return claims
-}
-
 func generateClaimsV2(claimValues map[string][]string, schema QuestionnaireSchema) (claims map[string]interface{}) {
 
 	var roles []string
@@ -414,49 +375,6 @@ func getStringOrDefault(key string, values map[string][]string, defaultValue str
 	return defaultValue
 }
 
-// GenerateTokenFromDefaults coverts a set of DEFAULT values into a JWT
-func GenerateTokenFromDefaults(schemaURL string, accountServiceURL string, accountServiceLogOutURL string, urlValues url.Values) (token string, error string) {
-	launcherSchema, validationError := launcherSchemaFromURL(schemaURL)
-	if validationError != "" {
-		return "", validationError
-	}
-
-	claims := make(map[string]interface{})
-	urlValues["account_service_url"] = []string{accountServiceURL}
-	urlValues["account_service_log_out_url"] = []string{accountServiceLogOutURL}
-	claims = generateClaims(urlValues, launcherSchema)
-
-	requiredMetadata, error := getRequiredSchemaMetadata(launcherSchema)
-	if error != "" {
-		return "", fmt.Sprintf("getRequiredSchemaMetadata failed err: %v", error)
-	}
-
-	for _, metadata := range requiredMetadata {
-		if metadata.Validator == "boolean" {
-			claims[metadata.Name] = getBooleanOrDefault(metadata.Name, urlValues, false)
-			continue
-		}
-		claims[metadata.Name] = getStringOrDefault(metadata.Name, urlValues, metadata.Default)
-	}
-
-	jwtClaims := GenerateJwtClaims()
-	for key, v := range jwtClaims {
-		claims[key] = v
-	}
-
-	schemaClaims := getSchemaClaims(launcherSchema)
-	for key, v := range schemaClaims {
-		claims[key] = v
-	}
-
-	token, tokenError := generateTokenFromClaims(claims)
-	if tokenError != nil {
-		return token, fmt.Sprintf("GenerateTokenFromDefaults failed err: %v", tokenError)
-	}
-
-	return token, ""
-}
-
 // GenerateTokenFromDefaultsV2 coverts a set of DEFAULT values into a JWT
 func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, urlValues url.Values) (token string, error string) {
 	launcherSchema, validationError := launcherSchemaFromURL(schemaURL)
@@ -552,7 +470,7 @@ func TransformSchemaParamsToName(postValues url.Values) string {
 }
 
 // GenerateTokenFromPost converts a set of POST values into a JWT
-func GenerateTokenFromPost(postValues url.Values, launchVersion2 bool) (string, string) {
+func GenerateTokenFromPost(postValues url.Values) (string, string) {
 	log.Println("POST received: ", postValues)
 
 	schemaName := TransformSchemaParamsToName(postValues)
@@ -568,11 +486,7 @@ func GenerateTokenFromPost(postValues url.Values, launchVersion2 bool) (string, 
 
 	claims := make(map[string]interface{})
 
-	if launchVersion2 {
-		claims = generateClaimsV2(postValues, schema)
-	} else {
-		claims = generateClaims(postValues, launcherSchema)
-	}
+	claims = generateClaimsV2(postValues, schema)
 
 	jwtClaims := GenerateJwtClaims()
 	for key, v := range jwtClaims {
