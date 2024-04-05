@@ -37,7 +37,7 @@ jobs:
       - name: Go linting
         uses: golangci/golangci-lint-action@v4
         with:
-          version: v1.54
+          version: v1.57
       - uses: actions/setup-node@v3
         with:
           node-version-file: ".nvmrc"
