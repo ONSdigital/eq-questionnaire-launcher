@@ -9,9 +9,7 @@
             <strong><u>Launch Pattern</u></strong>
             <div class="field-container">
                 <label for="launch_pattern">Version</label>
-                <select id="launch_pattern" name="version" class="qa-select-version" onchange="loadMetadataForSchemaName(); ">
-                    <option value="v2" selected="selected">v2</option>
-                </select>
+                <input id="launch_pattern" name="version" type="text" value="v2" class="qa-select-version" onload="loadMetadataForSchemaName();">
             </div>
 
             <strong><u>Launch by Schema Name</u></strong>
