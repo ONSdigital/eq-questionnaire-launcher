@@ -64,9 +64,9 @@ type page struct {
 }
 
 func getStatusPage(w http.ResponseWriter, r *http.Request) {
-	_, err := w.Write([]byte("OK"))
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Write err: %v", err), 500)
+	_, writeError := w.Write([]byte("OK"))
+	if writeError != nil {
+		http.Error(w, fmt.Sprintf("Write failed to write data as part of an HTTP reply: %v", writeError), 500)
 		return
 	}
 }
@@ -106,9 +106,9 @@ func getSurveyDataHandler(w http.ResponseWriter, r *http.Request) {
 
 	surveyDataJSON, _ := json.Marshal(surveyData)
 
-	_, err2 := w.Write([]byte(surveyDataJSON))
-	if err2 != nil {
-		http.Error(w, fmt.Sprintf("Write err: %v", err2), 500)
+	_, writeError := w.Write([]byte(surveyDataJSON))
+	if writeError != nil {
+		http.Error(w, fmt.Sprintf("Write failed to write data as part of an HTTP reply: %v", writeError), 500)
 		return
 	}
 }
@@ -124,9 +124,9 @@ func getSupplementaryDataHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	datasetJSON, _ := json.Marshal(datasets)
 
-	_, err = w.Write([]byte(datasetJSON))
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Write err: %v", err), 500)
+	_, writeError := w.Write([]byte(datasetJSON))
+	if writeError != nil {
+		http.Error(w, fmt.Sprintf("Write failed to write data as part of an HTTP reply: %v", writeError), 500)
 		return
 	}
 }
