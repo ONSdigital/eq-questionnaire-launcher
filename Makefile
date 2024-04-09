@@ -3,19 +3,20 @@ lint: lint-go  lint-templates lint-static
 format: format-go format-static format-templates
 
 format-go:
-	npm run format-go
+	go fmt ./...
 
 lint-go:
-	npm run lint-go
+	golangci-lint run
 
 lint-static:
-	npm run lint-static
+	npx prettier --check "static/**/*.{js,css}"
+	npx eslint static/javascript/*.js
 
 format-static:
-	npm run format-static
+	npx prettier "static/**/*.{js,css}" --write
 
 lint-templates:
-	npm run lint-templates
+	djlint templates --lint
 
 format-templates:
-	npm run format-templates
+	djlint templates/*.html --reformat
