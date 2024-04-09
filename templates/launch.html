@@ -182,6 +182,9 @@
         // store fetch so it only needs to be re-done if the survey changes
         let supplementaryDataSets = null;
 
+        // We always need survey_id from top-level schema metadata for SDS retrieval
+        let schemaSurveyId = null;
+
         function clearSurveyMetadataFields() {
             document.querySelector('#survey_metadata_fields').innerHTML = ""
             showSupplementaryData(false);
@@ -401,7 +404,6 @@
 
         function handleNoSupplementaryData() {
             showSupplementaryData(false);
-            showSubmitFlushButtons(false);
         }
 
         function showCIRMetdata(cirInstrumentId, cirSchema) {
@@ -417,7 +419,8 @@
                 ).join('')
         }
 
-        function updateSDSDropdown(surveyId) {
+        function updateSDSDropdown() {
+            const surveyId = schemaSurveyId;
             const periodId = document.getElementById("period_id")?.value;
 
             const supplementaryDataSection = document.querySelector("#supplementary_data");
@@ -469,6 +472,9 @@
                     document.querySelector("#survey_metadata").innerHTML = "";
                     document.querySelector("#survey_metadata").innerHTML = "";
 
+                    // We always need survey_id from top-level schema metadata for SDS retrieval
+                    schemaSurveyId = schema_response.survey_id
+
                     if (schema_response.metadata.length > 0) {
                         document.querySelector("#survey_metadata").innerHTML = schema_response.metadata.map(metadataField => {
 
@@ -499,7 +505,7 @@
                                 })()
                             }</div>`
                         }).join("")
-                        updateSDSDropdown(schema_response.survey_id)
+                        updateSDSDropdown()
                     } else {
                         document.querySelector("#survey_metadata").innerHTML = "No metadata required for this survey";
                     }
