@@ -11,7 +11,7 @@
     "url": "https://github.com/ONSdigital/eq-questionnaire-launcher"
   },
   "scripts": {
-    "lint": "npm run lint-go && npm run lint:static && npm run lint:static",
+    "lint": "npm run lint-go && npm run lint-static && npm run lint-templates",
     "lint-go": "golangci-lint run",
     "lint-static": "prettier --check \"static/**/*.{js,css}\" && eslint \"static/javascript/*.js\"",
     "lint-templates": "djlint templates --lint",
