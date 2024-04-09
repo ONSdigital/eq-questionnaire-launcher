@@ -34,6 +34,7 @@ jobs:
       - name: Install npm deps
         run: npm install
   lint:
+    needs: [build]
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
