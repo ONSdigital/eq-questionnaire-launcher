@@ -278,6 +278,38 @@ function loadMetadataForSchemaName() {
 }
 
 function loadMetadataForRemoteSchema() {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   let schemaUrl = document.querySelector("#schema-url").value;
   let surveyType = document.querySelector("#remote-schema-survey-type");
 
