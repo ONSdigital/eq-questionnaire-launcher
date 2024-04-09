@@ -50,8 +50,6 @@ jobs:
         with:
           node-version-file: ".nvmrc"
           cache: "npm"
-      - name: Install npm deps
-        run: npm install
       - name: Templates linting
         run: make lint-templates
       - name: Static linting
