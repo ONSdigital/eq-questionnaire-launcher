@@ -15,12 +15,12 @@ import (
 	"google.golang.org/api/option"
 )
 
-func GenerateIdToken() (oauth2.TokenSource, error) {
+func GenerateIdToken(clientId string) (oauth2.TokenSource, error) {
 	oidcBackend := settings.Get("OIDC_TOKEN_BACKEND")
 	if oidcBackend == "gcp" {
-		audience := settings.Get("SDS_OAUTH2_CLIENT_ID")
+		audience := clientId
 		if audience == "" {
-			return nil, fmt.Errorf("SDS_OAUTH2_CLIENT_ID not set")
+			return nil, fmt.Errorf("%s not set", clientId)
 		}
 		return getGCPIdToken(audience)
 	}

@@ -144,13 +144,24 @@ func getAvailableSchemasFromRegister() []LauncherSchema {
 }
 
 func GetAvailableSchemasFromCIR() []CIMetadata {
-
 	ciMetadataList := []CIMetadata{}
-
 	hostURL := settings.Get("CIR_API_BASE_URL")
 
-	log.Printf("CIR API Base URL: %s", hostURL)
+	client := clients.GetHTTPClient()
+	tokenSource, err := oidc.GenerateIdToken(settings.Get("CIR_OAUTH2_CLIENT_ID"))
 
+	if err != nil {
+		log.Print(err)
+		return ciMetadataList
+	}
+
+	if tokenSource != nil {
+		client.Transport = &oauth2.Transport{
+			Source: tokenSource,
+		}
+	}
+
+	log.Printf("CIR API Base URL: %s", hostURL)
 	url := fmt.Sprintf("%s/v2/ci_metadata", hostURL)
 
 	resp, err := clients.GetHTTPClient().Get(url)
@@ -238,11 +249,11 @@ func GetSupplementaryDataSets(surveyId string, periodId string) ([]DatasetMetada
 	hostURL := settings.Get("SDS_API_BASE_URL")
 
 	client := clients.GetHTTPClient()
-	tokenSource, err := oidc.GenerateIdToken()
+	tokenSource, err := oidc.GenerateIdToken(settings.Get("SDS_OAUTH2_CLIENT_ID"))
 
 	if err != nil {
 		log.Print(err)
-		return datasetList, errors.New("unable to generate authentication credentials")
+		return datasetList, errors.New("unable to generate SDS authentication credentials")
 	}
 
 	if tokenSource != nil {
