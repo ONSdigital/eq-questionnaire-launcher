@@ -66,10 +66,15 @@ Ensure you are using the correct version of node using:
 nvm install
 nvm use
 ```
-To install npm dependencies for formatting and linting use:
+To install ESLint and Prettier for formatting and linting of static files use:
 ``` shell
 npm install
 ```
+Install djLint for formatting and linting template files using:
+```shell
+pipenv install
+```
+
  **Note**: Before being able to run `lint-go`, 
 you will need to install the external tool `golangci-lint`. The command to install the tool is 
 `brew install golangci-lint` and to upgrade it use `brew upgrade golangci-lint`. Visit
