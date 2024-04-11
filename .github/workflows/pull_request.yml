@@ -44,6 +44,8 @@ jobs:
           cache: "npm"
       - name: Install npm deps
         run: npm install
+      - run: |
+          echo "PYTHON_VERSION=$(cat .python-version)" >> $GITHUB_ENV
       - name: Install pipenv
         run: pip install pipenv==2023.8.22
       - name: Install virtual environment
