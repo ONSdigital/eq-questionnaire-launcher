@@ -18,7 +18,7 @@ import (
 func GenerateIdToken(clientId string) (oauth2.TokenSource, error) {
 	oidcBackend := settings.Get("OIDC_TOKEN_BACKEND")
 	if oidcBackend == "gcp" {
-		audience := clientId
+		audience := settings.Get(clientId)
 		if audience == "" {
 			return nil, fmt.Errorf("%s not set", clientId)
 		}

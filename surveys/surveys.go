@@ -148,7 +148,7 @@ func GetAvailableSchemasFromCIR() []CIMetadata {
 	hostURL := settings.Get("CIR_API_BASE_URL")
 
 	client := clients.GetHTTPClient()
-	tokenSource, err := oidc.GenerateIdToken(settings.Get("CIR_OAUTH2_CLIENT_ID"))
+	tokenSource, err := oidc.GenerateIdToken("CIR_OAUTH2_CLIENT_ID")
 
 	if err != nil {
 		log.Print(err)
@@ -249,7 +249,7 @@ func GetSupplementaryDataSets(surveyId string, periodId string) ([]DatasetMetada
 	hostURL := settings.Get("SDS_API_BASE_URL")
 
 	client := clients.GetHTTPClient()
-	tokenSource, err := oidc.GenerateIdToken(settings.Get("SDS_OAUTH2_CLIENT_ID"))
+	tokenSource, err := oidc.GenerateIdToken("SDS_OAUTH2_CLIENT_ID")
 
 	if err != nil {
 		log.Print(err)
