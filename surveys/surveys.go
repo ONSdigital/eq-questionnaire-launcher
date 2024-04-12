@@ -3,10 +3,9 @@ package surveys
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"log"
-
-	"fmt"
 	"sort"
 	"strings"
 
@@ -14,7 +13,6 @@ import (
 	"github.com/ONSdigital/eq-questionnaire-launcher/clients"
 	"github.com/ONSdigital/eq-questionnaire-launcher/oidc"
 	"github.com/ONSdigital/eq-questionnaire-launcher/settings"
-	"golang.org/x/oauth2"
 )
 
 // LauncherSchema is a representation of a schema in the Launcher
@@ -156,9 +154,7 @@ func GetAvailableSchemasFromCIR() []CIMetadata {
 	}
 
 	if tokenSource != nil {
-		client.Transport = &oauth2.Transport{
-			Source: tokenSource,
-		}
+		oidc.AddTokenSourceToClient(client, tokenSource)
 	}
 
 	log.Printf("CIR API Base URL: %s", hostURL)
@@ -257,9 +253,7 @@ func GetSupplementaryDataSets(surveyId string, periodId string) ([]DatasetMetada
 	}
 
 	if tokenSource != nil {
-		client.Transport = &oauth2.Transport{
-			Source: tokenSource,
-		}
+		oidc.AddTokenSourceToClient(client, tokenSource)
 	}
 
 	log.Printf("SDS API Base URL: %s", hostURL)
