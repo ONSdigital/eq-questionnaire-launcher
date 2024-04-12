@@ -16,7 +16,7 @@ format-static:
 	npx prettier "static/**/*.{js,css}" --write
 
 lint-templates:
-	pipenv run djlint templates --lint
+	poetry run djlint templates --lint
 
 format-templates:
-	pipenv run djlint templates/*.html --reformat
+	poetry run djlint templates/*.html --reformat

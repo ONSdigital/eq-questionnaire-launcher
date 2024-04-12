@@ -70,9 +70,9 @@ To install ESLint and Prettier for formatting and linting of static files use:
 ``` shell
 npm install
 ```
-Install djLint for formatting and linting template files using:
+Firstly, ensure you have Python & Poetry installed and then install djLint for formatting and linting template files using:
 ```shell
-pipenv install
+poetry install
 ```
 
  **Note**: Before being able to run `lint-go`, 
