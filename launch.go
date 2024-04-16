@@ -64,7 +64,11 @@ type page struct {
 }
 
 func getStatusPage(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("OK"))
+	_, writeError := w.Write([]byte("OK"))
+	if writeError != nil {
+		http.Error(w, fmt.Sprintf("Write failed to write data as part of an HTTP reply: %v", writeError), 500)
+		return
+	}
 }
 
 func getLaunchHandler(w http.ResponseWriter, r *http.Request) {
@@ -102,7 +106,11 @@ func getSurveyDataHandler(w http.ResponseWriter, r *http.Request) {
 
 	surveyDataJSON, _ := json.Marshal(surveyData)
 
-	w.Write([]byte(surveyDataJSON))
+	_, writeError := w.Write([]byte(surveyDataJSON))
+	if writeError != nil {
+		http.Error(w, fmt.Sprintf("Write failed to write data as part of an HTTP reply: %v", writeError), 500)
+		return
+	}
 }
 
 func getSupplementaryDataHandler(w http.ResponseWriter, r *http.Request) {
@@ -116,7 +124,11 @@ func getSupplementaryDataHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	datasetJSON, _ := json.Marshal(datasets)
 
-	w.Write([]byte(datasetJSON))
+	_, writeError := w.Write([]byte(datasetJSON))
+	if writeError != nil {
+		http.Error(w, fmt.Sprintf("Write failed to write data as part of an HTTP reply: %v", writeError), 500)
+		return
+	}
 }
 
 func getAccountServiceURL(r *http.Request) string {
@@ -160,7 +172,7 @@ func redirectURL(w http.ResponseWriter, r *http.Request) {
 	} else if launchVersion != "" {
 		http.Redirect(w, r, hostURL+"/session?token="+token, 301)
 	} else {
-		http.Error(w, fmt.Sprintf("Invalid Action"), 500)
+		http.Error(w,"Invalid Action", 500)
 	}
 }
 
@@ -209,7 +221,7 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	if schemaURL != "" {
 		http.Redirect(w, r, hostURL+"/session?token="+token, 302)
 	} else {
-		http.Error(w, fmt.Sprintf("Not Found"), 404)
+		http.Error(w, "Not Found", 404)
 	}
 }
 

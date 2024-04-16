@@ -3,16 +3,18 @@ package surveys
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 	"io"
 	"log"
-	"sort"
-	"strings"
 
+	"fmt"
 	"github.com/AreaHQ/jsonhal"
 	"github.com/ONSdigital/eq-questionnaire-launcher/clients"
 	"github.com/ONSdigital/eq-questionnaire-launcher/oidc"
 	"github.com/ONSdigital/eq-questionnaire-launcher/settings"
+	"golang.org/x/oauth2"
+	"sort"
 )
 
 // LauncherSchema is a representation of a schema in the Launcher
@@ -84,7 +86,7 @@ func GetAvailableSchemas() map[string][]LauncherSchema {
 
 	schemasBySurveyType := map[string][]LauncherSchema{}
 	for _, schema := range allSchemas {
-		schemasBySurveyType[strings.Title(schema.SurveyType)] = append(schemasBySurveyType[strings.Title(schema.SurveyType)], schema)
+		schemasBySurveyType[cases.Title(language.Und).String(schema.SurveyType)] = append(schemasBySurveyType[cases.Title(language.Und).String(schema.SurveyType)], schema)
 	}
 
 	return schemasBySurveyType

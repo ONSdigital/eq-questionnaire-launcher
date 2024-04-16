@@ -60,6 +60,37 @@ Documentation on the `v2` structure can be found [here](https://github.com/ONSdi
 e.g."http://localhost:8000/quick-launch?schema_url=http://localhost:7777/1_0001.json&version=v1"
 ```
 
+### Commands for Formatting & Linting
+Ensure you are using the correct version of node using:
+``` shell
+nvm install
+nvm use
+```
+To install ESLint and Prettier for formatting and linting of static files use:
+``` shell
+npm install
+```
+Firstly, ensure you have Python & Poetry installed and then install djLint for formatting and linting template files using:
+```shell
+poetry install
+```
+
+ **Note**: Before being able to run `lint-go`, 
+you will need to install the external tool `golangci-lint`. The command to install the tool is 
+`brew install golangci-lint` and to upgrade it use `brew upgrade golangci-lint`. Visit
+https://golangci-lint.run/welcome/install/#local-installation to see additional ways to install the tool.
+
+| Command                 | Task                                                    |
+|-------------------------|---------------------------------------------------------|
+| `make format-static`    | Formats all static files (Javascipt and CSS)            |
+| `make format-templates` | Formats all HTML files and shows the changes to be made |
+| `make format-go`        | Formats all the Golang files                            |
+| `make format`           | Formats all files listed above                          |
+| `make lint-static`      | Lints all static files and reports any issues           |
+| `make lint-templates`   | Lints all HTML files and reports any issues             |
+| `make lint-go`          | Lints all Golang files using an external tool           |
+| `make lint`             | Lints all files listed above                            |
+
 ### Notes
 * There are no unit tests yet
 * JWT spec based on http://ons-schema-definitions.readthedocs.io/en/latest/jwt_profile.html
