@@ -72,7 +72,7 @@ func getIdTokenFromMetadataServer(audience string, clientIdName string) (oauth2.
 	if err != nil {
 		return nil, fmt.Errorf("failed to receive token for %s: %w", clientIdName, err)
 	}
-	log.Printf("Succesfully generated GCP ID token for %s audience: %s", clientIdName, audience)
+	log.Printf("Successfully generated GCP ID token for %s audience: %s", clientIdName, audience)
 
 	return ts, nil
 }
