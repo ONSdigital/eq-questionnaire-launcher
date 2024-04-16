@@ -6,6 +6,7 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
+	"github.com/ONSdigital/eq-questionnaire-launcher/oidc"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
@@ -675,7 +676,18 @@ func getSchema(launcherSchema surveys.LauncherSchema) (QuestionnaireSchema, stri
 	log.Println("Loading metadata from schema:", url)
 
 	var schema QuestionnaireSchema
-	resp, err := clients.GetHTTPClient().Get(url)
+	client := clients.GetHTTPClient()
+	tokenSource, err := oidc.GenerateIdToken("CIR_OAUTH2_CLIENT_ID")
+	if err != nil {
+		log.Print(err)
+		return schema, fmt.Sprintf("Unable to generate CIR authentication credentials %s", url)
+	}
+
+	if tokenSource != nil {
+		oidc.AddTokenSourceToClient(client, tokenSource)
+	}
+
+	resp, err := client.Get(url)
 	if err != nil {
 		log.Println("Failed to load schema from:", url)
 		return schema, fmt.Sprintf("Failed to load Schema from %s", url)
