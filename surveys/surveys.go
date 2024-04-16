@@ -13,7 +13,6 @@ import (
 	"github.com/ONSdigital/eq-questionnaire-launcher/clients"
 	"github.com/ONSdigital/eq-questionnaire-launcher/oidc"
 	"github.com/ONSdigital/eq-questionnaire-launcher/settings"
-	"golang.org/x/oauth2"
 	"sort"
 )
 
