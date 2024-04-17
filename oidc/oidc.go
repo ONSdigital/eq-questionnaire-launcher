@@ -16,7 +16,7 @@ import (
 	"google.golang.org/api/option"
 )
 
-func GenerateIdToken(clientIdName string) (oauth2.TokenSource, error) {
+func generateIdToken(clientIdName string) (oauth2.TokenSource, error) {
 	oidcBackend := settings.Get("OIDC_TOKEN_BACKEND")
 	if oidcBackend == "gcp" {
 		audience := settings.Get(clientIdName)
@@ -77,10 +77,18 @@ func getIdTokenFromMetadataServer(audience string, clientIdName string) (oauth2.
 	return ts, nil
 }
 
-func AddTokenSourceToClient(client *http.Client, tokenSource oauth2.TokenSource) {
-	client.Transport = &oauth2.Transport{
-		Source: tokenSource,
+func ConfigureClientAuthentication(client *http.Client, clientIdName string) (*http.Client, error) {
+	tokenSource, err := generateIdToken(clientIdName)
+	if err != nil {
+		return client, err
 	}
+
+	if tokenSource != nil {
+		client.Transport = &oauth2.Transport{
+			Source: tokenSource,
+		}
+	}
+	return client, nil
 }
 
 var getGCPIdToken = cachedWithTTL(getIdTokenFromMetadataServer)

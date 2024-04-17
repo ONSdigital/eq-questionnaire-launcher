@@ -3,16 +3,15 @@ package surveys
 import (
 	"encoding/json"
 	"errors"
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
-	"io"
-	"log"
-
 	"fmt"
 	"github.com/AreaHQ/jsonhal"
 	"github.com/ONSdigital/eq-questionnaire-launcher/clients"
 	"github.com/ONSdigital/eq-questionnaire-launcher/oidc"
 	"github.com/ONSdigital/eq-questionnaire-launcher/settings"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
+	"io"
+	"log"
 	"sort"
 )
 
@@ -146,16 +145,10 @@ func GetAvailableSchemasFromCIR() []CIMetadata {
 	ciMetadataList := []CIMetadata{}
 	hostURL := settings.Get("CIR_API_BASE_URL")
 
-	client := clients.GetHTTPClient()
-	tokenSource, err := oidc.GenerateIdToken("CIR_OAUTH2_CLIENT_ID")
-
+	client, err := oidc.ConfigureClientAuthentication(clients.GetHTTPClient(), "CIR_OAUTH2_CLIENT_ID")
 	if err != nil {
 		log.Print(err)
 		return ciMetadataList
-	}
-
-	if tokenSource != nil {
-		oidc.AddTokenSourceToClient(client, tokenSource)
 	}
 
 	log.Printf("CIR API Base URL: %s", hostURL)
@@ -245,16 +238,10 @@ func GetSupplementaryDataSets(surveyId string, periodId string) ([]DatasetMetada
 	datasetList := []DatasetMetadata{}
 	hostURL := settings.Get("SDS_API_BASE_URL")
 
-	client := clients.GetHTTPClient()
-	tokenSource, err := oidc.GenerateIdToken("SDS_OAUTH2_CLIENT_ID")
-
+	client, err := oidc.ConfigureClientAuthentication(clients.GetHTTPClient(), "SDS_OAUTH2_CLIENT_ID")
 	if err != nil {
 		log.Print(err)
 		return datasetList, errors.New("unable to generate SDS authentication credentials")
-	}
-
-	if tokenSource != nil {
-		oidc.AddTokenSourceToClient(client, tokenSource)
 	}
 
 	log.Printf("SDS API Base URL: %s", hostURL)

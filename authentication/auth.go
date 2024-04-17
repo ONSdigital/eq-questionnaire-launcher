@@ -673,15 +673,10 @@ func getSchema(launcherSchema surveys.LauncherSchema) (QuestionnaireSchema, stri
 	log.Println("Loading metadata from schema:", url)
 
 	var schema QuestionnaireSchema
-	client := clients.GetHTTPClient()
-	tokenSource, err := oidc.GenerateIdToken("CIR_OAUTH2_CLIENT_ID")
+	client, err := oidc.ConfigureClientAuthentication(clients.GetHTTPClient(), "CIR_OAUTH2_CLIENT_ID")
 	if err != nil {
 		log.Print(err)
 		return schema, fmt.Sprintf("Unable to generate CIR authentication credentials %s", url)
-	}
-
-	if tokenSource != nil {
-		oidc.AddTokenSourceToClient(client, tokenSource)
 	}
 
 	resp, err := client.Get(url)
