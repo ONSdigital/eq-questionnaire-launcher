@@ -655,6 +655,9 @@ func getRequiredSchemaMetadata(launcherSchema surveys.LauncherSchema) ([]Metadat
 
 func getSchema(launcherSchema surveys.LauncherSchema) (QuestionnaireSchema, string) {
 	var url string
+	var schema QuestionnaireSchema
+
+	client := clients.GetHTTPClient()
 
 	if launcherSchema.URL != "" {
 		url = launcherSchema.URL
@@ -663,6 +666,12 @@ func getSchema(launcherSchema surveys.LauncherSchema) (QuestionnaireSchema, stri
 
 		log.Println("Collection Instrument ID: ", launcherSchema.CIRInstrumentID)
 		url = fmt.Sprintf("%s/v2/retrieve_collection_instrument?guid=%s", hostURL, launcherSchema.CIRInstrumentID)
+
+		_, err := oidc.ConfigureClientAuthentication(client, "CIR_OAUTH2_CLIENT_ID")
+		if err != nil {
+			log.Print(err)
+			return schema, fmt.Sprintf("Unable to generate CIR authentication credentials %s", url)
+		}
 	} else {
 		hostURL := settings.Get("SURVEY_RUNNER_SCHEMA_URL")
 
@@ -671,13 +680,6 @@ func getSchema(launcherSchema surveys.LauncherSchema) (QuestionnaireSchema, stri
 	}
 
 	log.Println("Loading metadata from schema:", url)
-
-	var schema QuestionnaireSchema
-	client, err := oidc.ConfigureClientAuthentication(clients.GetHTTPClient(), "CIR_OAUTH2_CLIENT_ID")
-	if err != nil {
-		log.Print(err)
-		return schema, fmt.Sprintf("Unable to generate CIR authentication credentials %s", url)
-	}
 
 	resp, err := client.Get(url)
 	if err != nil {
