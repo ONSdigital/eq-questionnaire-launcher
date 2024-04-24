@@ -484,9 +484,7 @@ func GenerateTokenFromPost(postValues url.Values) (string, string) {
 		return "", fmt.Sprintf("getSchema failed err: %v", error)
 	}
 
-	var claims map[string]interface{}
-
-	claims = generateClaimsV2(postValues, schema)
+	var claims = generateClaimsV2(postValues, schema)
 
 	jwtClaims := GenerateJwtClaims()
 	for key, v := range jwtClaims {

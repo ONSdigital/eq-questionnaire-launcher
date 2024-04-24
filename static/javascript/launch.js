@@ -236,11 +236,12 @@ function showSubmitFlushButtons(show, justSubmit = false) {
 function includeSurveyMetadataFields(schema_name, survey_type) {
   let formTypeValue = schema_name.split("_").slice(1).join("_");
 
-  document.querySelector('#survey_metadata_fields').innerHTML = `<h3>${survey_type} Survey Metadata</h3>
+  document.querySelector("#survey_metadata_fields").innerHTML =
+    `<h3>${survey_type} Survey Metadata</h3>
                 <div class="field-container">
                     <label for="form_type">form_type</label>
                     <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="qa-form_type">
-                </div>`
+                </div>`;
 
   showSupplementaryData(true);
   document
