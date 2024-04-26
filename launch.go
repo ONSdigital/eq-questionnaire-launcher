@@ -153,11 +153,7 @@ func redirectURL(w http.ResponseWriter, r *http.Request) {
 	token := ""
 	err := ""
 
-	if launchVersion == "v2" {
-		token, err = authentication.GenerateTokenFromPost(r.PostForm, true)
-	} else {
-		token, err = authentication.GenerateTokenFromPost(r.PostForm, false)
-	}
+	token, err = authentication.GenerateTokenFromPost(r.PostForm)
 
 	if err != "" {
 		http.Error(w, err, 500)
@@ -179,20 +175,11 @@ func redirectURL(w http.ResponseWriter, r *http.Request) {
 func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	hostURL := settings.Get("SURVEY_RUNNER_URL")
 	accountServiceURL := getAccountServiceURL(r)
-	AccountServiceLogOutURL := getAccountServiceURL(r)
 	urlValues := r.URL.Query()
 	schemaURL := urlValues.Get("schema_url")
-	version := urlValues.Get("version")
-	launchVersion2 := true
 
 	defaultValues := authentication.GetDefaultValues()
-	if version == "" {
-		urlValues.Add("version", defaultValues["version"])
-	} else if version == "v1" {
-		launchVersion2 = false
-	} else {
-		urlValues.Add("version", version)
-	}
+	urlValues.Add("version", defaultValues["version"])
 
 	log.Println("Quick launch request received", schemaURL)
 
@@ -207,11 +194,7 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	token := ""
 	err := ""
 
-	if launchVersion2 {
-		token, err = authentication.GenerateTokenFromDefaultsV2(schemaURL, accountServiceURL, urlValues)
-	} else {
-		token, err = authentication.GenerateTokenFromDefaults(schemaURL, accountServiceURL, AccountServiceLogOutURL, urlValues)
-	}
+	token, err = authentication.GenerateTokenFromDefaultsV2(schemaURL, accountServiceURL, urlValues)
 
 	if err != "" {
 		http.Error(w, err, 400)
