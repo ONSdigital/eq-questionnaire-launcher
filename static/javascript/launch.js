@@ -139,6 +139,9 @@
 // store fetch so it only needs to be re-done if the survey changes
 let supplementaryDataSets = null;
 
+// We always need survey_id from top-level schema metadata for SDS retrieval
+let schemaSurveyId = null;
+
 function clearSurveyMetadataFields() {
   document.querySelector("#survey_metadata_fields").innerHTML = "";
   showSupplementaryData(false);
@@ -366,7 +369,6 @@ async function loadSDSDatasetMetadata(survey_id, period_id) {
 
 function handleNoSupplementaryData() {
   showSupplementaryData(false);
-  showSubmitFlushButtons(false);
 }
 
 function showCIRMetdata(cirInstrumentId, cirSchema) {
@@ -386,14 +388,25 @@ function showCIRMetdata(cirInstrumentId, cirSchema) {
 }
 
 function updateSDSDropdown() {
-  const surveyId = document.getElementById("survey_id")?.value;
+  const surveyId = schemaSurveyId;
   const periodId = document.getElementById("period_id")?.value;
+
+  const supplementaryDataSection = document.querySelector("#supplementary_data");
+  const sdsDatasetIdElement = document.querySelector("#sds_dataset_id");
+
   loadSDSDatasetMetadata(surveyId, periodId)
     .then((sds_metadata_response) => {
       if (sds_metadata_response?.length) {
+        document.querySelector("#supplementary_data").innerHTML = ""
         supplementaryDataSets = sds_metadata_response;
         showSupplementaryData(true);
         showSubmitFlushButtons(true);
+
+        if (!document.querySelector("#survey_metadata").contains(sdsDatasetIdElement)) {
+          // add sds_dataset_id field into the SDS metadata section if not already in survey metadata
+          supplementaryDataSection.innerHTML = `<div class="field-container">${getLabelFor("sds_dataset_id")}<select id="sds_dataset_id" name="sds_dataset_id" class="qa-sds_dataset_id" onchange="loadSupplementaryDataInfo()"></select></div>`;
+        }
+
         document.querySelector("#sds_dataset_id").innerHTML =
           sds_metadata_response
             .map(
@@ -427,6 +440,9 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
     .then((schema_response) => {
       document.querySelector("#survey_metadata").innerHTML = "";
       document.querySelector("#survey_metadata").innerHTML = "";
+
+      // We always need survey_id from top-level schema metadata for SDS retrieval
+      schemaSurveyId = schema_response.survey_id
 
       if (schema_response.metadata.length > 0) {
         document.querySelector("#survey_metadata").innerHTML =
@@ -480,25 +496,21 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
 
 function loadSupplementaryDataInfo() {
   const selectedDatasetId = document.getElementById("sds_dataset_id")?.value;
-  const selectedDataset = supplementaryDataSets?.find(
-    (d) => d["dataset_id"] === selectedDatasetId,
-  );
-  if (selectedDataset) {
-    const sdsDatasetMetadataKeys = [
-      "title",
-      "sds_schema_version",
-      "total_reporting_units",
-      "schema_version",
-      "sds_dataset_version",
-    ];
+  const selectedDataset = supplementaryDataSets?.find(d => d["dataset_id"] === selectedDatasetId)
 
-    document.querySelector("#supplementary_data").innerHTML =
-      sdsDatasetMetadataKeys
-        .map(
-          (key) =>
-            `<div class="field-container">${getLabelFor(key)}${getInputField(key, "text", selectedDataset[key], true)}</div>`,
-        )
-        .join("");
+  if (!selectedDataset) {
+    return;
+  }
+
+  const sdsDatasetMetadataKeys = ["title", "total_reporting_units", "schema_version", "sds_dataset_version"];
+
+  const sdsMetadataSection = document.querySelector("#supplementary_data");
+  const sdsMetadataField = key => `<div class="field-container">${getLabelFor(key)}${getInputField(key, "text", selectedDataset[key], true)}</div>`
+
+  if (sdsMetadataSection.contains(document.querySelector("#sds_dataset_id"))) {
+    sdsMetadataSection.innerHTML += sdsDatasetMetadataKeys.map(sdsMetadataField).join('')
+  } else {
+    sdsMetadataSection.innerHTML = sdsDatasetMetadataKeys.map(sdsMetadataField).join('')
   }
 }
 

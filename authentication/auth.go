@@ -6,10 +6,11 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"math/rand"
 	"net/http"
 	"net/url"
+	"os"
 	"time"
 
 	"github.com/ONSdigital/eq-questionnaire-launcher/clients"
@@ -59,7 +60,7 @@ type PrivateKeyResult struct {
 func loadEncryptionKey() (*PublicKeyResult, *KeyLoadError) {
 	encryptionKeyPath := settings.Get("JWT_ENCRYPTION_KEY_PATH")
 
-	keyData, err := ioutil.ReadFile(encryptionKeyPath)
+	keyData, err := os.ReadFile(encryptionKeyPath)
 	if err != nil {
 		return nil, &KeyLoadError{Op: "read", Err: "Failed to read encryption key from file: " + encryptionKeyPath}
 	}
@@ -82,7 +83,7 @@ func loadEncryptionKey() (*PublicKeyResult, *KeyLoadError) {
 
 func loadSigningKey() (*PrivateKeyResult, *KeyLoadError) {
 	signingKeyPath := settings.Get("JWT_SIGNING_KEY_PATH")
-	keyData, err := ioutil.ReadFile(signingKeyPath)
+	keyData, err := os.ReadFile(signingKeyPath)
 	if err != nil {
 		return nil, &KeyLoadError{Op: "read", Err: "Failed to read signing key from file: " + signingKeyPath}
 	}
@@ -156,45 +157,6 @@ func getSurveyMetadataFromClaims(claimValues map[string][]string, data map[strin
 	claims["survey_metadata"] = surveyMetadata
 }
 
-func generateClaims(claimValues map[string][]string, launcherSchema surveys.LauncherSchema) (claims map[string]interface{}) {
-
-	var roles []string
-	if rolesValues, ok := claimValues["roles"]; ok {
-		roles = rolesValues
-	} else {
-		roles = []string{"dumper"}
-	}
-
-	claims = make(map[string]interface{})
-
-	claims["roles"] = roles
-	TxID, _ := uuid.NewV4()
-	claims["tx_id"] = TxID.String()
-
-	for key, value := range claimValues {
-		if key != "roles" {
-			if value[0] != "" {
-				claims[key] = value[0]
-			}
-		} else {
-			claims[key] = value
-		}
-	}
-	if len(claimValues["form_type"]) > 0 && len(claimValues["eq_id"]) > 0 {
-		log.Println("Deleting schema name from claims")
-		delete(claims, "schema_name")
-	} else {
-		// When quicklaunching, schema_name will not be set, but launcherSchema will have the schema_name.
-		if len(claimValues["schema_name"]) == 0 && launcherSchema.Name != "" {
-			claims["schema_name"] = launcherSchema.Name
-		}
-	}
-
-	log.Printf("Using claims: %s", claims)
-
-	return claims
-}
-
 func generateClaimsV2(claimValues map[string][]string, schema QuestionnaireSchema) (claims map[string]interface{}) {
 
 	var roles []string
@@ -257,7 +219,7 @@ func launcherSchemaFromURL(url string) (launcherSchema surveys.LauncherSchema, e
 		return launcherSchema, fmt.Sprintf("Failed to load Schema from %s", url)
 	}
 
-	responseBody, err := ioutil.ReadAll(resp.Body)
+	responseBody, err := io.ReadAll(resp.Body)
 	resp.Body.Close()
 	if err != nil {
 		panic(err)
@@ -317,7 +279,7 @@ func validateSchema(payload []byte) (error string) {
 		return err.Error()
 	}
 
-	responseBody, err := ioutil.ReadAll(resp.Body)
+	responseBody, err := io.ReadAll(resp.Body)
 	resp.Body.Close()
 	if err != nil {
 		return err.Error()
@@ -420,49 +382,6 @@ func getStringOrDefault(key string, values map[string][]string, defaultValue str
 	return defaultValue
 }
 
-// GenerateTokenFromDefaults coverts a set of DEFAULT values into a JWT
-func GenerateTokenFromDefaults(schemaURL string, accountServiceURL string, accountServiceLogOutURL string, urlValues url.Values) (token string, error string) {
-	launcherSchema, validationError := launcherSchemaFromURL(schemaURL)
-	if validationError != "" {
-		return "", validationError
-	}
-
-	claims := make(map[string]interface{})
-	urlValues["account_service_url"] = []string{accountServiceURL}
-	urlValues["account_service_log_out_url"] = []string{accountServiceLogOutURL}
-	claims = generateClaims(urlValues, launcherSchema)
-
-	requiredMetadata, error := getRequiredSchemaMetadata(launcherSchema)
-	if error != "" {
-		return "", fmt.Sprintf("getRequiredSchemaMetadata failed err: %v", error)
-	}
-
-	for _, metadata := range requiredMetadata {
-		if metadata.Validator == "boolean" {
-			claims[metadata.Name] = getBooleanOrDefault(metadata.Name, urlValues, false)
-			continue
-		}
-		claims[metadata.Name] = getStringOrDefault(metadata.Name, urlValues, metadata.Default)
-	}
-
-	jwtClaims := GenerateJwtClaims()
-	for key, v := range jwtClaims {
-		claims[key] = v
-	}
-
-	schemaClaims := getSchemaClaims(launcherSchema)
-	for key, v := range schemaClaims {
-		claims[key] = v
-	}
-
-	token, tokenError := generateTokenFromClaims(claims)
-	if tokenError != nil {
-		return token, fmt.Sprintf("GenerateTokenFromDefaults failed err: %v", tokenError)
-	}
-
-	return token, ""
-}
-
 // GenerateTokenFromDefaultsV2 coverts a set of DEFAULT values into a JWT
 func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, urlValues url.Values) (token string, error string) {
 	launcherSchema, validationError := launcherSchemaFromURL(schemaURL)
@@ -475,10 +394,9 @@ func GenerateTokenFromDefaultsV2(schemaURL string, accountServiceURL string, url
 		return "", fmt.Sprintf("getSchema failed err: %v", error)
 	}
 
-	claims := make(map[string]interface{})
 	urlValues["account_service_url"] = []string{accountServiceURL}
 
-	claims = generateClaimsV2(urlValues, schema)
+	claims := generateClaimsV2(urlValues, schema)
 
 	requiredSchemaMetadata, error := getRequiredSchemaMetadata(launcherSchema)
 	if error != "" {
@@ -558,7 +476,7 @@ func TransformSchemaParamsToName(postValues url.Values) string {
 }
 
 // GenerateTokenFromPost converts a set of POST values into a JWT
-func GenerateTokenFromPost(postValues url.Values, launchVersion2 bool) (string, string) {
+func GenerateTokenFromPost(postValues url.Values) (string, string) {
 	log.Println("POST received: ", postValues)
 
 	schemaName := TransformSchemaParamsToName(postValues)
@@ -572,13 +490,7 @@ func GenerateTokenFromPost(postValues url.Values, launchVersion2 bool) (string, 
 		return "", fmt.Sprintf("getSchema failed err: %v", error)
 	}
 
-	claims := make(map[string]interface{})
-
-	if launchVersion2 {
-		claims = generateClaimsV2(postValues, schema)
-	} else {
-		claims = generateClaims(postValues, launcherSchema)
-	}
+	var claims = generateClaimsV2(postValues, schema)
 
 	jwtClaims := GenerateJwtClaims()
 	for key, v := range jwtClaims {
@@ -648,9 +560,7 @@ func GetSurveyData(launcherSchema surveys.LauncherSchema) (QuestionnaireSchema, 
 
 	missingClaims := getMissingMandatoryClaims(claims, mandatoryClaims)
 
-	for _, v := range missingClaims {
-		schema.Metadata = append(schema.Metadata, v)
-	}
+	schema.Metadata = append(schema.Metadata, missingClaims...)
 
 	return schema, ""
 }
@@ -692,7 +602,7 @@ func getSchema(launcherSchema surveys.LauncherSchema) (QuestionnaireSchema, stri
 		return schema, fmt.Sprintf("Failed to load Schema from %s", url)
 	}
 
-	responseBody, err := ioutil.ReadAll(resp.Body)
+	responseBody, err := io.ReadAll(resp.Body)
 	resp.Body.Close()
 	if err != nil {
 		log.Print(err)
@@ -708,7 +618,7 @@ func getSchema(launcherSchema surveys.LauncherSchema) (QuestionnaireSchema, stri
 }
 
 func getMandatatoryClaims(surveyType string, defaults map[string]string) []Metadata {
-	claims := make([]Metadata, 0)
+	var claims []Metadata
 	if isSocialSurvey(surveyType) {
 		claims = []Metadata{
 			{"qid", "false", defaults["qid"]},
