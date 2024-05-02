@@ -369,6 +369,7 @@ async function loadSDSDatasetMetadata(survey_id, period_id) {
 
 function handleNoSupplementaryData() {
   showSupplementaryData(false);
+  showSubmitFlushButtons(false);
 }
 
 function showCIRMetdata(cirInstrumentId, cirSchema) {
