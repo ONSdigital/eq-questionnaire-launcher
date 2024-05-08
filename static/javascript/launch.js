@@ -234,29 +234,14 @@ function showSubmitFlushButtons(show, justSubmit = false) {
 }
 
 function includeSurveyMetadataFields(schema_name, survey_type) {
-  let launchPattern = document.querySelector("#launch_pattern").value;
-  let eqIdValue = schema_name.split("_")[0];
   let formTypeValue = schema_name.split("_").slice(1).join("_");
 
-  if (launchPattern === "v1") {
-    document.querySelector("#survey_metadata_fields").innerHTML =
-      `<h3>${survey_type} Survey Metadata</h3>
-                    <div class="field-container">
-                        <label for="eq_id">eq_id</label>
-                        <input id="eq_id" name="eq_id" type="text" value="${eqIdValue}" class="qa-eq_id" >
-                    </div>
-                    <div class="field-container">
-                        <label for="form_type">form_type</label>
-                        <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="qa-form_type">
-                    </div>`;
-  } else {
-    document.querySelector("#survey_metadata_fields").innerHTML =
-      `<h3>${survey_type} Survey Metadata</h3>
-                    <div class="field-container">
-                        <label for="form_type">form_type</label>
-                        <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="qa-form_type">
-                    </div>`;
-  }
+  document.querySelector("#survey_metadata_fields").innerHTML =
+    `<h3>${survey_type} Survey Metadata</h3>
+                <div class="field-container">
+                    <label for="form_type">form_type</label>
+                    <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="qa-form_type">
+                </div>`;
 
   showSupplementaryData(true);
   document
