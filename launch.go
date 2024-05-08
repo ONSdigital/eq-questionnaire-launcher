@@ -168,7 +168,7 @@ func redirectURL(w http.ResponseWriter, r *http.Request) {
 	} else if launchVersion != "" {
 		http.Redirect(w, r, hostURL+"/session?token="+token, 301)
 	} else {
-		http.Error(w,"Invalid Action", 500)
+		http.Error(w, "Invalid Action", 500)
 	}
 }
 
