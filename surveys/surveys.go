@@ -42,7 +42,6 @@ type DatasetMetadata struct {
 	SurveyID            string `json:"survey_id"`
 	PeriodID            string `json:"period_id"`
 	Title               string `json:"title"`
-	SdsSchemaVersion    int    `json:"sds_schema_version"`
 	SdsPublishedAt      string `json:"sds_published_at"`
 	TotalReportingUnits int    `json:"total_reporting_units"`
 	SchemaVersion       string `json:"schema_version"`
@@ -246,6 +245,7 @@ func GetSupplementaryDataSets(surveyId string, periodId string) ([]DatasetMetada
 
 	log.Printf("SDS API Base URL: %s", hostURL)
 	url := fmt.Sprintf("%s/v1/dataset_metadata?survey_id=%s&period_id=%s", hostURL, surveyId, periodId)
+	log.Printf("Getting SDS metadata: %s", url)
 	resp, err := client.Get(url)
 
 	if err != nil || (resp.StatusCode != 200 && resp.StatusCode != 404) {

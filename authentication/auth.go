@@ -174,6 +174,12 @@ func generateClaimsV2(claimValues map[string][]string, schema QuestionnaireSchem
 	claims["tx_id"] = TxID.String()
 	claims["version"] = "v2"
 
+	// always send survey_id for business/test surveys unless it's already in survey metadata
+	_, ok := claimValues["survey_id"]
+	if !ok && !isSocialSurvey(schema.SurveyType) {
+		claimValues["survey_id"] = []string{schema.SurveyId}
+	}
+
 	surveyMetadata := make(map[string]interface{})
 	data := make(map[string]interface{})
 
