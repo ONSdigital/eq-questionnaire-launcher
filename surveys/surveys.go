@@ -3,17 +3,15 @@ package surveys
 import (
 	"encoding/json"
 	"errors"
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
-	"io"
-	"log"
-
 	"fmt"
 	"github.com/AreaHQ/jsonhal"
 	"github.com/ONSdigital/eq-questionnaire-launcher/clients"
 	"github.com/ONSdigital/eq-questionnaire-launcher/oidc"
 	"github.com/ONSdigital/eq-questionnaire-launcher/settings"
-	"golang.org/x/oauth2"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
+	"io"
+	"log"
 	"sort"
 )
 
@@ -44,7 +42,6 @@ type DatasetMetadata struct {
 	SurveyID            string `json:"survey_id"`
 	PeriodID            string `json:"period_id"`
 	Title               string `json:"title"`
-	SdsSchemaVersion    int    `json:"sds_schema_version"`
 	SdsPublishedAt      string `json:"sds_published_at"`
 	TotalReportingUnits int    `json:"total_reporting_units"`
 	SchemaVersion       string `json:"schema_version"`
@@ -144,16 +141,19 @@ func getAvailableSchemasFromRegister() []LauncherSchema {
 }
 
 func GetAvailableSchemasFromCIR() []CIMetadata {
-
 	ciMetadataList := []CIMetadata{}
-
 	hostURL := settings.Get("CIR_API_BASE_URL")
 
-	log.Printf("CIR API Base URL: %s", hostURL)
+	client, err := oidc.ConfigureClientAuthentication(clients.GetHTTPClient(), "CIR_OAUTH2_CLIENT_ID")
+	if err != nil {
+		log.Print(err)
+		return ciMetadataList
+	}
 
+	log.Printf("CIR API Base URL: %s", hostURL)
 	url := fmt.Sprintf("%s/v2/ci_metadata", hostURL)
 
-	resp, err := clients.GetHTTPClient().Get(url)
+	resp, err := client.Get(url)
 	if err != nil || resp.StatusCode != 200 {
 		log.Print(err)
 		return ciMetadataList
@@ -237,22 +237,15 @@ func GetSupplementaryDataSets(surveyId string, periodId string) ([]DatasetMetada
 	datasetList := []DatasetMetadata{}
 	hostURL := settings.Get("SDS_API_BASE_URL")
 
-	client := clients.GetHTTPClient()
-	tokenSource, err := oidc.GenerateIdToken()
-
+	client, err := oidc.ConfigureClientAuthentication(clients.GetHTTPClient(), "SDS_OAUTH2_CLIENT_ID")
 	if err != nil {
 		log.Print(err)
-		return datasetList, errors.New("unable to generate authentication credentials")
-	}
-
-	if tokenSource != nil {
-		client.Transport = &oauth2.Transport{
-			Source: tokenSource,
-		}
+		return datasetList, errors.New("unable to generate SDS authentication credentials")
 	}
 
 	log.Printf("SDS API Base URL: %s", hostURL)
 	url := fmt.Sprintf("%s/v1/dataset_metadata?survey_id=%s&period_id=%s", hostURL, surveyId, periodId)
+	log.Printf("Getting SDS metadata: %s", url)
 	resp, err := client.Get(url)
 
 	if err != nil || (resp.StatusCode != 200 && resp.StatusCode != 404) {
