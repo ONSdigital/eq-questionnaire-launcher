@@ -1,114 +1,120 @@
 {{ define "title" }}Launch a Survey{{ end }}
 {{ define "body" }}
 <body onload="onLoad()">
-    <h1 class="ons-u-mt-m">Launch a survey</h1>
+
     <form action=""
           method="post"
           xmlns="http://www.w3.org/1999/html"
           onsubmit="validateForm()">
-        <strong class="ons-u-mt-m"><u>Launch Pattern</u></strong>
-        <div class="field-container ons-field ons-field--inline">
-            <label class="ons-label" for="launch_pattern">Version</label>
-            <input id="launch_pattern"
-                   name="version"
-                   type="text"
-                   value="v2"
-                   class="qa-select-version ons-input ons-input--text ons-input-type__input"
-                   onload="loadMetadataForSchemaName();">
-        </div>
-        <strong><u>Launch by Schema Name</u></strong>
-        <div class="field-container ons-field ons-field--inline">
-            <label class="ons-label" for="schema_name">Schemas</label>
-            <select id="schema_name"
-                    name="schema_name"
-                    class="qa-select-schema ons-input ons-input--select"
-                    onchange="loadMetadataForSchemaName(); setLaunchType('name')">
-                <option selected disabled>Select Schema</option>
-                {{ range $surveyType, $schemasList := .Schemas }}
-                <optgroup label="{{ $surveyType }} Surveys">
-                    {{ range $schema := $schemasList }}
-                    <option value="{{ $schema.Name }}" data-survey-type="{{ $surveyType }}">{{ $schema.Name }}</option>
-                    {{ end }}
-                </optgroup>
-                {{ end }}
-            </select>
-        </div>
-        <p>----------</p>
-        <strong class="ons-u-mt-m"><u>Launch Remote Schemas</u></strong>
-        <div class="field-container ons-field ons-field--inline">
-            <label class="ons-label" for="remote-schema-survey-type">Survey Type</label>
-            <select name="survey-types"
-                    id="remote-schema-survey-type"
-                    onchange="setSurveyType(this)"
-                    class="ons-input ons-input--select">
-                <option selected disabled>Select Survey Type</option>
-                {{ range $surveyType, $schemasList := .Schemas }}
-                <option value="{{ $surveyType }}">{{ $surveyType }}</option>
-                {{ end }}
-            </select>
-        </div>
-        <div class="field-container ons-field ons-field--inline">
-            <label class="ons-label" for="schema-url">Schema URL</label>
-            <input id="schema-url"
-                   name="schema_url"
-                   type="text"
-                   class="qa-schema_url ons-input ons-input--text ons-input-type__input"
-                   onchange="setSchemaUrl(this)">
-        </div>
-        <div class="field-container ons-field ons-field--inline">
-            <label class="ons-label" for="cir-schemas">CIR Schema</label>
-            <select id="cir-schemas"
-                    name="cir_instrument_id"
-                    class="qa-cir_instrument_id ons-input ons-input--select"
-                    onchange="setCirSchema(this);">
-                <option selected disabled>Select Schema</option>
-                {{ range $cirSchema := .CirSchemas }}
-                <option value="{{ $cirSchema.ID }}"
-                        data-form-type="{{ $cirSchema.FormType }}"
-                        data-version="{{ $cirSchema.CIVersion }}"
-                        data-language="{{ $cirSchema.Language }}"
-                        data-title="{{ $cirSchema.Title }}"
-                        data-description="{{ $cirSchema.Description }}">
-                    {{ $cirSchema.FormType }} ({{ $cirSchema.Language }})
-                </option>
-                {{ end }}
-            </select>
-        </div>
-        <div class="field-container">
-            <input type="button"
-                   onClick="loadMetadataForRemoteSchema();"
-                   value="Load Schema"
-                   class="qa-btn-submit-dev btn btn--small"
-                   id="schema-url-btn" />
-        </div>
-        <p>----------</p>
-        <div id="survey_metadata_fields"></div>
-        <div class="cir-metadata cir-metadata--hidden">
-            <h3>CIR Metadata</h3>
-            <div id="cir_metadata"></div>
-        </div>
-        <h3>Survey Metadata</h3>
-        <div id="survey_metadata">
-            <p>--- Metadata fields will be loaded when you select a version and load a schema ---</p>
-        </div>
-        <div class="supplementary-data supplementary-data--hidden">
-            <h3>Supplementary Data</h3>
-            <div id="supplementary_data"></div>
-        </div>
-        <h3>Required Data</h3>
-        <div class="field-container">
-            <label for="case_id">Case ID</label>
-            <span class="field-container__span">
+        <div class="ons-grid">
+            <div class="ons-grid__col ons-col-6@m ">
+                <div class="ons-pl-grid-col">
+                    <h1 class="ons-">Launch a survey</h1>
+                    <strong class="ons-u-mt-m"><u>Launch Pattern</u></strong>
+                    <div class="field-container ons-field ons-field--inline">
+                        <label class="ons-label" for="launch_pattern">Version</label>
+                        <input id="launch_pattern"
+                               name="version"
+                               type="text"
+                               value="v2"
+                               class="qa-select-version ons-input ons-input--text ons-input-type__input ons-input--"
+                               onload="loadMetadataForSchemaName();">
+                    </div>
+                    <strong><u>Launch by Schema Name</u></strong>
+                    <div class="field-container ons-field ons-field--inline">
+                        <label class="ons-label" for="schema_name">Schemas</label>
+                        <select id="schema_name"
+                                name="schema_name"
+                                class="qa-select-schema ons-input ons-input--select"
+                                onchange="loadMetadataForSchemaName(); setLaunchType('name')">
+                            <option selected disabled>Select Schema</option>
+                            {{ range $surveyType, $schemasList := .Schemas }}
+                            <optgroup label="{{ $surveyType }} Surveys">
+                                {{ range $schema := $schemasList }}
+                                <option value="{{ $schema.Name }}" data-survey-type="{{ $surveyType }}">{{ $schema.Name }}</option>
+                                {{ end }}
+                            </optgroup>
+                            {{ end }}
+                        </select>
+                    </div>
+                    <p>----------</p>
+                    <strong class="ons-u-mt-m"><u>Launch Remote Schemas</u></strong>
+                    <div class="field-container ons-field ons-field--inline">
+                        <label class="ons-label" for="remote-schema-survey-type">Survey Type</label>
+                        <select name="survey-types"
+                                id="remote-schema-survey-type"
+                                onchange="setSurveyType(this)"
+                                class="ons-input ons-input--select">
+                            <option selected disabled>Select Survey Type</option>
+                            {{ range $surveyType, $schemasList := .Schemas }}
+                            <option value="{{ $surveyType }}">{{ $surveyType }}</option>
+                            {{ end }}
+                        </select>
+                    </div>
+                    <div class="field-container ons-field ons-field--inline">
+                        <label class="ons-label" for="schema-url">Schema URL</label>
+                        <input id="schema-url"
+                               name="schema_url"
+                               type="text"
+                               class="qa-schema_url ons-input ons-input--text ons-input-type__input"
+                               onchange="setSchemaUrl(this)">
+                    </div>
+                    <div class="field-container ons-field ons-field--inline">
+                        <label class="ons-label" for="cir-schemas">CIR Schema</label>
+                        <select id="cir-schemas"
+                                name="cir_instrument_id"
+                                class="qa-cir_instrument_id ons-input ons-input--select"
+                                onchange="setCirSchema(this);">
+                            <option selected disabled>Select Schema</option>
+                            {{ range $cirSchema := .CirSchemas }}
+                            <option value="{{ $cirSchema.ID }}"
+                                    data-form-type="{{ $cirSchema.FormType }}"
+                                    data-version="{{ $cirSchema.CIVersion }}"
+                                    data-language="{{ $cirSchema.Language }}"
+                                    data-title="{{ $cirSchema.Title }}"
+                                    data-description="{{ $cirSchema.Description }}">
+                                {{ $cirSchema.FormType }} ({{ $cirSchema.Language }})
+                            </option>
+                            {{ end }}
+                        </select>
+                    </div>
+                    <div class="field-container">
+                        <button type="button" class="qa-btn-submit-dev ons-btn ons-btn--secondary" onClick="loadMetadataForRemoteSchema();" id="schema-url-btn">
+              <span class="ons-btn__inner"><span class="ons-btn__text">Load Schema</span>
+              </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="ons-grid__col ons-col-6@m ">
+                <div class="ons-pl-grid-col">
+                    <div id="survey_metadata_fields"></div>
+                    <div class="cir-metadata cir-metadata--hidden">
+                        <h3>CIR Metadata</h3>
+                        <div id="cir_metadata"></div>
+                    </div>
+                    <h3>Survey Metadata</h3>
+                    <div id="survey_metadata" class="ons-field">
+                        <p>--- Metadata fields will be loaded when you select a version and load a schema ---</p>
+                    </div>
+                    <div class="supplementary-data supplementary-data--hidden">
+                        <h3>Supplementary Data</h3>
+                        <div id="supplementary_data"></div>
+                    </div>
+                    <h3>Required Data</h3>
+                    <div class="field-container">
+                        <label for="case_id">Case ID</label>
+                        <span class="field-container__span">
                 <input id="case_id" name="case_id" type="text" class="qa-case_id">
                 <img class="field-container__img"
                      onclick="uuid('case_id')"
                      src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg=="
                      alt="Reload symbol">
             </span>
-        </div>
-        <div class="field-container field-container--inline">
-            <label for="response_id">Response ID</label>
-            <span class="field-container__span">
+                    </div>
+                    <div class="field-container field-container--inline">
+                        <label for="response_id">Response ID</label>
+                        <span class="field-container__span">
                 <input id="response_id"
                        name="response_id"
                        type="text"
@@ -118,15 +124,15 @@
                      src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg=="
                      alt="Reload symbol">
             </span>
-        </div>
-        <input type="button"
-               value="Load Previous Value"
-               class="btn--hidden"
-               id="response-id-btn"
-               onclick="loadResponseId()" />
-        <div class="field-container">
-            <label for="collection_exercise_sid">Collection Exercise SID</label>
-            <span class="field-container__span">
+                    </div>
+                    <input type="button"
+                           value="Load Previous Value"
+                           class="btn--hidden"
+                           id="response-id-btn"
+                           onclick="loadResponseId()" />
+                    <div class="field-container">
+                        <label for="collection_exercise_sid">Collection Exercise SID</label>
+                        <span class="field-container__span">
                 <input id="collection_exercise_sid"
                        name="collection_exercise_sid"
                        type="text"
@@ -136,10 +142,10 @@
                      src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg=="
                      alt="Reload symbol">
             </span>
-        </div>
-        <div class="field-container">
-            <label for="response_expires_at">Response Expiry Time</label>
-            <span class="field-container__span">
+                    </div>
+                    <div class="field-container">
+                        <label for="response_expires_at">Response Expiry Time</label>
+                        <span class="field-container__span">
                 <input id="response_expires_at"
                        name="response_expires_at"
                        type="text"
@@ -149,60 +155,63 @@
                      src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg=="
                      alt="Reload symbol">
             </span>
-        </div>
-        <h3>Runner Data</h3>
-        <div class="field-container">
-            <label for="exp">Token Expiry (seconds)</label>
-            <input id="exp" type="text" value="1800" class="qa-token-expiry">
-        </div>
-        <div class="field-container">
-            <label for="language_code">Language</label>
-            <select id="language_code" name="language_code" class="qa-language-code">
-                <option value="en">English (en)</option>
-                <option value="cy">Cymraeg (cy)</option>
-                <option value="ga">Gaeilge (ga)</option>
-                <option value="eo">Ulstér Scotch (eo)</option>
-                <option value="">&lt;not set&gt;</option>
-            </select>
-        </div>
-        <div class="field-container">
-            <label for="roles">Roles</label>
-            <select id="roles" name="roles" multiple="multiple" class="qa-roles">
-                <option value="flusher">flusher</option>
-                <option value="dumper" selected>dumper</option>
-            </select>
-        </div>
-        <div class="field-container">
-            <label for="account_service_url">Account Service URL</label>
-            <input id="account_service_url"
-                   name="account_service_url"
-                   type="text"
-                   value="{{.AccountServiceURL}}"
-                   class="qa-account_service_url">
-        </div>
-        <div class="field-container">
-            <label for="account_service_log_out_url">Account Service Log Out URL</label>
-            <input id="account_service_log_out_url"
-                   type="text"
-                   value="{{.AccountServiceLogOutURL}}"
-                   class="qa-account_service_log_out_url">
-        </div>
-        <div class="field-container">
-            <input type="submit"
-                   value="Open Survey"
-                   class="qa-btn-submit-dev btn btn--hidden"
-                   id="submit-btn"
-                   onclick="saveResponseId()" />
-            <input type="submit"
-                   name="action_flush"
-                   value="Flush Survey Data"
-                   class="qa-btn-submit-dev btn btn--hidden"
-                   id="flush-btn" />
-            <input type="button"
-                   value="Clear Local Storage"
-                   class="qa-btn-submit-dev btn"
-                   id="local-storage-btn"
-                   onclick="clearLocalStorage()" />
+                    </div>
+                    <h3>Runner Data</h3>
+                    <div class="field-container ons-field ons-field--inline">
+                        <label class="ons-label" for="exp">Token Expiry (seconds)</label>
+                        <input id="exp" type="text" value="1800" class="qa-token-expiry ons-input ons-input--text">
+                    </div>
+                    <div class="field-container ons-field ons-field--inline">
+                        <label class="ons-label" for="language_code">Language</label>
+                        <select id="language_code" name="language_code" class="qa-language-code ons-input ons-input--select">
+                            <option value="en">English (en)</option>
+                            <option value="cy">Cymraeg (cy)</option>
+                            <option value="ga">Gaeilge (ga)</option>
+                            <option value="eo">Ulstér Scotch (eo)</option>
+                            <option value="">&lt;not set&gt;</option>
+                        </select>
+                    </div>
+                    <div class="field-container ons-field ons-field--inline">
+                        <label class="ons-label" for="roles">Roles</label>
+                        <select id="roles" name="roles" class="qa-roles ons-input ons-input--select">
+                            <option value="flusher">flusher</option>
+                            <option value="dumper" selected>dumper</option>
+                        </select>
+                    </div>
+                    <div class="field-container ons-field ons-field--inline">
+                        <label class="ons-label" for="account_service_url">Account Service URL</label>
+                        <input id="account_service_url"
+                               name="account_service_url"
+                               type="text"
+                               value="{{.AccountServiceURL}}"
+                               class="qa-account_service_url ons-input ons-input--text">
+                    </div>
+                    <div class="field-container ons-field ons-field--inline">
+                        <label class="ons-label" for="account_service_log_out_url">Account Service Log Out URL</label>
+                        <input id="account_service_log_out_url"
+                               type="text"
+                               value="{{.AccountServiceLogOutURL}}"
+                               class="qa-account_service_log_out_url ons-input ons-input--text">
+                    </div>
+                    <div class="field-container">
+                        <input type="submit"
+                               value="Open Survey"
+                               class="qa-btn-submit-dev btn btn--hidden"
+                               id="submit-btn"
+                               onclick="saveResponseId()" />
+                        <input type="submit"
+                               name="action_flush"
+                               value="Flush Survey Data"
+                               class="qa-btn-submit-dev btn btn--hidden"
+                               id="flush-btn" />
+                        <input type="button"
+                               value="Clear Local Storage"
+                               class="qa-btn-submit-dev btn"
+                               id="local-storage-btn"
+                               onclick="clearLocalStorage()" />
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
     <script src="../static/javascript/main.js"></script>

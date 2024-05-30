@@ -1,6 +1,9 @@
 body {
   font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
-  color: #222;
+  background-color: var(--ons-color-grey-35);
+  margin-left: 20px;
+  margin-top: 15px;
+  margin-right: 20px;
 }
 
 label {
