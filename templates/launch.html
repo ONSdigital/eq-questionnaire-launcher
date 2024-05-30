@@ -1,27 +1,27 @@
 {{ define "title" }}Launch a Survey{{ end }}
 {{ define "body" }}
 <body onload="onLoad()">
-    <h1>Launch a survey</h1>
+    <h1 class="ons-u-mt-m">Launch a survey</h1>
     <form action=""
           method="post"
           xmlns="http://www.w3.org/1999/html"
           onsubmit="validateForm()">
-        <strong><u>Launch Pattern</u></strong>
-        <div class="field-container">
-            <label for="launch_pattern">Version</label>
+        <strong class="ons-u-mt-m"><u>Launch Pattern</u></strong>
+        <div class="field-container ons-field ons-field--inline">
+            <label class="ons-label" for="launch_pattern">Version</label>
             <input id="launch_pattern"
                    name="version"
                    type="text"
                    value="v2"
-                   class="qa-select-version"
+                   class="qa-select-version ons-input ons-input--text ons-input-type__input"
                    onload="loadMetadataForSchemaName();">
         </div>
         <strong><u>Launch by Schema Name</u></strong>
-        <div class="field-container">
-            <label for="schema_name">Schemas</label>
+        <div class="field-container ons-field ons-field--inline">
+            <label class="ons-label" for="schema_name">Schemas</label>
             <select id="schema_name"
                     name="schema_name"
-                    class="qa-select-schema"
+                    class="qa-select-schema ons-input ons-input--select"
                     onchange="loadMetadataForSchemaName(); setLaunchType('name')">
                 <option selected disabled>Select Schema</option>
                 {{ range $surveyType, $schemasList := .Schemas }}
@@ -34,50 +34,45 @@
             </select>
         </div>
         <p>----------</p>
-        <strong><u>Launch Remote Schemas</u></strong>
-        <div class="field-container">
-            <span class="field-container__span">
-                <label for="remote-schema-survey-type">Survey Type</label>
-                <select name="survey-types"
-                        id="remote-schema-survey-type"
-                        onchange="setSurveyType(this)">
-                    <option selected disabled>Select Survey Type</option>
-                    {{ range $surveyType, $schemasList := .Schemas }}
-                    <option value="{{ $surveyType }}">{{ $surveyType }}</option>
-                    {{ end }}
-                </select>
-            </span>
+        <strong class="ons-u-mt-m"><u>Launch Remote Schemas</u></strong>
+        <div class="field-container ons-field ons-field--inline">
+            <label class="ons-label" for="remote-schema-survey-type">Survey Type</label>
+            <select name="survey-types"
+                    id="remote-schema-survey-type"
+                    onchange="setSurveyType(this)"
+                    class="ons-input ons-input--select">
+                <option selected disabled>Select Survey Type</option>
+                {{ range $surveyType, $schemasList := .Schemas }}
+                <option value="{{ $surveyType }}">{{ $surveyType }}</option>
+                {{ end }}
+            </select>
         </div>
-        <div class="field-container">
-            <span class="field-container__span">
-                <label for="schema-url">Schema URL</label>
-                <input id="schema-url"
-                       name="schema_url"
-                       type="text"
-                       class="qa-schema_url"
-                       onchange="setSchemaUrl(this)">
-            </span>
+        <div class="field-container ons-field ons-field--inline">
+            <label class="ons-label" for="schema-url">Schema URL</label>
+            <input id="schema-url"
+                   name="schema_url"
+                   type="text"
+                   class="qa-schema_url ons-input ons-input--text ons-input-type__input"
+                   onchange="setSchemaUrl(this)">
         </div>
-        <div class="field-container">
-            <span class="field-container__span">
-                <label for="cir-schemas">CIR Schema</label>
-                <select id="cir-schemas"
-                        name="cir_instrument_id"
-                        class="qa-cir_instrument_id"
-                        onchange="setCirSchema(this);">
-                    <option selected disabled>Select Schema</option>
-                    {{ range $cirSchema := .CirSchemas }}
-                    <option value="{{ $cirSchema.ID }}"
-                            data-form-type="{{ $cirSchema.FormType }}"
-                            data-version="{{ $cirSchema.CIVersion }}"
-                            data-language="{{ $cirSchema.Language }}"
-                            data-title="{{ $cirSchema.Title }}"
-                            data-description="{{ $cirSchema.Description }}">
-                        {{ $cirSchema.FormType }} ({{ $cirSchema.Language }})
-                    </option>
-                    {{ end }}
-                </select>
-            </span>
+        <div class="field-container ons-field ons-field--inline">
+            <label class="ons-label" for="cir-schemas">CIR Schema</label>
+            <select id="cir-schemas"
+                    name="cir_instrument_id"
+                    class="qa-cir_instrument_id ons-input ons-input--select"
+                    onchange="setCirSchema(this);">
+                <option selected disabled>Select Schema</option>
+                {{ range $cirSchema := .CirSchemas }}
+                <option value="{{ $cirSchema.ID }}"
+                        data-form-type="{{ $cirSchema.FormType }}"
+                        data-version="{{ $cirSchema.CIVersion }}"
+                        data-language="{{ $cirSchema.Language }}"
+                        data-title="{{ $cirSchema.Title }}"
+                        data-description="{{ $cirSchema.Description }}">
+                    {{ $cirSchema.FormType }} ({{ $cirSchema.Language }})
+                </option>
+                {{ end }}
+            </select>
         </div>
         <div class="field-container">
             <input type="button"
@@ -210,6 +205,7 @@
                    onclick="clearLocalStorage()" />
         </div>
     </form>
+    <script src="../static/javascript/main.js"></script>
     <script src="../static/javascript/launch.js"></script>
 </body>
 {{ end }}

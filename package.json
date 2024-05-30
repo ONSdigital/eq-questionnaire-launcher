@@ -29,5 +29,9 @@
       "no-unused-vars": "off",
       "no-undef": "off"
     }
+  },
+  "dependencies": {
+    "@ons/design-system": "^70.0.7",
+    "normalize.css": "^8.0.1"
   }
 }
