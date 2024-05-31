@@ -9,7 +9,7 @@
         <div class="ons-grid">
             <div class="ons-grid__col ons-col-6@m ">
                 <div class="ons-pl-grid-col">
-                    <h1 class="ons-">Launch a survey</h1>
+                    <h1>Launch a survey</h1>
                     <strong class="ons-u-mt-m"><u>Launch Pattern</u></strong>
                     <div class="field-container ons-field ons-field--inline">
                         <label class="ons-label" for="launch_pattern">Version</label>
@@ -17,7 +17,7 @@
                                name="version"
                                type="text"
                                value="v2"
-                               class="qa-select-version ons-input ons-input--text ons-input-type__input ons-input--"
+                               class="qa-select-version ons-input ons-input--text ons-input-type__input"
                                onload="loadMetadataForSchemaName();">
                     </div>
                     <strong><u>Launch by Schema Name</u></strong>
@@ -37,7 +37,7 @@
                             {{ end }}
                         </select>
                     </div>
-                    <p>----------</p>
+                    <hr>
                     <strong class="ons-u-mt-m"><u>Launch Remote Schemas</u></strong>
                     <div class="field-container ons-field ons-field--inline">
                         <label class="ons-label" for="remote-schema-survey-type">Survey Type</label>
@@ -84,10 +84,29 @@
               </span>
                         </button>
                     </div>
+                    <hr>
+                    <div class="field-container">
+                        <input type="submit"
+                               value="Open Survey"
+                               class="qa-btn-submit-dev btn btn--hidden"
+                               id="submit-btn"
+                               onclick="saveResponseId()" />
+                        <input type="submit"
+                               name="action_flush"
+                               value="Flush Survey Data"
+                               class="qa-btn-submit-dev btn btn--hidden"
+                               id="flush-btn" />
+                        <input type="button"
+                               value="Clear Local Storage"
+                               class="qa-btn-submit-dev btn"
+                               id="local-storage-btn"
+                               onclick="clearLocalStorage()" />
+                    </div>
                 </div>
             </div>
             <div class="ons-grid__col ons-col-6@m ">
                 <div class="ons-pl-grid-col">
+                    <hr>
                     <div id="survey_metadata_fields"></div>
                     <div class="cir-metadata cir-metadata--hidden">
                         <h3>CIR Metadata</h3>
@@ -95,12 +114,13 @@
                     </div>
                     <h3>Survey Metadata</h3>
                     <div id="survey_metadata" class="ons-field">
-                        <p>--- Metadata fields will be loaded when you select a version and load a schema ---</p>
+                        <p>Metadata fields will be loaded when you select a version and load a schema</p>
                     </div>
                     <div class="supplementary-data supplementary-data--hidden">
                         <h3>Supplementary Data</h3>
                         <div id="supplementary_data"></div>
                     </div>
+                    <hr>
                     <h3>Required Data</h3>
                     <div class="field-container">
                         <label for="case_id">Case ID</label>
@@ -156,6 +176,7 @@
                      alt="Reload symbol">
             </span>
                     </div>
+                    <hr>
                     <h3>Runner Data</h3>
                     <div class="field-container ons-field ons-field--inline">
                         <label class="ons-label" for="exp">Token Expiry (seconds)</label>
@@ -192,23 +213,6 @@
                                type="text"
                                value="{{.AccountServiceLogOutURL}}"
                                class="qa-account_service_log_out_url ons-input ons-input--text">
-                    </div>
-                    <div class="field-container">
-                        <input type="submit"
-                               value="Open Survey"
-                               class="qa-btn-submit-dev btn btn--hidden"
-                               id="submit-btn"
-                               onclick="saveResponseId()" />
-                        <input type="submit"
-                               name="action_flush"
-                               value="Flush Survey Data"
-                               class="qa-btn-submit-dev btn btn--hidden"
-                               id="flush-btn" />
-                        <input type="button"
-                               value="Clear Local Storage"
-                               class="qa-btn-submit-dev btn"
-                               id="local-storage-btn"
-                               onclick="clearLocalStorage()" />
                     </div>
                 </div>
             </div>
