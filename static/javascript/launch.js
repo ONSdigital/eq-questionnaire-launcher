@@ -241,10 +241,10 @@ function includeSurveyMetadataFields(schema_name, survey_type) {
 
   document.querySelector("#survey_metadata_fields").innerHTML =
     `<h3>${survey_type} Survey Metadata</h3>
-                <div class="field-container">
-                    <label for="form_type">form_type</label>
-                    <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="qa-form_type">
-                </div>`;
+                <div class="field-container ons-field ons-field--inline">
+                    <label class="ons-label" for="form_type">form_type</label>
+                    <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="qa-form_type ons-input ons-input--text ons-input-type__input">
+                </div><hr>`;
 
   showSupplementaryData(true);
   document
@@ -341,7 +341,7 @@ async function getDataAsync(queryParam) {
 }
 
 function getLabelFor(fieldName) {
-  return `<label for="${fieldName}">${fieldName}</label>`;
+  return `<label class="ons-label" for="${fieldName}">${fieldName}</label>`;
 }
 
 function getInputField(
@@ -354,9 +354,9 @@ function getInputField(
   const value = defaultValue ? `value="${defaultValue}"` : "";
   const readOnly = isReadOnly ? "readonly" : "";
   if (readOnly) {
-    return `<input ${readOnly} id="${fieldName}" type="${type}" ${value} class="qa-${fieldName}" onchange="${onChangeCallback}">`;
+    return `<input ${readOnly} id="${fieldName}" type="${type}" ${value} class="qa-${fieldName} ons-input ons-input--text" onchange="${onChangeCallback}">`;
   }
-  return `<input ${readOnly} id="${fieldName}" name="${fieldName}" type="${type}" ${value} class="qa-${fieldName}" onchange="${onChangeCallback}">`;
+  return `<input ${readOnly} id="${fieldName}" name="${fieldName}" type="${type}" ${value} class="qa-${fieldName} ons-input ons-input--text" onchange="${onChangeCallback}">`;
 }
 
 async function loadSDSDatasetMetadata(survey_id, period_id) {
@@ -383,7 +383,7 @@ function showCIRMetdata(cirInstrumentId, cirSchema) {
   document.querySelector("#cir_metadata").innerHTML = Object.keys(ciMetadata)
     .map(
       (key) =>
-        `<div class="field-container">${getLabelFor(key)}${getInputField(key, "text", ciMetadata[key], true)}</div>`,
+        `<div class="field-container ons-field ons-field--inline">${getLabelFor(key)}${getInputField(key, "text", ciMetadata[key], true)}</div>`,
     )
     .join("");
 }
@@ -411,7 +411,7 @@ function updateSDSDropdown() {
             .contains(sdsDatasetIdElement)
         ) {
           // add sds_dataset_id field into the SDS metadata section if not already in survey metadata
-          supplementaryDataSection.innerHTML = `<div class="field-container">${getLabelFor("sds_dataset_id")}<select id="sds_dataset_id" name="sds_dataset_id" class="qa-sds_dataset_id" onchange="loadSupplementaryDataInfo()"></select></div>`;
+          supplementaryDataSection.innerHTML = `<div class="field-container ons-field ons-field--inline">${getLabelFor("sds_dataset_id")}<select id="sds_dataset_id" name="sds_dataset_id" class="qa-sds_dataset_id ons-input ons-input--select" onchange="loadSupplementaryDataInfo()"></select></div>`;
         }
 
         document.querySelector("#sds_dataset_id").innerHTML =
@@ -458,7 +458,7 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
               const fieldName = metadataField["name"];
               const defaultValue = metadataField["default"];
 
-              return `<div class="field-container">${getLabelFor(fieldName)}${(() => {
+              return `<div class="field-container ons-field ons-field--inline">${getLabelFor(fieldName)}${(() => {
                 if (metadataField["type"] === "boolean") {
                   return getInputField(fieldName, "checkbox");
                 } else if (metadataField["type"] === "uuid") {
@@ -481,7 +481,7 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
                     "updateSDSDropdown()",
                   );
                 } else if (fieldName === "sds_dataset_id") {
-                  return `<select id="${fieldName}" name="${fieldName}" class="qa-${fieldName}" onchange="loadSupplementaryDataInfo()"></select>`;
+                  return `<select id="${fieldName}" name="${fieldName}" class="qa-${fieldName} ons-input ons-input--select" onchange="loadSupplementaryDataInfo()"></select>`;
                 } else {
                   return getInputField(fieldName, "text", defaultValue);
                 }
@@ -520,7 +520,7 @@ function loadSupplementaryDataInfo() {
 
   const sdsMetadataSection = document.querySelector("#supplementary_data");
   const sdsMetadataField = (key) =>
-    `<div class="field-container">${getLabelFor(key)}${getInputField(key, "text", selectedDataset[key], true)}</div>`;
+    `<div class="field-container ons-field ons-field--inline">${getLabelFor(key)}${getInputField(key, "text", selectedDataset[key], true)}</div>`;
 
   if (sdsMetadataSection.contains(document.querySelector("#sds_dataset_id"))) {
     sdsMetadataSection.innerHTML += sdsDatasetMetadataKeys
