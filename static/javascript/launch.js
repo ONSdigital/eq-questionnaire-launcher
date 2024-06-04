@@ -238,18 +238,19 @@ function showSubmitFlushButtons(show, justSubmit = false) {
 
 function includeSurveyMetadataFields(schema_name, survey_type) {
   let formTypeValue = schema_name.split("_").slice(1).join("_");
+  document.querySelector("#testblah").innerHTML =
+  `<h2 class="ons-details__title">${survey_type} Survey Metadata</h2>`
 
   document.querySelector("#survey_metadata_fields").innerHTML =
-    `<h3>${survey_type} Survey Metadata</h3>
-                <div class="field-container ons-field ons-field--inline">
+                `<div class="field-container ons-field ons-field--inline">
                     <label class="ons-label" for="form_type">form_type</label>
                     <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="qa-form_type ons-input ons-input--text ons-input-type__input">
                 </div><hr>`;
 
   showSupplementaryData(true);
   document
-    .querySelector("#survey_metadata_fields")
-    .classList.remove("supplementary-data--hidden");
+      .querySelector("#survey_metadata_fields")
+      .classList.remove("supplementary-data--hidden");
 }
 
 function loadMetadataForSchemaName() {
@@ -344,6 +345,7 @@ function getLabelFor(fieldName) {
   return `<label class="ons-label" for="${fieldName}">${fieldName}</label>`;
 }
 
+
 function getInputField(
   fieldName,
   type,
@@ -355,6 +357,9 @@ function getInputField(
   const readOnly = isReadOnly ? "readonly" : "";
   if (readOnly) {
     return `<input ${readOnly} id="${fieldName}" type="${type}" ${value} class="qa-${fieldName} ons-input ons-input--text" onchange="${onChangeCallback}">`;
+  }
+  if (type==="checkbox") {
+    return `<input ${readOnly} id="${fieldName}" type="${type}" ${value} class="qa-${fieldName} ons-checkbox--toggle" onchange="${onChangeCallback}">`;
   }
   return `<input ${readOnly} id="${fieldName}" name="${fieldName}" type="${type}" ${value} class="qa-${fieldName} ons-input ons-input--text" onchange="${onChangeCallback}">`;
 }
