@@ -38,18 +38,6 @@ label {
   margin: 0.1rem !important;
 }
 
-.field-container__img {
-  padding-top: 4px;
-  width: 26px;
-  height: auto;
-  display: block;
-  position: absolute;
-  top: -2px;
-  right: 2px;
-  cursor: pointer;
-  z-index: 3;
-}
-
 .btn {
   background: #6099c6;
   color: white;
