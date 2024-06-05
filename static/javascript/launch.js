@@ -213,12 +213,10 @@ function showSupplementaryData(show) {
 function showCIRMetadata(show) {
   if (show) {
     document
-      .querySelector(".cir-metadata")
-      .classList.remove("cir-metadata--hidden");
+      .querySelector(".cir-metadata");
   } else {
     document
-      .querySelector(".cir-metadata")
-      .classList.add("cir-metadata--hidden");
+      .querySelector(".cir-metadata");
   }
 }
 
@@ -238,7 +236,7 @@ function showSubmitFlushButtons(show, justSubmit = false) {
 
 function includeSurveyMetadataFields(schema_name, survey_type) {
   let formTypeValue = schema_name.split("_").slice(1).join("_");
-  document.querySelector("#testblah").innerHTML =
+  document.querySelector("#survey_type").innerHTML =
   `<h2 class="ons-details__title">${survey_type} Survey Metadata</h2>`
 
   document.querySelector("#survey_metadata_fields").innerHTML =

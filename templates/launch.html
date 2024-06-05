@@ -78,30 +78,26 @@
                         </select>
                     </div>
                     <div class="field-container">
-                        <input type="button"
-                               onClick="loadMetadataForRemoteSchema();"
-                               value="Load Metadata"
-                               class="qa-btn-submit-dev btn btn--small"
-                               id="schema-url-btn" />
+                        <button id="schema-url-btn" type="button" class="ons-btn qa-btn-submit-dev" onclick="loadMetadataForRemoteSchema()">
+                              <span class="ons-btn__inner"><span class="ons-btn__text">Load Metadata</span>
+                              </span>
+                        </button>
                     </div>
                     <hr>
                     <h3>Survey Actions</h3>
                     <div class="field-container">
-                        <input type="submit"
-                               value="Open Survey"
-                               class="qa-btn-submit-dev btn btn--hidden"
-                               id="submit-btn"
-                               onclick="saveResponseId()" />
-                        <input type="submit"
-                               name="action_flush"
-                               value="Flush Survey Data"
-                               class="qa-btn-submit-dev btn btn--hidden"
-                               id="flush-btn" />
-                        <input type="button"
-                               value="Clear Local Storage"
-                               class="qa-btn-submit-dev btn"
-                               id="local-storage-btn"
-                               onclick="clearLocalStorage()" />
+                        <button id="submit-btn" type="submit" class="ons-btn qa-btn-submit-dev btn--hidden" onclick="saveResponseId()">
+                              <span class="ons-btn__inner"><span class="ons-btn__text">Open Survey</span>
+                              </span>
+                        </button>
+                        <button name="action_flush" id="flush-btn" type="submit" class="ons-btn qa-btn-submit-dev btn--hidden">
+                              <span class="ons-btn__inner"><span class="ons-btn__text">Flush Survey Data</span>
+                              </span>
+                        </button>
+                        <button id="local-storage-btn" type="button" class="ons-btn qa-btn-submit-dev" onclick="clearLocalStorage()">
+                              <span class="ons-btn__inner"><span class="ons-btn__text">Clear Local Storage</span>
+                              </span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -109,7 +105,7 @@
                 <div class="ons-pl-grid-col">
                     <div id="metadata-accordion" class="ons-accordion">
                         <button type="button"
-                                class="ons-btn ons-accordion__toggle-all ons-u-mb-s ons-u-d-no ons-btn--secondary ons-btn--small"
+                                class="ons-btn ons-accordion__toggle-all ons-u-mb-s ons-u-d-no ons-btn--small"
                                 data-close-all="Hide all"
                                 data-group="metadata-accordion">
                             <span class="ons-btn__inner ons-accordion__toggle-all-inner"><span class="ons-btn__text">Show all</span>
@@ -120,7 +116,7 @@
                      class="ons-details ons-js-details ons-details--accordion"
                      data-group="metadata-accordion">
                     <div class="ons-details__heading ons-js-details-heading" role="button">
-                        <div id="testblah">
+                        <div id="survey_type">
                             <h2 class="ons-details__title">Choose Survey Type</h2>
                         </div>
                         <span class="ons-details__icon">
@@ -159,8 +155,8 @@
                     </div>
                     <div id="metadata-accordion-1-content"
                          class="ons-details__content ons-js-details-content">
-                        <div class="cir-metadata cir-metadata--hidden">
-                            <div id="cir_metadata"></div>
+                        <div class="cir-metadata">
+                            <div id="cir_metadata"><p>No CIR Metadata currently<p></div>
                         </div>
                     </div>
                 </div>
@@ -195,7 +191,7 @@
                 <div id="metadata-accordion-3"
                      class="ons-details ons-js-details ons-details--accordion"
                      data-group="metadata-accordion">
-                    <div class="ons-details__heading ons-js-details-heading" role="button">
+                    <div class="ons-details__heading ons-js-details-heading" role="button" data-save-state="true">
                         <h2 class="ons-details__title">Required Metadata</h2>
                         <span class="ons-details__icon">
                             <svg class="ons-icon"
@@ -236,11 +232,10 @@
                                      src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg=="
                                      alt="Reload symbol">
                             </span>
-                            <input type="button"
-                                   value="Load Previous Value"
-                                   class="btn--hidden"
-                                   id="response-id-btn"
-                                   onclick="loadResponseId()" />
+                            <button id="response-id-btn" type="button" class="ons-btn" onclick="loadResponseId()">
+                              <span class="ons-btn__inner"><span class="ons-btn__text">Load Previous Value</span>
+                              </span>
+                            </button>
                         </div>
                         <div class="field-container ons-field ons-field--inline">
                             <label class="ons-label" for="collection_exercise_sid">Collection Exercise SID</label>
