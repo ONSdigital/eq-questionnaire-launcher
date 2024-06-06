@@ -14,19 +14,6 @@ label {
   font-size: 0.9rem;
 }
 
-.field-container {
-  margin: 0 0 0.2rem 0;
-}
-
-.field-container--inline {
-  display: inline-block;
-}
-
-.supplementary-data--hidden,
-.cir-metadata--hidden {
+.supplementary-data--hidden {
   display: none;
-}
-
-.field-container__span {
-  position: relative;
 }

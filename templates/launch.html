@@ -10,7 +10,7 @@
                 <div class="ons-pl-grid-col">
                     <h1>Launch a survey</h1>
                     <strong class="ons-u-mt-m"><u>Launch Pattern</u></strong>
-                    <div class="field-container ons-field ons-field--inline">
+                    <div class="ons-field ons-field--inline">
                         <label class="ons-label" for="launch_pattern">Version</label>
                         <input id="launch_pattern"
                                name="version"
@@ -20,7 +20,7 @@
                                onload="loadMetadataForSchemaName();">
                     </div>
                     <strong><u>Launch by Schema Name</u></strong>
-                    <div class="field-container ons-field ons-field--inline">
+                    <div class="ons-field ons-field--inline">
                         <label class="ons-label" for="schema_name">Schemas</label>
                         <select id="schema_name"
                                 name="schema_name"
@@ -36,9 +36,9 @@
                             {{ end }}
                         </select>
                     </div>
-                    <hr>
-                    <strong class="ons-u-mt-m"><u>Launch Remote Schemas</u></strong>
-                    <div class="field-container ons-field ons-field--inline">
+                    <hr class="ons-u-mb-m">
+                    <strong><u>Launch Remote Schemas</u></strong>
+                    <div class="ons-field ons-field--inline">
                         <label class="ons-label" for="remote-schema-survey-type">Survey Type</label>
                         <select name="survey-types"
                                 id="remote-schema-survey-type"
@@ -50,7 +50,7 @@
                             {{ end }}
                         </select>
                     </div>
-                    <div class="field-container ons-field ons-field--inline">
+                    <div class="ons-field ons-field--inline">
                         <label class="ons-label" for="schema-url">Schema URL</label>
                         <input id="schema-url"
                                name="schema_url"
@@ -58,7 +58,7 @@
                                class="qa-schema_url ons-input ons-input--text ons-input-type__input"
                                onchange="setSchemaUrl(this)">
                     </div>
-                    <div class="field-container ons-field ons-field--inline">
+                    <div class="ons-field ons-field--inline">
                         <label class="ons-label" for="cir-schemas">CIR Schema</label>
                         <select id="cir-schemas"
                                 name="cir_instrument_id"
@@ -77,7 +77,7 @@
                             {{ end }}
                         </select>
                     </div>
-                    <div class="field-container">
+                    <div class="ons-u-mt-s">
                         <button id="schema-url-btn"
                                 type="button"
                                 class="ons-btn qa-btn-submit-dev"
@@ -87,8 +87,8 @@
                     </button>
                 </div>
                 <hr>
-                <h3>Survey Actions</h3>
-                <div class="field-container">
+                <h3 class="ons-u-mt-m">Survey Actions</h3>
+                <div>
                     <button id="submit-btn"
                             type="submit"
                             class="ons-btn qa-btn-submit-dev ons-btn--disabled"
@@ -242,9 +242,9 @@
                     </div>
                     <div id="metadata-accordion-3-content"
                          class="ons-details__content ons-js-details-content ons-u-mb-m">
-                        <div class="field-container ons-field ons-field--inline">
+                        <div class="ons-field ons-field--inline">
                             <label class="ons-label" for="case_id">Case ID</label>
-                            <span class="field-container__span">
+                            <span>
                                 <input id="case_id"
                                        name="case_id"
                                        type="text"
@@ -255,9 +255,9 @@
                                  src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg=="
                                  alt="Reload symbol">
                         </div>
-                        <div class="field-container ons-field ons-field--inline">
+                        <div class="ons-field ons-field--inline">
                             <label class="ons-label" for="response_id">Response ID</label>
-                            <span class="field-container__span">
+                            <span>
                                 <input id="response_id"
                                        name="response_id"
                                        type="text"
@@ -275,9 +275,9 @@
                             </span>
                         </button>
                     </div>
-                    <div class="field-container ons-field ons-field--inline">
+                    <div class="ons-field ons-field--inline">
                         <label class="ons-label" for="collection_exercise_sid">Collection Exercise SID</label>
-                        <span class="field-container__span">
+                        <span>
                             <input id="collection_exercise_sid"
                                    name="collection_exercise_sid"
                                    type="text"
@@ -288,9 +288,9 @@
                              src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg=="
                              alt="Reload symbol">
                     </div>
-                    <div class="field-container ons-field ons-field--inline">
+                    <div class="ons-field ons-field--inline">
                         <label class="ons-label" for="response_expires_at">Response Expiry Time</label>
-                        <span class="field-container__span">
+                        <span>
                             <input id="response_expires_at"
                                    name="response_expires_at"
                                    type="text"
@@ -324,14 +324,14 @@
                 </div>
                 <div id="metadata-accordion-4-content"
                      class="ons-details__content ons-js-details-content">
-                    <div class="field-container ons-field ons-field--inline">
+                    <div class="ons-field ons-field--inline">
                         <label class="ons-label" for="exp">Token Expiry (seconds)</label>
                         <input id="exp"
                                type="text"
                                value="1800"
                                class="qa-token-expiry ons-input ons-input--text">
                     </div>
-                    <div class="field-container ons-field ons-field--inline">
+                    <div class="ons-field ons-field--inline">
                         <label class="ons-label" for="language_code">Language</label>
                         <select id="language_code"
                                 name="language_code"
@@ -343,14 +343,14 @@
                             <option value="">&lt;not set&gt;</option>
                         </select>
                     </div>
-                    <div class="field-container ons-field ons-field--inline">
+                    <div class="ons-field ons-field--inline">
                         <label class="ons-label" for="roles">Roles</label>
                         <select id="roles" name="roles" class="qa-roles ons-input ons-input--select">
                             <option value="flusher">flusher</option>
                             <option value="dumper" selected>dumper</option>
                         </select>
                     </div>
-                    <div class="field-container ons-field ons-field--inline">
+                    <div class="ons-field ons-field--inline">
                         <label class="ons-label" for="account_service_url">Account Service URL</label>
                         <input id="account_service_url"
                                name="account_service_url"
@@ -358,7 +358,7 @@
                                value="{{.AccountServiceURL}}"
                                class="qa-account_service_url ons-input ons-input--text">
                     </div>
-                    <div class="field-container ons-field ons-field--inline">
+                    <div class="ons-field ons-field--inline">
                         <label class="ons-label" for="account_service_log_out_url">Account Service Log Out URL</label>
                         <input id="account_service_log_out_url"
                                type="text"

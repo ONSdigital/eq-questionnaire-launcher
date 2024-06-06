@@ -242,7 +242,7 @@ function includeSurveyMetadataFields(schema_name, survey_type) {
   `<h2 class="ons-details__title">${survey_type} Survey Metadata</h2>`
 
   document.querySelector("#survey_metadata_fields").innerHTML =
-                `<div class="field-container ons-field ons-field--inline">
+                `<div class="ons-field ons-field--inline">
                     <label class="ons-label" for="form_type">form_type</label>
                     <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="qa-form_type ons-input ons-input--text ons-input-type__input">
                 </div>`;
@@ -389,7 +389,7 @@ function showCIRMetdata(cirInstrumentId, cirSchema) {
   document.querySelector("#cir_metadata").innerHTML = Object.keys(ciMetadata)
     .map(
       (key) =>
-        `<div class="field-container ons-field ons-field--inline">${getLabelFor(key)}${getInputField(key, "text", ciMetadata[key], true)}</div>`,
+        `<div class="ons-field ons-field--inline">${getLabelFor(key)}${getInputField(key, "text", ciMetadata[key], true)}</div>`,
     )
     .join("");
 }
@@ -417,7 +417,7 @@ function updateSDSDropdown() {
             .contains(sdsDatasetIdElement)
         ) {
           // add sds_dataset_id field into the SDS metadata section if not already in survey metadata
-          supplementaryDataSection.innerHTML = `<div class="field-container ons-field ons-field--inline">${getLabelFor("sds_dataset_id")}<select id="sds_dataset_id" name="sds_dataset_id" class="qa-sds_dataset_id ons-input ons-input--select" onchange="loadSupplementaryDataInfo()"></select></div>`;
+          supplementaryDataSection.innerHTML = `<div class="ons-field ons-field--inline">${getLabelFor("sds_dataset_id")}<select id="sds_dataset_id" name="sds_dataset_id" class="qa-sds_dataset_id ons-input ons-input--select" onchange="loadSupplementaryDataInfo()"></select></div>`;
         }
 
         document.querySelector("#sds_dataset_id").innerHTML =
@@ -464,13 +464,13 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
               const fieldName = metadataField["name"];
               const defaultValue = metadataField["default"];
 
-              return `<div class="field-container ons-field ons-field--inline">${getLabelFor(fieldName)}${(() => {
+              return `<div class="ons-field ons-field--inline">${getLabelFor(fieldName)}${(() => {
                 if (metadataField["type"] === "boolean") {
                   return getInputField(fieldName, "checkbox");
                 } else if (metadataField["type"] === "uuid") {
                   return (
-                    `<span class="field-container__span">${getInputField(fieldName, "text", uuidv4())}` +
-                    `<img class="field-container__img" onclick="uuid('${fieldName}')" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg==">` +
+                    `<span>${getInputField(fieldName, "text", uuidv4())}` +
+                    `<img onclick="uuid('${fieldName}')" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg==">` +
                     `</span>`
                   );
                 } else if (
@@ -526,7 +526,7 @@ function loadSupplementaryDataInfo() {
 
   const sdsMetadataSection = document.querySelector("#supplementary_data");
   const sdsMetadataField = (key) =>
-    `<div class="field-container ons-field ons-field--inline">${getLabelFor(key)}${getInputField(key, "text", selectedDataset[key], true)}</div>`;
+    `<div class="ons-field ons-field--inline">${getLabelFor(key)}${getInputField(key, "text", selectedDataset[key], true)}</div>`;
 
   if (sdsMetadataSection.contains(document.querySelector("#sds_dataset_id"))) {
     sdsMetadataSection.innerHTML += sdsDatasetMetadataKeys
