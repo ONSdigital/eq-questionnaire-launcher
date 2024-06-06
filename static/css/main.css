@@ -22,7 +22,6 @@ label {
   display: inline-block;
 }
 
-.btn--hidden,
 .supplementary-data--hidden,
 .cir-metadata--hidden {
   display: none;
@@ -30,28 +29,4 @@ label {
 
 .field-container__span {
   position: relative;
-}
-
-.btn--small {
-  font-size: 0.9rem !important;
-  padding: 0.5rem 2rem !important;
-  margin: 0.1rem !important;
-}
-
-.btn {
-  background: #6099c6;
-  color: white;
-  border: 0;
-  border-radius: 3px;
-  padding: 0.75rem 2rem;
-  text-align: center;
-  font-size: 1rem;
-  margin: 0.5rem;
-  cursor: pointer;
-}
-
-.btn:disabled {
-  background: #cccccc;
-  color: grey;
-  cursor: default;
 }

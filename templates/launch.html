@@ -113,44 +113,61 @@
     </div>
 </div>
 </div>
-<div class="ons-grid__col ons-col-6@m ">
-    <div class="ons-pl-grid-col">
-        <div id="metadata-accordion" class="ons-accordion">
-            <button type="button"
-                    class="ons-btn ons-accordion__toggle-all ons-u-mb-s ons-u-d-no ons-btn--small"
-                    data-close-all="Hide all"
-                    data-group="metadata-accordion">
-                <span class="ons-btn__inner ons-accordion__toggle-all-inner"><span class="ons-btn__text">Show all</span></span>
-            </button>
-        </div>
-        <div id="survey_types"></div>
-        <div id="metadata-accordion-1"
-             class="ons-details ons-js-details ons-details--accordion"
-             data-group="metadata-accordion">
-            <div class="ons-details__heading ons-js-details-heading"
-                 role="button"
-                 data-save-state="true">
-                <h2 class="ons-details__title">CIR Metadata</h2>
-                <span class="ons-details__icon">
-                    <svg class="ons-icon"
-                         viewBox="0 0 8 13"
-                         xmlns="http://www.w3.org/2000/svg"
-                         focusable="false"
-                         fill="currentColor"
-                         role="img"
-                         title="ons-icon-chevron">
-                        <path d="M5.74,14.28l-.57-.56a.5.5,0,0,1,0-.71h0l5-5-5-5a.5.5,0,0,1,0-.71h0l.57-.56a.5.5,0,0,1,.71,0h0l5.93,5.93a.5.5,0,0,1,0,.7L6.45,14.28a.5.5,0,0,1-.71,0Z" transform="translate(-5.02 -1.59)" />
-                    </svg>
-                </span>
-            </div>
-            <div id="metadata-accordion-1-content"
-                 class="ons-details__content ons-js-details-content ons-u-mb-m">
-                <div class="cir-metadata">
-                    <div id="cir_metadata">
-                        <p>
-                            No CIR Metadata currently
-                            <p>
-                            </div>
+        <div class="ons-grid__col ons-col-6@m ">
+            <div class="ons-pl-grid-col">
+                <div id="metadata-accordion" class="ons-accordion">
+                    <button type="button"
+                            class="ons-btn ons-accordion__toggle-all ons-u-mb-s ons-u-d-no ons-btn--small"
+                            data-close-all="Hide all"
+                            data-group="metadata-accordion">
+                        <span class="ons-btn__inner ons-accordion__toggle-all-inner"><span class="ons-btn__text">Show all</span></span>
+                    </button>
+                </div>
+                <div id="metadata-accordion-5"
+                     class="ons-details ons-js-details ons-details--accordion ons-u-vh"
+                     data-group="metadata-accordion">
+                    <div class="ons-details__heading ons-js-details-heading" role="button">
+                        <h2 class="ons-details__title survey_heading"></h2>
+                        <span class="ons-details__icon">
+                        <svg class="ons-icon"
+                             viewBox="0 0 8 13"
+                             xmlns="http://www.w3.org/2000/svg"
+                             focusable="false"
+                             fill="currentColor"
+                             role="img"
+                             title="ons-icon-chevron">
+                            <path d="M5.74,14.28l-.57-.56a.5.5,0,0,1,0-.71h0l5-5-5-5a.5.5,0,0,1,0-.71h0l.57-.56a.5.5,0,0,1,.71,0h0l5.93,5.93a.5.5,0,0,1,0,.7L6.45,14.28a.5.5,0,0,1-.71,0Z" transform="translate(-5.02 -1.59)" />
+                        </svg>
+                    </span>
+                    </div>
+                    <div id="metadata-accordion-5-content"
+                         class="ons-details__content ons-js-details-content ons-u-mb-m">
+                        <div id="survey_metadata_fields"></div>
+                    </div>
+                </div>
+                <div id="metadata-accordion-1"
+                     class="ons-details ons-js-details ons-details--accordion ons-u-vh"
+                     data-group="metadata-accordion">
+                    <div class="ons-details__heading ons-js-details-heading"
+                         role="button"
+                         data-save-state="true">
+                        <h2 class="ons-details__title">CIR Metadata</h2>
+                        <span class="ons-details__icon">
+                            <svg class="ons-icon"
+                                 viewBox="0 0 8 13"
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 focusable="false"
+                                 fill="currentColor"
+                                 role="img"
+                                 title="ons-icon-chevron">
+                                <path d="M5.74,14.28l-.57-.56a.5.5,0,0,1,0-.71h0l5-5-5-5a.5.5,0,0,1,0-.71h0l.57-.56a.5.5,0,0,1,.71,0h0l5.93,5.93a.5.5,0,0,1,0,.7L6.45,14.28a.5.5,0,0,1-.71,0Z" transform="translate(-5.02 -1.59)" />
+                            </svg>
+                        </span>
+                    </div>
+                    <div id="metadata-accordion-1-content"
+                         class="ons-details__content ons-js-details-content ons-u-mb-m">
+                        <div class="cir-metadata">
+                            <div id="cir_metadata"></div>
                         </div>
                     </div>
                 </div>
@@ -181,7 +198,7 @@
                     </div>
                 </div>
                 <div id="metadata-accordion-6"
-                     class="ons-details ons-js-details ons-details--accordion"
+                     class="ons-details ons-js-details ons-details--accordion ons-u-vh"
                      data-group="metadata-accordion">
                     <div class="ons-details__heading ons-js-details-heading" role="button">
                         <h2 class="ons-details__title">Supplementary Data</h2>
@@ -198,9 +215,8 @@
                         </span>
                     </div>
                     <div id="metadata-accordion-6-content"
-                         class="ons-details__content ons-js-details-content ons-">
-                        <div class="supplementary-data supplementary-data--hidden">
-                            <h3>Supplementary Data</h3>
+                         class="ons-details__content ons-js-details-content ons-u-mb-m">
+                        <div class="supplementary-data">
                             <div id="supplementary_data"></div>
                         </div>
                     </div>
@@ -225,7 +241,7 @@
                         </span>
                     </div>
                     <div id="metadata-accordion-3-content"
-                         class="ons-details__content ons-js-details-content">
+                         class="ons-details__content ons-js-details-content ons-u-mb-m">
                         <div class="field-container ons-field ons-field--inline">
                             <label class="ons-label" for="case_id">Case ID</label>
                             <span class="field-container__span">

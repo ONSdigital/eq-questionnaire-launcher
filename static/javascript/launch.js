@@ -143,7 +143,8 @@ let supplementaryDataSets = null;
 let schemaSurveyId = null;
 
 function clearSurveyMetadataFields() {
-  document.querySelector("#survey_types").innerHTML = "";
+  document.querySelector("#metadata-accordion-5").classList.add("ons-u-vh");
+  document.querySelector("#survey_metadata_fields").innerHTML = "";
   showSupplementaryData(false);
 }
 
@@ -200,10 +201,12 @@ function setLaunchType(launchType) {
 
 function showSupplementaryData(show) {
   if (show) {
+    document.querySelector("#metadata-accordion-6").classList.remove("ons-u-vh");
     document
       .querySelector(".supplementary-data")
       .classList.remove("supplementary-data--hidden");
   } else {
+    document.querySelector("#metadata-accordion-6").classList.add("ons-u-vh");
     document
       .querySelector(".supplementary-data")
       .classList.add("supplementary-data--hidden");
@@ -212,60 +215,42 @@ function showSupplementaryData(show) {
 
 function showCIRMetadata(show) {
   if (show) {
-    document
-      .querySelector(".cir-metadata");
+    document.querySelector("#metadata-accordion-1").classList.remove("ons-u-vh");
   } else {
-    document
-      .querySelector(".cir-metadata");
+    document.querySelector("#metadata-accordion-1").classList.add("ons-u-vh");
   }
 }
 
 function showSubmitFlushButtons(show, justSubmit = false) {
   if (show) {
-    document.querySelector("#submit-btn").classList.remove("btn--hidden");
+    document.querySelector("#submit-btn").classList.remove("ons-btn--disabled");
     if (!justSubmit) {
-      document.querySelector("#flush-btn").classList.remove("btn--hidden");
+      document.querySelector("#flush-btn").classList.remove("ons-btn--disabled");
     }
   } else {
-    document.querySelector("#submit-btn").classList.add("btn--hidden");
+    document.querySelector("#submit-btn").classList.add("ons-btn--disabled");
     if (!justSubmit) {
-      document.querySelector("#flush-btn").classList.add("btn--hidden");
+      document.querySelector("#flush-btn").classList.add("ons-btn--disabled");
     }
   }
 }
 
 function includeSurveyMetadataFields(schema_name, survey_type) {
   let formTypeValue = schema_name.split("_").slice(1).join("_");
-  document.querySelector("#survey_types").innerHTML = `<div id="metadata-accordion-5"
-         class="ons-details ons-js-details ons-details--accordion"
-         data-group="metadata-accordion">
-        <div class="ons-details__heading ons-js-details-heading" role="button">
-            <h2 class="ons-details__title">${survey_type} Survey Metadata</h2>
-            <span class="ons-details__icon">
-                <svg class="ons-icon"
-                     viewBox="0 0 8 13"
-                     xmlns="http://www.w3.org/2000/svg"
-                     focusable="false"
-                     fill="currentColor"
-                     role="img"
-                     title="ons-icon-chevron">
-                    <path d="M5.74,14.28l-.57-.56a.5.5,0,0,1,0-.71h0l5-5-5-5a.5.5,0,0,1,0-.71h0l.57-.56a.5.5,0,0,1,.71,0h0l5.93,5.93a.5.5,0,0,1,0,.7L6.45,14.28a.5.5,0,0,1-.71,0Z" transform="translate(-5.02 -1.59)" />
-                </svg>
-            </span>
-        </div>
-        <div id="metadata-accordion-5-content"
-             class="ons-details__content ons-js-details-content">
-            <div class="field-container ons-field ons-field--inline">
+  document.querySelector("#metadata-accordion-5").classList.remove("ons-u-vh");
+  document.querySelector(".survey_heading").innerHTML =
+  `<h2 class="ons-details__title">${survey_type} Survey Metadata</h2>`
+
+  document.querySelector("#survey_metadata_fields").innerHTML =
+                `<div class="field-container ons-field ons-field--inline">
                     <label class="ons-label" for="form_type">form_type</label>
                     <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="qa-form_type ons-input ons-input--text ons-input-type__input">
-                </div>
-        </div>
-    </div>`;
+                </div>`;
 
   showSupplementaryData(true);
   document
-      .querySelector("#survey_types")
-      .classList.remove("supplementary-data--hidden");
+    .querySelector("#survey_metadata_fields")
+    .classList.remove("supplementary-data--hidden");
 }
 
 function loadMetadataForSchemaName() {
@@ -400,6 +385,7 @@ function showCIRMetdata(cirInstrumentId, cirSchema) {
     title: cirSchema.getAttribute("data-title"),
     description: cirSchema.getAttribute("data-description"),
   };
+  // document.querySelector("#metadata-accordion-1").classList.remove("ons-u-vh");
   document.querySelector("#cir_metadata").innerHTML = Object.keys(ciMetadata)
     .map(
       (key) =>
@@ -602,12 +588,6 @@ function removeUnwantedMetadata() {
 function retrieveResponseId() {
   let responseId = localStorage.getItem("response_id");
   let responseIdButton = document.querySelector("#response-id-btn");
-
-  if (responseId) {
-    responseIdButton.classList.remove("btn--hidden");
-  } else {
-    responseIdButton.classList.add("btn--hidden");
-  }
 }
 
 function loadResponseId() {
