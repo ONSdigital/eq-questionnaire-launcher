@@ -202,14 +202,8 @@ function setLaunchType(launchType) {
 function showSupplementaryData(show) {
   if (show) {
     document.querySelector("#sds-metadata-accordion").classList.remove("ons-u-vh");
-    document
-      .querySelector(".supplementary-data")
-      .classList.remove("supplementary-data--hidden");
   } else {
     document.querySelector("#sds-metadata-accordion").classList.add("ons-u-vh");
-    document
-      .querySelector(".supplementary-data")
-      .classList.add("supplementary-data--hidden");
   }
 }
 
@@ -224,8 +218,10 @@ function showCIRMetadata(show) {
 function showSubmitFlushButtons(show, justSubmit = false) {
   if (show) {
     document.querySelector("#submit-btn").classList.remove("ons-btn--disabled");
+    document.querySelector("#submit-btn").removeAttribute("disabled");
     if (!justSubmit) {
       document.querySelector("#flush-btn").classList.remove("ons-btn--disabled");
+      document.querySelector("#flush-btn").removeAttribute("disabled");
     }
   } else {
     document.querySelector("#submit-btn").classList.add("ons-btn--disabled");
@@ -248,9 +244,6 @@ function includeSurveyMetadataFields(schema_name, survey_type) {
                 </div>`;
 
   showSupplementaryData(true);
-  document
-    .querySelector("#survey_metadata_fields")
-    .classList.remove("supplementary-data--hidden");
 }
 
 function loadMetadataForSchemaName() {
