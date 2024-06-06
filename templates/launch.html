@@ -82,296 +82,291 @@
                                 type="button"
                                 class="ons-btn qa-btn-submit-dev"
                                 onclick="loadMetadataForRemoteSchema()">
-                            <span class="ons-btn__inner"><span class="ons-btn__text">Load Metadata</span>
-                        </span>
-                    </button>
-                </div>
-                <hr>
-                <h3 class="ons-u-mt-m">Survey Actions</h3>
-                <div>
-                    <button id="submit-btn"
-                            type="submit"
-                            class="ons-btn qa-btn-submit-dev ons-btn--disabled"
-                            onclick="saveResponseId()">
-                        <span class="ons-btn__inner"><span class="ons-btn__text">Open Survey</span>
-                    </span>
-                </button>
-                <button name="action_flush"
-                        id="flush-btn"
-                        type="submit"
-                        class="ons-btn qa-btn-submit-dev ons-btn--disabled">
-                    <span class="ons-btn__inner"><span class="ons-btn__text">Flush Survey Data</span>
-                </span>
-            </button>
-            <button id="local-storage-btn"
-                    type="button"
-                    class="ons-btn qa-btn-submit-dev"
-                    onclick="clearLocalStorage()">
-                <span class="ons-btn__inner"><span class="ons-btn__text">Clear Local Storage</span>
-            </span>
-        </button>
-    </div>
-</div>
-</div>
-        <div class="ons-grid__col ons-col-6@m ">
-            <div class="ons-pl-grid-col">
-                <div id="metadata-accordion" class="ons-accordion">
-                    <button type="button"
-                            class="ons-btn ons-accordion__toggle-all ons-u-mb-s ons-u-d-no ons-btn--small"
-                            data-close-all="Hide all"
-                            data-group="metadata-accordion">
-                        <span class="ons-btn__inner ons-accordion__toggle-all-inner"><span class="ons-btn__text">Show all</span></span>
-                    </button>
-                </div>
-                <div id="metadata-accordion-5"
-                     class="ons-details ons-js-details ons-details--accordion ons-u-vh"
-                     data-group="metadata-accordion">
-                    <div class="ons-details__heading ons-js-details-heading" role="button">
-                        <h2 class="ons-details__title survey_heading"></h2>
-                        <span class="ons-details__icon">
-                        <svg class="ons-icon"
-                             viewBox="0 0 8 13"
-                             xmlns="http://www.w3.org/2000/svg"
-                             focusable="false"
-                             fill="currentColor"
-                             role="img"
-                             title="ons-icon-chevron">
-                            <path d="M5.74,14.28l-.57-.56a.5.5,0,0,1,0-.71h0l5-5-5-5a.5.5,0,0,1,0-.71h0l.57-.56a.5.5,0,0,1,.71,0h0l5.93,5.93a.5.5,0,0,1,0,.7L6.45,14.28a.5.5,0,0,1-.71,0Z" transform="translate(-5.02 -1.59)" />
-                        </svg>
-                    </span>
-                    </div>
-                    <div id="metadata-accordion-5-content"
-                         class="ons-details__content ons-js-details-content ons-u-mb-m">
-                        <div id="survey_metadata_fields"></div>
-                    </div>
-                </div>
-                <div id="metadata-accordion-1"
-                     class="ons-details ons-js-details ons-details--accordion ons-u-vh"
-                     data-group="metadata-accordion">
-                    <div class="ons-details__heading ons-js-details-heading"
-                         role="button"
-                         data-save-state="true">
-                        <h2 class="ons-details__title">CIR Metadata</h2>
-                        <span class="ons-details__icon">
-                            <svg class="ons-icon"
-                                 viewBox="0 0 8 13"
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 focusable="false"
-                                 fill="currentColor"
-                                 role="img"
-                                 title="ons-icon-chevron">
-                                <path d="M5.74,14.28l-.57-.56a.5.5,0,0,1,0-.71h0l5-5-5-5a.5.5,0,0,1,0-.71h0l.57-.56a.5.5,0,0,1,.71,0h0l5.93,5.93a.5.5,0,0,1,0,.7L6.45,14.28a.5.5,0,0,1-.71,0Z" transform="translate(-5.02 -1.59)" />
-                            </svg>
-                        </span>
-                    </div>
-                    <div id="metadata-accordion-1-content"
-                         class="ons-details__content ons-js-details-content ons-u-mb-m">
-                        <div class="cir-metadata">
-                            <div id="cir_metadata"></div>
-                        </div>
-                    </div>
-                </div>
-                <div id="metadata-accordion-2"
-                     class="ons-details ons-js-details ons-details--accordion"
-                     data-group="metadata-accordion">
-                    <div class="ons-details__heading ons-js-details-heading"
-                         role="button"
-                         data-save-state="true">
-                        <h2 class="ons-details__title">Survey Metadata</h2>
-                        <span class="ons-details__icon">
-                            <svg class="ons-icon"
-                                 viewBox="0 0 8 13"
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 focusable="false"
-                                 fill="currentColor"
-                                 role="img"
-                                 title="ons-icon-chevron">
-                                <path d="M5.74,14.28l-.57-.56a.5.5,0,0,1,0-.71h0l5-5-5-5a.5.5,0,0,1,0-.71h0l.57-.56a.5.5,0,0,1,.71,0h0l5.93,5.93a.5.5,0,0,1,0,.7L6.45,14.28a.5.5,0,0,1-.71,0Z" transform="translate(-5.02 -1.59)" />
-                            </svg>
-                        </span>
-                    </div>
-                    <div id="metadata-accordion-2-content"
-                         class="ons-details__content ons-js-details-content ons-u-mb-m">
-                        <div id="survey_metadata" class="ons-field">
-                            <p>Metadata fields will be loaded when you select a version and load a schema</p>
-                        </div>
-                    </div>
-                </div>
-                <div id="metadata-accordion-6"
-                     class="ons-details ons-js-details ons-details--accordion ons-u-vh"
-                     data-group="metadata-accordion">
-                    <div class="ons-details__heading ons-js-details-heading" role="button">
-                        <h2 class="ons-details__title">Supplementary Data</h2>
-                        <span class="ons-details__icon">
-                            <svg class="ons-icon"
-                                 viewBox="0 0 8 13"
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 focusable="false"
-                                 fill="currentColor"
-                                 role="img"
-                                 title="ons-icon-chevron">
-                                <path d="M5.74,14.28l-.57-.56a.5.5,0,0,1,0-.71h0l5-5-5-5a.5.5,0,0,1,0-.71h0l.57-.56a.5.5,0,0,1,.71,0h0l5.93,5.93a.5.5,0,0,1,0,.7L6.45,14.28a.5.5,0,0,1-.71,0Z" transform="translate(-5.02 -1.59)" />
-                            </svg>
-                        </span>
-                    </div>
-                    <div id="metadata-accordion-6-content"
-                         class="ons-details__content ons-js-details-content ons-u-mb-m">
-                        <div class="supplementary-data">
-                            <div id="supplementary_data"></div>
-                        </div>
-                    </div>
-                </div>
-                <div id="metadata-accordion-3"
-                     class="ons-details ons-js-details ons-details--accordion"
-                     data-group="metadata-accordion">
-                    <div class="ons-details__heading ons-js-details-heading"
-                         role="button"
-                         data-save-state="true">
-                        <h2 class="ons-details__title">Required Metadata</h2>
-                        <span class="ons-details__icon">
-                            <svg class="ons-icon"
-                                 viewBox="0 0 8 13"
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 focusable="false"
-                                 fill="currentColor"
-                                 role="img"
-                                 title="ons-icon-chevron">
-                                <path d="M5.74,14.28l-.57-.56a.5.5,0,0,1,0-.71h0l5-5-5-5a.5.5,0,0,1,0-.71h0l.57-.56a.5.5,0,0,1,.71,0h0l5.93,5.93a.5.5,0,0,1,0,.7L6.45,14.28a.5.5,0,0,1-.71,0Z" transform="translate(-5.02 -1.59)" />
-                            </svg>
-                        </span>
-                    </div>
-                    <div id="metadata-accordion-3-content"
-                         class="ons-details__content ons-js-details-content ons-u-mb-m">
-                        <div class="ons-field ons-field--inline">
-                            <label class="ons-label" for="case_id">Case ID</label>
-                            <span>
-                                <input id="case_id"
-                                       name="case_id"
-                                       type="text"
-                                       class="qa-case_id ons-input ons-input--text">
-                            </span>
-                            <img class="ons-icon ons-icon--l"
-                                 onclick="numericId()"
-                                 src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg=="
-                                 alt="Reload symbol">
-                        </div>
-                        <div class="ons-field ons-field--inline">
-                            <label class="ons-label" for="response_id">Response ID</label>
-                            <span>
-                                <input id="response_id"
-                                       name="response_id"
-                                       type="text"
-                                       class="qa-response_id ons-input ons-input--text">
-                            </span>
-                            <img class="ons-icon ons-icon--l"
-                                 onclick="numericId()"
-                                 src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg=="
-                                 alt="Reload symbol">
-                            <button id="response-id-btn"
-                                    type="button"
-                                    class="ons-btn ons-btn--small"
-                                    onclick="loadResponseId()">
-                                <span class="ons-btn__inner"><span class="ons-btn__text">Load Previous Value</span>
-                            </span>
+                            <span class="ons-btn__inner"><span class="ons-btn__text">Load Metadata</span></span>
                         </button>
                     </div>
-                    <div class="ons-field ons-field--inline">
-                        <label class="ons-label" for="collection_exercise_sid">Collection Exercise SID</label>
-                        <span>
-                            <input id="collection_exercise_sid"
-                                   name="collection_exercise_sid"
-                                   type="text"
-                                   class="qa-collection-sid ons-input ons-input--text">
-                        </span>
-                        <img class="ons-icon ons-icon--l"
-                             onclick="numericId()"
-                             src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg=="
-                             alt="Reload symbol">
-                    </div>
-                    <div class="ons-field ons-field--inline">
-                        <label class="ons-label" for="response_expires_at">Response Expiry Time</label>
-                        <span>
-                            <input id="response_expires_at"
-                                   name="response_expires_at"
-                                   type="text"
-                                   class="qa-response-expires-at ons-input ons-input--text">
-                        </span>
-                        <img class="ons-icon ons-icon--l"
-                             onclick="numericId()"
-                             src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg=="
-                             alt="Reload symbol">
+                    <hr>
+                    <h3 class="ons-u-mt-m">Survey Actions</h3>
+                    <div>
+                        <button id="submit-btn"
+                                type="submit"
+                                class="ons-btn qa-btn-submit-dev ons-btn--disabled"
+                                onclick="saveResponseId()">
+                            <span class="ons-btn__inner"><span class="ons-btn__text">Open Survey</span></span>
+                        </button>
+                        <button name="action_flush"
+                                id="flush-btn"
+                                type="submit"
+                                class="ons-btn qa-btn-submit-dev ons-btn--disabled">
+                            <span class="ons-btn__inner"><span class="ons-btn__text">Flush Survey Data</span></span>
+                        </button>
+                        <button id="local-storage-btn"
+                                type="button"
+                                class="ons-btn qa-btn-submit-dev"
+                                onclick="clearLocalStorage()">
+                            <span class="ons-btn__inner"><span class="ons-btn__text">Clear Local Storage</span></span>
+                        </button>
                     </div>
                 </div>
             </div>
-            <div id="metadata-accordion-4"
-                 class="ons-details ons-js-details ons-details--accordion"
-                 data-group="metadata-accordion">
-                <div class="ons-details__heading ons-js-details-heading"
-                     role="button"
-                     data-save-state="true">
-                    <h2 class="ons-details__title">Runner Metadata</h2>
-                    <span class="ons-details__icon">
-                        <svg class="ons-icon"
-                             viewBox="0 0 8 13"
-                             xmlns="http://www.w3.org/2000/svg"
-                             focusable="false"
-                             fill="currentColor"
-                             role="img"
-                             title="ons-icon-chevron">
-                            <path d="M5.74,14.28l-.57-.56a.5.5,0,0,1,0-.71h0l5-5-5-5a.5.5,0,0,1,0-.71h0l.57-.56a.5.5,0,0,1,.71,0h0l5.93,5.93a.5.5,0,0,1,0,.7L6.45,14.28a.5.5,0,0,1-.71,0Z" transform="translate(-5.02 -1.59)" />
-                        </svg>
-                    </span>
-                </div>
-                <div id="metadata-accordion-4-content"
-                     class="ons-details__content ons-js-details-content">
-                    <div class="ons-field ons-field--inline">
-                        <label class="ons-label" for="exp">Token Expiry (seconds)</label>
-                        <input id="exp"
-                               type="text"
-                               value="1800"
-                               class="qa-token-expiry ons-input ons-input--text">
+            <div class="ons-grid__col ons-col-6@m ">
+                <div class="ons-pl-grid-col">
+                    <div id="metadata-accordion" class="ons-accordion">
+                        <button type="button"
+                                class="ons-btn ons-accordion__toggle-all ons-u-mb-s ons-u-d-no ons-btn--small"
+                                data-close-all="Hide all"
+                                data-group="metadata-accordion">
+                            <span class="ons-btn__inner ons-accordion__toggle-all-inner"><span class="ons-btn__text">Show all</span></span>
+                        </button>
                     </div>
-                    <div class="ons-field ons-field--inline">
-                        <label class="ons-label" for="language_code">Language</label>
-                        <select id="language_code"
-                                name="language_code"
-                                class="qa-language-code ons-input ons-input--select">
-                            <option value="en">English (en)</option>
-                            <option value="cy">Cymraeg (cy)</option>
-                            <option value="ga">Gaeilge (ga)</option>
-                            <option value="eo">Ulstér Scotch (eo)</option>
-                            <option value="">&lt;not set&gt;</option>
-                        </select>
+                    <div id="metadata-accordion-5"
+                         class="ons-details ons-js-details ons-details--accordion ons-u-vh"
+                         data-group="metadata-accordion">
+                        <div class="ons-details__heading ons-js-details-heading" role="button">
+                            <h2 class="ons-details__title survey_heading"></h2>
+                            <span class="ons-details__icon">
+                            <svg class="ons-icon"
+                                 viewBox="0 0 8 13"
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 focusable="false"
+                                 fill="currentColor"
+                                 role="img"
+                                 title="ons-icon-chevron">
+                                <path d="M5.74,14.28l-.57-.56a.5.5,0,0,1,0-.71h0l5-5-5-5a.5.5,0,0,1,0-.71h0l.57-.56a.5.5,0,0,1,.71,0h0l5.93,5.93a.5.5,0,0,1,0,.7L6.45,14.28a.5.5,0,0,1-.71,0Z" transform="translate(-5.02 -1.59)" />
+                            </svg>
+                        </span>
+                        </div>
+                        <div id="metadata-accordion-5-content"
+                             class="ons-details__content ons-js-details-content ons-u-mb-m">
+                            <div id="survey_metadata_fields"></div>
+                        </div>
                     </div>
-                    <div class="ons-field ons-field--inline">
-                        <label class="ons-label" for="roles">Roles</label>
-                        <select id="roles" name="roles" class="qa-roles ons-input ons-input--select">
-                            <option value="flusher">flusher</option>
-                            <option value="dumper" selected>dumper</option>
-                        </select>
+                    <div id="metadata-accordion-1"
+                         class="ons-details ons-js-details ons-details--accordion ons-u-vh"
+                         data-group="metadata-accordion">
+                        <div class="ons-details__heading ons-js-details-heading"
+                             role="button"
+                             data-save-state="true">
+                            <h2 class="ons-details__title">CIR Metadata</h2>
+                            <span class="ons-details__icon">
+                                <svg class="ons-icon"
+                                     viewBox="0 0 8 13"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     focusable="false"
+                                     fill="currentColor"
+                                     role="img"
+                                     title="ons-icon-chevron">
+                                    <path d="M5.74,14.28l-.57-.56a.5.5,0,0,1,0-.71h0l5-5-5-5a.5.5,0,0,1,0-.71h0l.57-.56a.5.5,0,0,1,.71,0h0l5.93,5.93a.5.5,0,0,1,0,.7L6.45,14.28a.5.5,0,0,1-.71,0Z" transform="translate(-5.02 -1.59)" />
+                                </svg>
+                            </span>
+                        </div>
+                        <div id="metadata-accordion-1-content"
+                             class="ons-details__content ons-js-details-content ons-u-mb-m">
+                            <div class="cir-metadata">
+                                <div id="cir_metadata"></div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="ons-field ons-field--inline">
-                        <label class="ons-label" for="account_service_url">Account Service URL</label>
-                        <input id="account_service_url"
-                               name="account_service_url"
-                               type="text"
-                               value="{{.AccountServiceURL}}"
-                               class="qa-account_service_url ons-input ons-input--text">
+                    <div id="metadata-accordion-2"
+                         class="ons-details ons-js-details ons-details--accordion"
+                         data-group="metadata-accordion">
+                        <div class="ons-details__heading ons-js-details-heading"
+                             role="button"
+                             data-save-state="true">
+                            <h2 class="ons-details__title">Survey Metadata</h2>
+                            <span class="ons-details__icon">
+                                <svg class="ons-icon"
+                                     viewBox="0 0 8 13"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     focusable="false"
+                                     fill="currentColor"
+                                     role="img"
+                                     title="ons-icon-chevron">
+                                    <path d="M5.74,14.28l-.57-.56a.5.5,0,0,1,0-.71h0l5-5-5-5a.5.5,0,0,1,0-.71h0l.57-.56a.5.5,0,0,1,.71,0h0l5.93,5.93a.5.5,0,0,1,0,.7L6.45,14.28a.5.5,0,0,1-.71,0Z" transform="translate(-5.02 -1.59)" />
+                                </svg>
+                            </span>
+                        </div>
+                        <div id="metadata-accordion-2-content"
+                             class="ons-details__content ons-js-details-content ons-u-mb-m">
+                            <div id="survey_metadata" class="ons-field">
+                                <p>Metadata fields will be loaded when you select a version and load a schema</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="ons-field ons-field--inline">
-                        <label class="ons-label" for="account_service_log_out_url">Account Service Log Out URL</label>
-                        <input id="account_service_log_out_url"
-                               type="text"
-                               value="{{.AccountServiceLogOutURL}}"
-                               class="qa-account_service_log_out_url ons-input ons-input--text">
+                    <div id="metadata-accordion-6"
+                         class="ons-details ons-js-details ons-details--accordion ons-u-vh"
+                         data-group="metadata-accordion">
+                        <div class="ons-details__heading ons-js-details-heading" role="button">
+                            <h2 class="ons-details__title">Supplementary Data</h2>
+                            <span class="ons-details__icon">
+                                <svg class="ons-icon"
+                                     viewBox="0 0 8 13"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     focusable="false"
+                                     fill="currentColor"
+                                     role="img"
+                                     title="ons-icon-chevron">
+                                    <path d="M5.74,14.28l-.57-.56a.5.5,0,0,1,0-.71h0l5-5-5-5a.5.5,0,0,1,0-.71h0l.57-.56a.5.5,0,0,1,.71,0h0l5.93,5.93a.5.5,0,0,1,0,.7L6.45,14.28a.5.5,0,0,1-.71,0Z" transform="translate(-5.02 -1.59)" />
+                                </svg>
+                            </span>
+                        </div>
+                        <div id="metadata-accordion-6-content"
+                             class="ons-details__content ons-js-details-content ons-u-mb-m">
+                            <div class="supplementary-data">
+                                <div id="supplementary_data"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="metadata-accordion-3"
+                         class="ons-details ons-js-details ons-details--accordion"
+                         data-group="metadata-accordion">
+                        <div class="ons-details__heading ons-js-details-heading"
+                             role="button"
+                             data-save-state="true">
+                            <h2 class="ons-details__title">Required Metadata</h2>
+                            <span class="ons-details__icon">
+                                <svg class="ons-icon"
+                                     viewBox="0 0 8 13"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     focusable="false"
+                                     fill="currentColor"
+                                     role="img"
+                                     title="ons-icon-chevron">
+                                    <path d="M5.74,14.28l-.57-.56a.5.5,0,0,1,0-.71h0l5-5-5-5a.5.5,0,0,1,0-.71h0l.57-.56a.5.5,0,0,1,.71,0h0l5.93,5.93a.5.5,0,0,1,0,.7L6.45,14.28a.5.5,0,0,1-.71,0Z" transform="translate(-5.02 -1.59)" />
+                                </svg>
+                            </span>
+                        </div>
+                        <div id="metadata-accordion-3-content"
+                             class="ons-details__content ons-js-details-content ons-u-mb-m">
+                            <div class="ons-field ons-field--inline">
+                                <label class="ons-label" for="case_id">Case ID</label>
+                                <span>
+                                    <input id="case_id"
+                                           name="case_id"
+                                           type="text"
+                                           class="qa-case_id ons-input ons-input--text">
+                                </span>
+                                <img class="ons-icon ons-icon--l"
+                                     onclick="numericId()"
+                                     src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg=="
+                                     alt="Reload symbol">
+                            </div>
+                            <div class="ons-field ons-field--inline">
+                                <label class="ons-label" for="response_id">Response ID</label>
+                                <span>
+                                    <input id="response_id"
+                                           name="response_id"
+                                           type="text"
+                                           class="qa-response_id ons-input ons-input--text">
+                                </span>
+                                <img class="ons-icon ons-icon--l"
+                                     onclick="numericId()"
+                                     src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg=="
+                                     alt="Reload symbol">
+                                <button id="response-id-btn"
+                                        type="button"
+                                        class="ons-btn ons-btn--small"
+                                        onclick="loadResponseId()">
+                                    <span class="ons-btn__inner"><span class="ons-btn__text">Load Previous Value</span></span>
+                                </button>
+                            </div>
+                            <div class="ons-field ons-field--inline">
+                                <label class="ons-label" for="collection_exercise_sid">Collection Exercise SID</label>
+                                <span>
+                                    <input id="collection_exercise_sid"
+                                           name="collection_exercise_sid"
+                                           type="text"
+                                           class="qa-collection-sid ons-input ons-input--text">
+                                </span>
+                                <img class="ons-icon ons-icon--l"
+                                     onclick="numericId()"
+                                     src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg=="
+                                     alt="Reload symbol">
+                            </div>
+                            <div class="ons-field ons-field--inline">
+                                <label class="ons-label" for="response_expires_at">Response Expiry Time</label>
+                                <span>
+                                    <input id="response_expires_at"
+                                           name="response_expires_at"
+                                           type="text"
+                                           class="qa-response-expires-at ons-input ons-input--text">
+                                </span>
+                                <img class="ons-icon ons-icon--l"
+                                     onclick="numericId()"
+                                     src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg=="
+                                     alt="Reload symbol">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="metadata-accordion-4"
+                         class="ons-details ons-js-details ons-details--accordion"
+                         data-group="metadata-accordion">
+                        <div class="ons-details__heading ons-js-details-heading"
+                             role="button"
+                             data-save-state="true">
+                            <h2 class="ons-details__title">Runner Metadata</h2>
+                            <span class="ons-details__icon">
+                                <svg class="ons-icon"
+                                     viewBox="0 0 8 13"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     focusable="false"
+                                     fill="currentColor"
+                                     role="img"
+                                     title="ons-icon-chevron">
+                                    <path d="M5.74,14.28l-.57-.56a.5.5,0,0,1,0-.71h0l5-5-5-5a.5.5,0,0,1,0-.71h0l.57-.56a.5.5,0,0,1,.71,0h0l5.93,5.93a.5.5,0,0,1,0,.7L6.45,14.28a.5.5,0,0,1-.71,0Z" transform="translate(-5.02 -1.59)" />
+                                </svg>
+                            </span>
+                        </div>
+                        <div id="metadata-accordion-4-content"
+                             class="ons-details__content ons-js-details-content">
+                            <div class="ons-field ons-field--inline">
+                                <label class="ons-label" for="exp">Token Expiry (seconds)</label>
+                                <input id="exp"
+                                       type="text"
+                                       value="1800"
+                                       class="qa-token-expiry ons-input ons-input--text">
+                            </div>
+                            <div class="ons-field ons-field--inline">
+                                <label class="ons-label" for="language_code">Language</label>
+                                <select id="language_code"
+                                        name="language_code"
+                                        class="qa-language-code ons-input ons-input--select">
+                                    <option value="en">English (en)</option>
+                                    <option value="cy">Cymraeg (cy)</option>
+                                    <option value="ga">Gaeilge (ga)</option>
+                                    <option value="eo">Ulstér Scotch (eo)</option>
+                                    <option value="">&lt;not set&gt;</option>
+                                </select>
+                            </div>
+                            <div class="ons-field ons-field--inline">
+                                <label class="ons-label" for="roles">Roles</label>
+                                <select id="roles" name="roles" class="qa-roles ons-input ons-input--select">
+                                    <option value="flusher">flusher</option>
+                                    <option value="dumper" selected>dumper</option>
+                                </select>
+                            </div>
+                            <div class="ons-field ons-field--inline">
+                                <label class="ons-label" for="account_service_url">Account Service URL</label>
+                                <input id="account_service_url"
+                                       name="account_service_url"
+                                       type="text"
+                                       value="{{.AccountServiceURL}}"
+                                       class="qa-account_service_url ons-input ons-input--text">
+                            </div>
+                            <div class="ons-field ons-field--inline">
+                                <label class="ons-label" for="account_service_log_out_url">Account Service Log Out URL</label>
+                                <input id="account_service_log_out_url"
+                                       type="text"
+                                       value="{{.AccountServiceLogOutURL}}"
+                                       class="qa-account_service_log_out_url ons-input ons-input--text">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-</form>
-<script src="https://cdn.ons.gov.uk/sdc/design-system/70.0.7/scripts/main.js"></script>
-<script src="../static/javascript/launch.js"></script>
+    </form>
+    <script src="https://cdn.ons.gov.uk/sdc/design-system/70.0.7/scripts/main.js"></script>
+    <script src="../static/javascript/launch.js"></script>
 </body>
 {{ end }}
