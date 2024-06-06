@@ -143,7 +143,7 @@ let supplementaryDataSets = null;
 let schemaSurveyId = null;
 
 function clearSurveyMetadataFields() {
-  document.querySelector("#metadata-accordion-5").classList.add("ons-u-vh");
+  document.querySelector("#survey-type-metadata-accordion").classList.add("ons-u-vh");
   document.querySelector("#survey_metadata_fields").innerHTML = "";
   showSupplementaryData(false);
 }
@@ -201,12 +201,12 @@ function setLaunchType(launchType) {
 
 function showSupplementaryData(show) {
   if (show) {
-    document.querySelector("#metadata-accordion-6").classList.remove("ons-u-vh");
+    document.querySelector("#sds-metadata-accordion").classList.remove("ons-u-vh");
     document
       .querySelector(".supplementary-data")
       .classList.remove("supplementary-data--hidden");
   } else {
-    document.querySelector("#metadata-accordion-6").classList.add("ons-u-vh");
+    document.querySelector("#sds-metadata-accordion").classList.add("ons-u-vh");
     document
       .querySelector(".supplementary-data")
       .classList.add("supplementary-data--hidden");
@@ -215,9 +215,9 @@ function showSupplementaryData(show) {
 
 function showCIRMetadata(show) {
   if (show) {
-    document.querySelector("#metadata-accordion-1").classList.remove("ons-u-vh");
+    document.querySelector("#cir-metadata-accordion").classList.remove("ons-u-vh");
   } else {
-    document.querySelector("#metadata-accordion-1").classList.add("ons-u-vh");
+    document.querySelector("#cir-metadata-accordion").classList.add("ons-u-vh");
   }
 }
 
@@ -237,7 +237,7 @@ function showSubmitFlushButtons(show, justSubmit = false) {
 
 function includeSurveyMetadataFields(schema_name, survey_type) {
   let formTypeValue = schema_name.split("_").slice(1).join("_");
-  document.querySelector("#metadata-accordion-5").classList.remove("ons-u-vh");
+  document.querySelector("#survey-type-metadata-accordion").classList.remove("ons-u-vh");
   document.querySelector(".survey_heading").innerHTML =
   `<h2 class="ons-details__title">${survey_type} Survey Metadata</h2>`
 
@@ -385,7 +385,6 @@ function showCIRMetdata(cirInstrumentId, cirSchema) {
     title: cirSchema.getAttribute("data-title"),
     description: cirSchema.getAttribute("data-description"),
   };
-  // document.querySelector("#metadata-accordion-1").classList.remove("ons-u-vh");
   document.querySelector("#cir_metadata").innerHTML = Object.keys(ciMetadata)
     .map(
       (key) =>
