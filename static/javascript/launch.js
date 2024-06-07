@@ -143,7 +143,9 @@ let supplementaryDataSets = null;
 let schemaSurveyId = null;
 
 function clearSurveyMetadataFields() {
-  document.querySelector("#survey-type-metadata-accordion").classList.add("ons-u-vh");
+  document
+    .querySelector("#survey-type-metadata-accordion")
+    .classList.add("ons-u-vh");
   document.querySelector("#survey_metadata_fields").innerHTML = "";
   showSupplementaryData(false);
 }
@@ -201,7 +203,9 @@ function setLaunchType(launchType) {
 
 function showSupplementaryData(show) {
   if (show) {
-    document.querySelector("#sds-metadata-accordion").classList.remove("ons-u-vh");
+    document
+      .querySelector("#sds-metadata-accordion")
+      .classList.remove("ons-u-vh");
   } else {
     document.querySelector("#sds-metadata-accordion").classList.add("ons-u-vh");
   }
@@ -209,7 +213,9 @@ function showSupplementaryData(show) {
 
 function showCIRMetadata(show) {
   if (show) {
-    document.querySelector("#cir-metadata-accordion").classList.remove("ons-u-vh");
+    document
+      .querySelector("#cir-metadata-accordion")
+      .classList.remove("ons-u-vh");
   } else {
     document.querySelector("#cir-metadata-accordion").classList.add("ons-u-vh");
   }
@@ -220,7 +226,9 @@ function showSubmitFlushButtons(show, justSubmit = false) {
     document.querySelector("#submit-btn").classList.remove("ons-btn--disabled");
     document.querySelector("#submit-btn").removeAttribute("disabled");
     if (!justSubmit) {
-      document.querySelector("#flush-btn").classList.remove("ons-btn--disabled");
+      document
+        .querySelector("#flush-btn")
+        .classList.remove("ons-btn--disabled");
       document.querySelector("#flush-btn").removeAttribute("disabled");
     }
   } else {
@@ -233,12 +241,14 @@ function showSubmitFlushButtons(show, justSubmit = false) {
 
 function includeSurveyMetadataFields(schema_name, survey_type) {
   let formTypeValue = schema_name.split("_").slice(1).join("_");
-  document.querySelector("#survey-type-metadata-accordion").classList.remove("ons-u-vh");
+  document
+    .querySelector("#survey-type-metadata-accordion")
+    .classList.remove("ons-u-vh");
   document.querySelector(".survey_heading").innerHTML =
-  `<h2 class="ons-details__title">${survey_type} Survey Metadata</h2>`
+    `<h2 class="ons-details__title">${survey_type} Survey Metadata</h2>`;
 
   document.querySelector("#survey_metadata_fields").innerHTML =
-                `<div class="ons-field ons-field--inline">
+    `<div class="ons-field ons-field--inline">
                     <label class="ons-label" for="form_type">form_type</label>
                     <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="qa-form_type ons-input ons-input--text ons-input-type__input">
                 </div>`;
@@ -338,7 +348,6 @@ function getLabelFor(fieldName) {
   return `<label class="ons-label" for="${fieldName}">${fieldName}</label>`;
 }
 
-
 function getInputField(
   fieldName,
   type,
@@ -351,7 +360,7 @@ function getInputField(
   if (readOnly) {
     return `<input ${readOnly} id="${fieldName}" type="${type}" ${value} class="qa-${fieldName} ons-input ons-input--text" onchange="${onChangeCallback}">`;
   }
-  if (type==="checkbox") {
+  if (type === "checkbox") {
     return `<input ${readOnly} id="${fieldName}" type="${type}" ${value} class="qa-${fieldName} ons-checkbox--toggle" onchange="${onChangeCallback}">`;
   }
   return `<input ${readOnly} id="${fieldName}" name="${fieldName}" type="${type}" ${value} class="qa-${fieldName} ons-input ons-input--text" onchange="${onChangeCallback}">`;
@@ -584,7 +593,6 @@ function retrieveResponseId() {
   if (responseId) {
     responseIdButton.classList.remove("ons-btn--disabled");
     responseIdButton.removeAttribute("disabled");
-
   } else {
     responseIdButton.classList.add("ons-btn--disabled");
     responseIdButton.setAttribute("disabled");
