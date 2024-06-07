@@ -580,6 +580,15 @@ function removeUnwantedMetadata() {
 function retrieveResponseId() {
   let responseId = localStorage.getItem("response_id");
   let responseIdButton = document.querySelector("#response-id-btn");
+
+  if (responseId) {
+    responseIdButton.classList.remove("ons-btn--disabled");
+    responseIdButton.removeAttribute("disabled");
+
+  } else {
+    responseIdButton.classList.add("ons-btn--disabled");
+    responseIdButton.setAttribute("disabled");
+  }
 }
 
 function loadResponseId() {
