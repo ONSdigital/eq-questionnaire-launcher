@@ -9,12 +9,12 @@
             <div class="ons-grid__col ons-col-6@m ">
                 <div class="ons-pl-grid-col">
                     <h1>Launch a survey</h1>
-                    <strong class="ons-u-mt-m"><u>Launch Pattern</u></strong>
+                    <strong class="ons-u-mt-m">Launch Pattern</strong>
                     <div class="ons-field ons-field--inline">
                         <label class="ons-label" for="launch_pattern">Version</label>
                         <select id="launch_pattern"
                                 name="version"
-                                class="qa-select-version ons-input ons-input--select"
+                                class="ons-input ons-input--select"
                                 onload="loadMetadataForSchemaName()">
                             <option value="v2" selected>v2</option>
                         </select>
@@ -24,7 +24,7 @@
                         <label class="ons-label" for="schema_name">Schemas</label>
                         <select id="schema_name"
                                 name="schema_name"
-                                class="qa-select-schema ons-input ons-input--select"
+                                class="ons-input ons-input--select"
                                 onchange="loadMetadataForSchemaName(); setLaunchType('name')">
                             <option selected disabled>Select Schema</option>
                             {{ range $surveyType, $schemasList := .Schemas }}
@@ -55,14 +55,14 @@
                         <input id="schema-url"
                                name="schema_url"
                                type="text"
-                               class="qa-schema_url ons-input ons-input--text ons-input-type__input"
+                               class="ons-input ons-input--text ons-input-type__input"
                                onchange="setSchemaUrl(this)">
                     </div>
                     <div class="ons-field ons-field--inline">
                         <label class="ons-label" for="cir-schemas">CIR Schema</label>
                         <select id="cir-schemas"
                                 name="cir_instrument_id"
-                                class="qa-cir_instrument_id ons-input ons-input--select"
+                                class="ons-input ons-input--select"
                                 onchange="setCirSchema(this);">
                             <option selected disabled>Select Schema</option>
                             {{ range $cirSchema := .CirSchemas }}
@@ -80,31 +80,29 @@
                     <div class="ons-u-mt-s">
                         <button id="schema-url-btn"
                                 type="button"
-                                class="ons-btn qa-btn-submit-dev"
+                                class="ons-btn"
                                 onclick="loadMetadataForRemoteSchema()">
                             <span class="ons-btn__inner"><span class="ons-btn__text">Load Metadata</span></span>
                         </button>
                     </div>
                     <hr>
-                    <h3 class="ons-u-mt-m">Survey Actions</h3>
+                    <h2 class="ons-u-mt-m">Survey Actions</h2>
                     <div>
                         <button id="submit-btn"
                                 type="submit"
-                                class="ons-btn qa-btn-submit-dev ons-btn--disabled"
-                                disabled
+                                class="ons-btn ons-btn--disabled"
                                 onclick="saveResponseId()">
                             <span class="ons-btn__inner"><span class="ons-btn__text">Open Survey</span></span>
                         </button>
                         <button name="action_flush"
                                 id="flush-btn"
                                 type="submit"
-                                class="ons-btn qa-btn-submit-dev ons-btn--disabled"
-                                disabled>
+                                class="ons-btn ons-btn--disabled">
                             <span class="ons-btn__inner"><span class="ons-btn__text">Flush Survey Data</span></span>
                         </button>
                         <button id="local-storage-btn"
                                 type="button"
-                                class="ons-btn qa-btn-submit-dev"
+                                class="ons-btn"
                                 onclick="clearLocalStorage()">
                             <span class="ons-btn__inner"><span class="ons-btn__text">Clear Local Storage</span></span>
                         </button>
@@ -246,7 +244,7 @@
                                     <input id="case_id"
                                            name="case_id"
                                            type="text"
-                                           class="qa-case_id ons-input ons-input--text">
+                                           class="ons-input ons-input--text">
                                 </span>
                                 <button type="button"
                                         class="ons-btn ons-btn--small ons-btn--secondary ons-u-ml-xs"
@@ -264,7 +262,7 @@
                                     <input id="response_id"
                                            name="response_id"
                                            type="text"
-                                           class="qa-response_id ons-input ons-input--text">
+                                           class="ons-input ons-input--text">
                                 </span>
                                 <button type="button"
                                         class="ons-btn ons-btn--small ons-btn--secondary ons-u-ml-xs"
@@ -278,7 +276,6 @@
                                 <button id="response-id-btn"
                                         type="button"
                                         class="ons-btn ons-btn--small ons-btn--disabled ons-u-ml-xs"
-                                        disabled
                                         onclick="loadResponseId()">
                                     <span class="ons-btn__inner"><span class="ons-btn__text">Load Previous Value</span></span>
                                 </button>
@@ -289,7 +286,7 @@
                                     <input id="collection_exercise_sid"
                                            name="collection_exercise_sid"
                                            type="text"
-                                           class="qa-collection-sid ons-input ons-input--text">
+                                           class="ons-input ons-input--text">
                                 </span>
                                 <button type="button"
                                         class="ons-btn ons-btn--small ons-btn--secondary ons-u-ml-xs"
@@ -307,7 +304,7 @@
                                     <input id="response_expires_at"
                                            name="response_expires_at"
                                            type="text"
-                                           class="qa-response-expires-at ons-input ons-input--text">
+                                           class="ons-input ons-input--text">
                                 </span>
                                 <button type="button"
                                         class="ons-btn ons-btn--small ons-btn--secondary ons-u-ml-xs"
@@ -347,13 +344,13 @@
                                 <input id="exp"
                                        type="text"
                                        value="1800"
-                                       class="qa-token-expiry ons-input ons-input--text">
+                                       class="ons-input ons-input--text">
                             </div>
                             <div class="ons-field ons-field--inline">
                                 <label class="ons-label" for="language_code">Language</label>
                                 <select id="language_code"
                                         name="language_code"
-                                        class="qa-language-code ons-input ons-input--select">
+                                        class="ons-input ons-input--select">
                                     <option value="en">English (en)</option>
                                     <option value="cy">Cymraeg (cy)</option>
                                     <option value="ga">Gaeilge (ga)</option>
@@ -363,7 +360,7 @@
                             </div>
                             <div class="ons-field ons-field--inline">
                                 <label class="ons-label" for="roles">Roles</label>
-                                <select id="roles" name="roles" class="qa-roles ons-input ons-input--select">
+                                <select id="roles" name="roles" class="ons-input ons-input--select">
                                     <option value="flusher">flusher</option>
                                     <option value="dumper" selected>dumper</option>
                                 </select>
@@ -374,14 +371,14 @@
                                        name="account_service_url"
                                        type="text"
                                        value="{{.AccountServiceURL}}"
-                                       class="qa-account_service_url ons-input ons-input--text">
+                                       class="ons-input ons-input--text">
                             </div>
                             <div class="ons-field ons-field--inline">
                                 <label class="ons-label" for="account_service_log_out_url">Account Service Log Out URL</label>
                                 <input id="account_service_log_out_url"
                                        type="text"
                                        value="{{.AccountServiceLogOutURL}}"
-                                       class="qa-account_service_log_out_url ons-input ons-input--text">
+                                       class="ons-input ons-input--text">
                             </div>
                         </div>
                     </div>
