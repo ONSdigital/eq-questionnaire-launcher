@@ -147,7 +147,7 @@ function clearSurveyMetadataFields() {
     .querySelector("#survey-type-metadata-accordion")
     .classList.add("ons-u-vh");
   document.querySelector("#survey_metadata_fields").innerHTML = "";
-  showMetadataAccordion("sds", false)
+  showMetadataAccordion("sds", false);
 }
 
 function setSurveyType(event) {
@@ -202,7 +202,9 @@ function setLaunchType(launchType) {
 }
 
 function showMetadataAccordion(type, show) {
-  let accordionElement = document.querySelector("#"+ type +"-metadata-accordion");
+  let accordionElement = document.querySelector(
+    "#" + type + "-metadata-accordion",
+  );
   if (show) {
     accordionElement.classList.remove("ons-u-vh");
   } else {
@@ -369,7 +371,7 @@ function handleNoSupplementaryData() {
 }
 
 function showCIRMetdata(cirInstrumentId, cirSchema) {
-  showMetadataAccordion("cir", true)
+  showMetadataAccordion("cir", true);
   let ciMetadata = {
     id: cirInstrumentId,
     ci_version: cirSchema.getAttribute("data-version"),
@@ -434,7 +436,7 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
   if (cirInstrumentId) {
     survey_data_url += `&cir_instrument_id=${cirInstrumentId}`;
   } else {
-    showMetadataAccordion("cir", false)
+    showMetadataAccordion("cir", false);
     if (schemaName) survey_data_url += `&schema_name=${schemaName}`;
     if (schemaUrl) survey_data_url += `&schema_url=${schemaUrl}`;
   }
