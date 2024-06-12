@@ -349,12 +349,12 @@ function getInputField(
   const value = defaultValue ? `value="${defaultValue}"` : "";
   const readOnly = isReadOnly ? "readonly" : "";
   if (readOnly) {
-    return `<input ${readOnly} id="${fieldName}" type="${type}" ${value} class="ons-input ons-input--text" onchange="${onChangeCallback}">`;
+    return `<input ${readOnly} id="${fieldName}" type="${type}" ${value} class="ons-input ons-input--text ons-input--w-20" onchange="${onChangeCallback}">`;
   }
   if (type === "checkbox") {
     return `<input ${readOnly} id="${fieldName}" type="${type}" ${value} class="ons-checkbox--toggle" onchange="${onChangeCallback}">`;
   }
-  return `<input ${readOnly} id="${fieldName}" name="${fieldName}" type="${type}" ${value} class="ons-input ons-input--text" onchange="${onChangeCallback}">`;
+  return `<input ${readOnly} id="${fieldName}" name="${fieldName}" type="${type}" ${value} class="ons-input ons-input--text ons-input--w-20" onchange="${onChangeCallback}">`;
 }
 
 async function loadSDSDatasetMetadata(survey_id, period_id) {
@@ -409,7 +409,7 @@ function updateSDSDropdown() {
             .contains(sdsDatasetIdElement)
         ) {
           // add sds_dataset_id field into the SDS metadata section if not already in survey metadata
-          supplementaryDataSection.innerHTML = `<div class="ons-field ons-field--inline">${getLabelFor("sds_dataset_id")}<select id="sds_dataset_id" name="sds_dataset_id" class="ons-input ons-input--select" onchange="loadSupplementaryDataInfo()"></select></div>`;
+          supplementaryDataSection.innerHTML = `<div class="ons-field ons-field--inline">${getLabelFor("sds_dataset_id")}<select id="sds_dataset_id" name="sds_dataset_id" class="ons-input ons-input--select ons-input--w-20" onchange="loadSupplementaryDataInfo()"></select></div>`;
         }
 
         document.querySelector("#sds_dataset_id").innerHTML =
@@ -479,7 +479,7 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
                     "updateSDSDropdown()",
                   );
                 } else if (fieldName === "sds_dataset_id") {
-                  return `<select id="${fieldName}" name="${fieldName}" class="ons-input ons-input--select" onchange="loadSupplementaryDataInfo()"></select>`;
+                  return `<select id="${fieldName}" name="${fieldName}" class="ons-input ons-input--select ons-input--w-20" onchange="loadSupplementaryDataInfo()"></select>`;
                 } else {
                   return getInputField(fieldName, "text", defaultValue);
                 }
