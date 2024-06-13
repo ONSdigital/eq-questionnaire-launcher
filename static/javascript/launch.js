@@ -147,7 +147,7 @@ function clearSurveyMetadataFields() {
     .querySelector("#survey-type-metadata-accordion")
     .classList.add("ons-u-vh");
   document.querySelector("#survey_metadata_fields").innerHTML = "";
-  setTabIndex("survey_type_metadata_detail", -1)
+  setTabIndex("survey_type_metadata_detail", -1);
   showMetadataAccordion("sds", false);
 }
 
@@ -368,7 +368,7 @@ async function loadSDSDatasetMetadata(survey_id, period_id) {
 
 function handleNoSupplementaryData() {
   showMetadataAccordion("sds", false);
-  setTabIndex("sds_metadata_detail", -1)
+  setTabIndex("sds_metadata_detail", -1);
   enableSubmitFlushButtons(false);
 }
 
@@ -396,7 +396,7 @@ function updateSDSDropdown() {
   const supplementaryDataSection = document.querySelector(
     "#supplementary_data",
   );
-  const sdsDatasetIdElement = document.querySelector("#sds_dataset_id")
+  const sdsDatasetIdElement = document.querySelector("#sds_dataset_id");
   loadSDSDatasetMetadata(surveyId, periodId)
     .then((sds_metadata_response) => {
       if (sds_metadata_response?.length) {
@@ -440,12 +440,12 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
     survey_data_url += `&cir_instrument_id=${cirInstrumentId}`;
   } else {
     showMetadataAccordion("cir", false);
-    setTabIndex("cir_metadata_detail", -1)
+    setTabIndex("cir_metadata_detail", -1);
     if (schemaName) survey_data_url += `&schema_name=${schemaName}`;
     if (schemaUrl) survey_data_url += `&schema_url=${schemaUrl}`;
   }
   showMetadataAccordion("sds", false);
-  setTabIndex("sds_metadata_detail", -1)
+  setTabIndex("sds_metadata_detail", -1);
   getDataAsync(survey_data_url)
     .then((schema_response) => {
       document.querySelector("#survey_metadata").innerHTML = "";
@@ -631,7 +631,11 @@ function setTabIndex(metadataDetail, value) {
 }
 
 function initialiseTabIndex() {
-  const details= ["cir_metadata_detail", "survey_type_metadata_detail", "sds_metadata_detail"];
+  const details = [
+    "cir_metadata_detail",
+    "survey_type_metadata_detail",
+    "sds_metadata_detail",
+  ];
   for (i = 0; i < 3; i++) {
     document.getElementById(details[i]).tabIndex = -1;
   }
