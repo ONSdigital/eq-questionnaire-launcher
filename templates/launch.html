@@ -91,12 +91,14 @@
                         <button id="submit-btn"
                                 type="submit"
                                 class="ons-btn ons-btn--disabled ons-u-ml-xs ons-u-mb-s"
+                                disabled
                                 onclick="saveResponseId()">
                             <span class="ons-btn__inner"><span class="ons-btn__text">Open Survey</span></span>
                         </button>
                         <button name="action_flush"
                                 id="flush-btn"
                                 type="submit"
+                                disabled
                                 class="ons-btn ons-btn--disabled ons-u-mb-s">
                             <span class="ons-btn__inner"><span class="ons-btn__text">Flush Survey Data</span></span>
                         </button>
@@ -122,7 +124,7 @@
                     <div id="survey-type-metadata-accordion"
                          class="ons-details ons-js-details ons-details--accordion ons-u-vh"
                          data-group="metadata-accordion">
-                        <div class="ons-details__heading ons-js-details-heading" role="button">
+                        <div class="ons-details__heading ons-js-details-heading" role="button" id="survey_type_metadata_detail">
                             <h2 class="ons-details__title survey_heading"></h2>
                             <span class="ons-details__icon">
                                 <svg class="ons-icon"
@@ -145,6 +147,7 @@
                          class="ons-details ons-js-details ons-details--accordion ons-u-vh"
                          data-group="metadata-accordion">
                         <div class="ons-details__heading ons-js-details-heading"
+                             id="cir_metadata_detail"
                              role="button"
                              data-save-state="true">
                             <h2 class="ons-details__title">CIR Metadata</h2>
@@ -196,7 +199,7 @@
                     <div id="sds-metadata-accordion"
                          class="ons-details ons-js-details ons-details--accordion ons-u-vh"
                          data-group="metadata-accordion">
-                        <div class="ons-details__heading ons-js-details-heading" role="button">
+                        <div class="ons-details__heading ons-js-details-heading" role="button" id="sds_metadata_detail">
                             <h2 class="ons-details__title">Supplementary Data</h2>
                             <span class="ons-details__icon">
                                 <svg class="ons-icon"
@@ -276,8 +279,9 @@
                                 <button id="response-id-btn"
                                         type="button"
                                         class="ons-btn ons-btn--small ons-btn--disabled ons-u-ml-xs"
+                                        disabled
                                         onclick="loadResponseId()">
-                                    <span class="ons-btn__inner"><span class="ons-btn__text">Load Previous Value</span></span>
+                                    <span class="ons-btn__inner"><span class="ons-btn__text">Previous Value</span></span>
                                 </button>
                             </div>
                             <div class="ons-field ons-field--inline">

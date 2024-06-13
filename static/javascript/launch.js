@@ -243,7 +243,7 @@ function includeSurveyMetadataFields(schema_name, survey_type) {
                     <label class="ons-label" for="form_type">form_type</label>
                     <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="ons-input ons-input--text ons-input-type__input">
                 </div>`;
-
+  removeTabIndex("survey_type_metadata_detail");
   showMetadataAccordion("sds", true);
 }
 
@@ -384,6 +384,7 @@ function showCIRMetdata(cirInstrumentId, cirSchema) {
         `<div class="ons-field ons-field--inline">${getLabelFor(key)}${getInputField(key, "text", ciMetadata[key], true)}</div>`,
     )
     .join("");
+  removeTabIndex("cir_metadata_detail");
 }
 
 function updateSDSDropdown() {
@@ -394,7 +395,7 @@ function updateSDSDropdown() {
     "#supplementary_data",
   );
   const sdsDatasetIdElement = document.querySelector("#sds_dataset_id");
-
+  removeTabIndex("sds_metadata_detail");
   loadSDSDatasetMetadata(surveyId, periodId)
     .then((sds_metadata_response) => {
       if (sds_metadata_response?.length) {
@@ -621,12 +622,26 @@ function populateDropDownWithValue(selector, value) {
   }
 }
 
+function removeTabIndex(metadataDetail) {
+  // Removes the tab index for an element that needs to be shown
+  document.getElementById(metadataDetail).tabIndex = 0;
+}
+
+function setTabIndex() {
+  // Sets the tab index of the hidden elements to minus 1 on page load
+  const details= ["cir_metadata_detail", "survey_type_metadata_detail", "sds_metadata_detail"];
+  for (i = 0; i < 3; i++) {
+    document.getElementById(details[i]).tabIndex = -1;
+  }
+}
+
 function onLoad() {
   uuid("collection_exercise_sid");
   uuid("case_id");
   numericId();
   setResponseExpiry();
   retrieveResponseId();
+  setTabIndex();
 
   if ((schemaName = localStorage.getItem("schema_name"))) {
     populateDropDownWithValue("#schema_name", schemaName);
