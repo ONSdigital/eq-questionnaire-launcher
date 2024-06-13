@@ -177,7 +177,7 @@ function setLaunchType(launchType) {
   if (launchType === "cir" || launchType === "remote" || launchType === "url") {
     if (schemaName.selectedIndex) {
       clearSurveyMetadataFields();
-      showSubmitFlushButtons(false);
+      enableSubmitFlushButtons(false);
       schemaName.selectedIndex = 0;
       localStorage.removeItem("schema_name");
     }
@@ -212,7 +212,7 @@ function showMetadataAccordion(type, show) {
   }
 }
 
-function showSubmitFlushButtons(show, justSubmit = false) {
+function enableSubmitFlushButtons(show, justSubmit = false) {
   if (show) {
     document.querySelector("#submit-btn").classList.remove("ons-btn--disabled");
     document.querySelector("#submit-btn").disabled = false;
@@ -303,7 +303,7 @@ function loadMetadataForRemoteSchema() {
 
   loadSurveyMetadata(schemaName, surveyType.value);
   loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId);
-  showSubmitFlushButtons(true);
+  enableSubmitFlushButtons(true);
 }
 
 function loadSurveyMetadata(schema_name, survey_type) {
@@ -367,7 +367,7 @@ async function loadSDSDatasetMetadata(survey_id, period_id) {
 
 function handleNoSupplementaryData() {
   showMetadataAccordion("sds", false);
-  showSubmitFlushButtons(false);
+  enableSubmitFlushButtons(false);
 }
 
 function showCIRMetdata(cirInstrumentId, cirSchema) {
@@ -402,7 +402,7 @@ function updateSDSDropdown() {
         document.querySelector("#supplementary_data").innerHTML = "";
         supplementaryDataSets = sds_metadata_response;
         showMetadataAccordion("sds", true);
-        showSubmitFlushButtons(true);
+        enableSubmitFlushButtons(true);
 
         if (
           !document
@@ -492,7 +492,7 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
         document.querySelector("#survey_metadata").innerHTML =
           "No metadata required for this survey";
       }
-      showSubmitFlushButtons(true);
+      enableSubmitFlushButtons(true);
     })
     .catch((_) => {
       document.querySelector("#survey_metadata").innerHTML =
