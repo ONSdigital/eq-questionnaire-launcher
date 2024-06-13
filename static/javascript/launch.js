@@ -147,6 +147,7 @@ function clearSurveyMetadataFields() {
     .querySelector("#survey-type-metadata-accordion")
     .classList.add("ons-u-vh");
   document.querySelector("#survey_metadata_fields").innerHTML = "";
+  setTabIndex("survey_type_metadata_detail", -1)
   showMetadataAccordion("sds", false);
 }
 
@@ -243,7 +244,7 @@ function includeSurveyMetadataFields(schema_name, survey_type) {
                     <label class="ons-label" for="form_type">form_type</label>
                     <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="ons-input ons-input--text ons-input-type__input">
                 </div>`;
-  removeTabIndex("survey_type_metadata_detail");
+  setTabIndex("survey_type_metadata_detail", 0);
   showMetadataAccordion("sds", true);
 }
 
@@ -367,6 +368,7 @@ async function loadSDSDatasetMetadata(survey_id, period_id) {
 
 function handleNoSupplementaryData() {
   showMetadataAccordion("sds", false);
+  setTabIndex("sds_metadata_detail", -1)
   enableSubmitFlushButtons(false);
 }
 
@@ -384,7 +386,7 @@ function showCIRMetdata(cirInstrumentId, cirSchema) {
         `<div class="ons-field ons-field--inline">${getLabelFor(key)}${getInputField(key, "text", ciMetadata[key], true)}</div>`,
     )
     .join("");
-  removeTabIndex("cir_metadata_detail");
+  setTabIndex("cir_metadata_detail", 0);
 }
 
 function updateSDSDropdown() {
@@ -394,14 +396,14 @@ function updateSDSDropdown() {
   const supplementaryDataSection = document.querySelector(
     "#supplementary_data",
   );
-  const sdsDatasetIdElement = document.querySelector("#sds_dataset_id");
-  removeTabIndex("sds_metadata_detail");
+  const sdsDatasetIdElement = document.querySelector("#sds_dataset_id")
   loadSDSDatasetMetadata(surveyId, periodId)
     .then((sds_metadata_response) => {
       if (sds_metadata_response?.length) {
         document.querySelector("#supplementary_data").innerHTML = "";
         supplementaryDataSets = sds_metadata_response;
         showMetadataAccordion("sds", true);
+        setTabIndex("sds_metadata_detail", 0);
         enableSubmitFlushButtons(true);
 
         if (
@@ -438,10 +440,12 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
     survey_data_url += `&cir_instrument_id=${cirInstrumentId}`;
   } else {
     showMetadataAccordion("cir", false);
+    setTabIndex("cir_metadata_detail", -1)
     if (schemaName) survey_data_url += `&schema_name=${schemaName}`;
     if (schemaUrl) survey_data_url += `&schema_url=${schemaUrl}`;
   }
   showMetadataAccordion("sds", false);
+  setTabIndex("sds_metadata_detail", -1)
   getDataAsync(survey_data_url)
     .then((schema_response) => {
       document.querySelector("#survey_metadata").innerHTML = "";
@@ -622,13 +626,11 @@ function populateDropDownWithValue(selector, value) {
   }
 }
 
-function removeTabIndex(metadataDetail) {
-  // Removes the tab index for an element that needs to be shown
-  document.getElementById(metadataDetail).tabIndex = 0;
+function setTabIndex(metadataDetail, value) {
+  document.getElementById(metadataDetail).tabIndex = value;
 }
 
-function setTabIndex() {
-  // Sets the tab index of the hidden elements to minus 1 on page load
+function initialiseTabIndex() {
   const details= ["cir_metadata_detail", "survey_type_metadata_detail", "sds_metadata_detail"];
   for (i = 0; i < 3; i++) {
     document.getElementById(details[i]).tabIndex = -1;
@@ -641,7 +643,7 @@ function onLoad() {
   numericId();
   setResponseExpiry();
   retrieveResponseId();
-  setTabIndex();
+  initialiseTabIndex();
 
   if ((schemaName = localStorage.getItem("schema_name"))) {
     populateDropDownWithValue("#schema_name", schemaName);
