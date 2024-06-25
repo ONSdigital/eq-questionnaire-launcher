@@ -13,6 +13,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: "1.21.x"
+          cache: false
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Cache dependencies
@@ -49,7 +50,7 @@ jobs:
         with:
           version: 1.8.2
           virtualenvs-create: true
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'poetry'
