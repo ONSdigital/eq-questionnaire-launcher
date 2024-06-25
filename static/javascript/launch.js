@@ -237,7 +237,7 @@ function includeSurveyMetadataFields(schema_name, survey_type) {
     .querySelector("#survey-type-metadata-accordion")
     .classList.remove("ons-u-vh");
   document.querySelector(".survey_heading").innerHTML =
-    `<h2 class="ons-details__title">${survey_type} Survey Metadata</h2>`;
+    `${survey_type} Survey Metadata`;
 
   document.querySelector("#survey_metadata_fields").innerHTML =
     `<div class="ons-field ons-field--inline">
