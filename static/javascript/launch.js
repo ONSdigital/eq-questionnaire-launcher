@@ -213,21 +213,30 @@ function showMetadataAccordion(type, show) {
   }
 }
 
-function enableSubmitFlushButtons(show, justSubmit = false) {
-  if (show) {
-    document.querySelector("#submit-btn").classList.remove("ons-btn--disabled");
-    document.querySelector("#submit-btn").disabled = false;
-    if (!justSubmit) {
-      document
-        .querySelector("#flush-btn")
-        .classList.remove("ons-btn--disabled");
-      document.querySelector("#flush-btn").disabled = false;
-    }
+function enableButtons(button) {
+  for (let i = 0; i < button.length; i++) {
+    button[i].classList.remove("ons-btn--disabled");
+    button[i].disabled = false;
+  }
+}
+
+function disableButtons(button) {
+  for (let i = 0; i < button.length; i++) {
+    button[i].classList.add("ons-btn--disabled");
+    button[i].disabled = true;
+  }
+}
+
+function enableSubmitFlushButtons(enable) {
+  let submitButton = document.querySelector("#submit-btn");
+  let flushButton = document.querySelector("#flush-btn");
+
+  let buttons = [submitButton, flushButton];
+
+  if (enable) {
+    enableButtons(buttons);
   } else {
-    document.querySelector("#submit-btn").classList.add("ons-btn--disabled");
-    if (!justSubmit) {
-      document.querySelector("#flush-btn").classList.add("ons-btn--disabled");
-    }
+    disableButtons(buttons);
   }
 }
 
