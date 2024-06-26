@@ -175,7 +175,7 @@ function setLaunchType(launchType) {
     "#remote-schema-survey-type",
   );
 
-  if (launchType === "cir" || launchType === "remote" || launchType === "url") {
+  if (["cir", "remote", "url"].includes(launchType)) {
     if (schemaName.selectedIndex) {
       clearSurveyMetadataFields();
       enableSubmitFlushButtons(false);

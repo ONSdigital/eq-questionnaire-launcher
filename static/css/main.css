@@ -13,3 +13,18 @@ label {
   width: 200px;
   font-size: 0.9rem;
 }
+
+.reload-button {
+  min-width: 1.5rem;
+}
+
+.test{
+  display: flex;
+  align-items: flex-end;
+}
+
+.load-id-button {
+  max-width: 40.67rem;
+  display: flex;
+  justify-content: flex-end;
+}
