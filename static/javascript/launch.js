@@ -393,14 +393,14 @@ function updateSDSDropdown() {
   const periodId = document.getElementById("period_id")?.value;
 
   const supplementaryDataSection = document.querySelector(
-    "#supplementary_data",
+    "#sds_id",
   );
   const sdsDatasetIdElement = document.querySelector("#sds_dataset_id");
 
   loadSDSDatasetMetadata(surveyId, periodId)
     .then((sds_metadata_response) => {
       if (sds_metadata_response?.length) {
-        document.querySelector("#supplementary_data").innerHTML = "";
+        document.querySelector("#sds_id").innerHTML = "";
         supplementaryDataSets = sds_metadata_response;
         showSupplementaryData(true);
         showSubmitFlushButtons(true);
@@ -518,10 +518,14 @@ function loadSupplementaryDataInfo() {
     "sds_dataset_version",
   ];
 
-  const sdsMetadataSection = document.querySelector("#supplementary_data");
-  const sdsMetadataField = (key) =>
-    `<div class="field-container">${getLabelFor(key)}${getInputField(key, "text", selectedDataset[key], true)}</div>`;
+  // Since the sdsMetadataSection refers to the whole thing, it overwrites the change to the select and sets it back to the original
+  // I need to put them into 2 divs and then update the second one
 
+  const sdsMetadataSection = document.querySelector("#sds_data");
+  const sdsMetadataField = (key) =>
+    `<div class="field-container sds-data">${getLabelFor(key)}${getInputField(key, "text", selectedDataset[key], true)}</div>`;
+
+  clearSDSMetadata();
   if (sdsMetadataSection.contains(document.querySelector("#sds_dataset_id"))) {
     sdsMetadataSection.innerHTML += sdsDatasetMetadataKeys
       .map(sdsMetadataField)
@@ -530,6 +534,16 @@ function loadSupplementaryDataInfo() {
     sdsMetadataSection.innerHTML = sdsDatasetMetadataKeys
       .map(sdsMetadataField)
       .join("");
+  }
+}
+
+function clearSDSMetadata() {
+  let dataset = document.querySelectorAll("#sds_data > div");
+  let div_array = [...dataset];
+  for (let i = 0; i < div_array.length; i++) {
+    if ((div_array[i].classList.contains("sds-data"))) {
+      div_array[i].remove();
+    }
   }
 }
 
