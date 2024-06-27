@@ -392,9 +392,7 @@ function updateSDSDropdown() {
   const surveyId = schemaSurveyId;
   const periodId = document.getElementById("period_id")?.value;
 
-  const supplementaryDataSection = document.querySelector(
-    "#sds_id",
-  );
+  const supplementaryDataSection = document.querySelector("#sds_id");
   const sdsDatasetIdElement = document.querySelector("#sds_dataset_id");
 
   loadSDSDatasetMetadata(surveyId, periodId)
@@ -541,7 +539,7 @@ function clearSDSMetadata() {
   let dataset = document.querySelectorAll("#sds_data > div");
   let div_array = [...dataset];
   for (let i = 0; i < div_array.length; i++) {
-    if ((div_array[i].classList.contains("sds-data"))) {
+    if (div_array[i].classList.contains("sds-data")) {
       div_array[i].remove();
     }
   }
