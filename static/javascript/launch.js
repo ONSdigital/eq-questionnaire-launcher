@@ -204,7 +204,7 @@ function setLaunchType(launchType) {
 
 function showMetadataAccordion(type, show) {
   let accordionElement = document.querySelector(
-    "#" + type + "-metadata-accordion",
+    `#${type}-metadata-accordion`,
   );
   if (show) {
     accordionElement.classList.remove("ons-u-vh");
@@ -645,7 +645,7 @@ function initialiseTabIndex() {
     "survey_type_metadata_detail",
     "sds_metadata_detail",
   ];
-  for (i = 0; i < 3; i++) {
+  for (i = 0; i < details.length; i++) {
     document.getElementById(details[i]).tabIndex = -1;
   }
 }
