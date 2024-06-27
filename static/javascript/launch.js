@@ -203,9 +203,7 @@ function setLaunchType(launchType) {
 }
 
 function showMetadataAccordion(type, show) {
-  let accordionElement = document.querySelector(
-    `#${type}-metadata-accordion`,
-  );
+  let accordionElement = document.querySelector(`#${type}-metadata-accordion`);
   if (show) {
     accordionElement.classList.remove("ons-u-vh");
   } else {
