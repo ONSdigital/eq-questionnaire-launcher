@@ -143,8 +143,12 @@ let supplementaryDataSets = null;
 let schemaSurveyId = null;
 
 function clearSurveyMetadataFields() {
+  document
+    .querySelector("#survey-type-metadata-accordion")
+    .classList.add("ons-u-vh");
   document.querySelector("#survey_metadata_fields").innerHTML = "";
-  showSupplementaryData(false);
+  setTabIndex("survey_type_metadata_detail", -1);
+  showMetadataAccordion("sds", false);
 }
 
 function setSurveyType(event) {
@@ -171,10 +175,10 @@ function setLaunchType(launchType) {
     "#remote-schema-survey-type",
   );
 
-  if (launchType === "cir" || launchType === "remote" || launchType === "url") {
+  if (["cir", "remote", "url"].includes(launchType)) {
     if (schemaName.selectedIndex) {
       clearSurveyMetadataFields();
-      showSubmitFlushButtons(false);
+      enableSubmitFlushButtons(false);
       schemaName.selectedIndex = 0;
       localStorage.removeItem("schema_name");
     }
@@ -198,58 +202,57 @@ function setLaunchType(launchType) {
   }
 }
 
-function showSupplementaryData(show) {
+function showMetadataAccordion(type, show) {
+  let accordionElement = document.querySelector(`#${type}-metadata-accordion`);
   if (show) {
-    document
-      .querySelector(".supplementary-data")
-      .classList.remove("supplementary-data--hidden");
+    accordionElement.classList.remove("ons-u-vh");
   } else {
-    document
-      .querySelector(".supplementary-data")
-      .classList.add("supplementary-data--hidden");
+    accordionElement.classList.add("ons-u-vh");
   }
 }
 
-function showCIRMetadata(show) {
-  if (show) {
-    document
-      .querySelector(".cir-metadata")
-      .classList.remove("cir-metadata--hidden");
-  } else {
-    document
-      .querySelector(".cir-metadata")
-      .classList.add("cir-metadata--hidden");
+function enableButtons(button) {
+  for (let i = 0; i < button.length; i++) {
+    button[i].classList.remove("ons-btn--disabled");
+    button[i].disabled = false;
   }
 }
 
-function showSubmitFlushButtons(show, justSubmit = false) {
-  if (show) {
-    document.querySelector("#submit-btn").classList.remove("btn--hidden");
-    if (!justSubmit) {
-      document.querySelector("#flush-btn").classList.remove("btn--hidden");
-    }
+function disableButtons(button) {
+  for (let i = 0; i < button.length; i++) {
+    button[i].classList.add("ons-btn--disabled");
+    button[i].disabled = true;
+  }
+}
+
+function enableSubmitFlushButtons(enable) {
+  let submitButton = document.querySelector("#submit-btn");
+  let flushButton = document.querySelector("#flush-btn");
+
+  let buttons = [submitButton, flushButton];
+
+  if (enable) {
+    enableButtons(buttons);
   } else {
-    document.querySelector("#submit-btn").classList.add("btn--hidden");
-    if (!justSubmit) {
-      document.querySelector("#flush-btn").classList.add("btn--hidden");
-    }
+    disableButtons(buttons);
   }
 }
 
 function includeSurveyMetadataFields(schema_name, survey_type) {
   let formTypeValue = schema_name.split("_").slice(1).join("_");
+  document
+    .querySelector("#survey-type-metadata-accordion")
+    .classList.remove("ons-u-vh");
+  document.querySelector(".survey_heading").innerHTML =
+    `${survey_type} Survey Metadata`;
 
   document.querySelector("#survey_metadata_fields").innerHTML =
-    `<h3>${survey_type} Survey Metadata</h3>
-                <div class="field-container">
-                    <label for="form_type">form_type</label>
-                    <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="qa-form_type">
+    `<div class="ons-field ons-field--inline">
+                    <label class="ons-label" for="form_type">form_type</label>
+                    <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="ons-input ons-input--text ons-input-type__input">
                 </div>`;
-
-  showSupplementaryData(true);
-  document
-    .querySelector("#survey_metadata_fields")
-    .classList.remove("supplementary-data--hidden");
+  setTabIndex("survey_type_metadata_detail", 0);
+  showMetadataAccordion("sds", true);
 }
 
 function loadMetadataForSchemaName() {
@@ -308,7 +311,7 @@ function loadMetadataForRemoteSchema() {
 
   loadSurveyMetadata(schemaName, surveyType.value);
   loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId);
-  showSubmitFlushButtons(true);
+  enableSubmitFlushButtons(true);
 }
 
 function loadSurveyMetadata(schema_name, survey_type) {
@@ -341,7 +344,7 @@ async function getDataAsync(queryParam) {
 }
 
 function getLabelFor(fieldName) {
-  return `<label for="${fieldName}">${fieldName}</label>`;
+  return `<label class="ons-label" for="${fieldName}">${fieldName}</label>`;
 }
 
 function getInputField(
@@ -354,9 +357,12 @@ function getInputField(
   const value = defaultValue ? `value="${defaultValue}"` : "";
   const readOnly = isReadOnly ? "readonly" : "";
   if (readOnly) {
-    return `<input ${readOnly} id="${fieldName}" type="${type}" ${value} class="qa-${fieldName}" onchange="${onChangeCallback}">`;
+    return `<input ${readOnly} id="${fieldName}" type="${type}" ${value} class="ons-input ons-input--text ons-input--w-20" onchange="${onChangeCallback}">`;
   }
-  return `<input ${readOnly} id="${fieldName}" name="${fieldName}" type="${type}" ${value} class="qa-${fieldName}" onchange="${onChangeCallback}">`;
+  if (type === "checkbox") {
+    return `<input ${readOnly} id="${fieldName}" type="${type}" ${value} class="ons-checkbox--toggle" onchange="${onChangeCallback}">`;
+  }
+  return `<input ${readOnly} id="${fieldName}" name="${fieldName}" type="${type}" ${value} class="ons-input ons-input--text ons-input--w-20" onchange="${onChangeCallback}">`;
 }
 
 async function loadSDSDatasetMetadata(survey_id, period_id) {
@@ -368,12 +374,13 @@ async function loadSDSDatasetMetadata(survey_id, period_id) {
 }
 
 function handleNoSupplementaryData() {
-  showSupplementaryData(false);
-  showSubmitFlushButtons(false);
+  showMetadataAccordion("sds", false);
+  setTabIndex("sds_metadata_detail", -1);
+  enableSubmitFlushButtons(false);
 }
 
 function showCIRMetdata(cirInstrumentId, cirSchema) {
-  showCIRMetadata(true);
+  showMetadataAccordion("cir", true);
   let ciMetadata = {
     id: cirInstrumentId,
     ci_version: cirSchema.getAttribute("data-version"),
@@ -383,9 +390,10 @@ function showCIRMetdata(cirInstrumentId, cirSchema) {
   document.querySelector("#cir_metadata").innerHTML = Object.keys(ciMetadata)
     .map(
       (key) =>
-        `<div class="field-container">${getLabelFor(key)}${getInputField(key, "text", ciMetadata[key], true)}</div>`,
+        `<div class="ons-field ons-field--inline">${getLabelFor(key)}${getInputField(key, "text", ciMetadata[key], true)}</div>`,
     )
     .join("");
+  setTabIndex("cir_metadata_detail", 0);
 }
 
 function updateSDSDropdown() {
@@ -396,14 +404,14 @@ function updateSDSDropdown() {
     "#supplementary_data",
   );
   const sdsDatasetIdElement = document.querySelector("#sds_dataset_id");
-
   loadSDSDatasetMetadata(surveyId, periodId)
     .then((sds_metadata_response) => {
       if (sds_metadata_response?.length) {
         document.querySelector("#supplementary_data").innerHTML = "";
         supplementaryDataSets = sds_metadata_response;
-        showSupplementaryData(true);
-        showSubmitFlushButtons(true);
+        showMetadataAccordion("sds", true);
+        setTabIndex("sds_metadata_detail", 0);
+        enableSubmitFlushButtons(true);
 
         if (
           !document
@@ -411,7 +419,7 @@ function updateSDSDropdown() {
             .contains(sdsDatasetIdElement)
         ) {
           // add sds_dataset_id field into the SDS metadata section if not already in survey metadata
-          supplementaryDataSection.innerHTML = `<div class="field-container">${getLabelFor("sds_dataset_id")}<select id="sds_dataset_id" name="sds_dataset_id" class="qa-sds_dataset_id" onchange="loadSupplementaryDataInfo()"></select></div>`;
+          supplementaryDataSection.innerHTML = `<div class="ons-field ons-field--inline">${getLabelFor("sds_dataset_id")}<select id="sds_dataset_id" name="sds_dataset_id" class="ons-input ons-input--select ons-input--w-20" onchange="loadSupplementaryDataInfo()"></select></div>`;
         }
 
         document.querySelector("#sds_dataset_id").innerHTML =
@@ -438,11 +446,13 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
   if (cirInstrumentId) {
     survey_data_url += `&cir_instrument_id=${cirInstrumentId}`;
   } else {
-    showCIRMetadata(false);
+    showMetadataAccordion("cir", false);
+    setTabIndex("cir_metadata_detail", -1);
     if (schemaName) survey_data_url += `&schema_name=${schemaName}`;
     if (schemaUrl) survey_data_url += `&schema_url=${schemaUrl}`;
   }
-  showSupplementaryData(false);
+  showMetadataAccordion("sds", false);
+  setTabIndex("sds_metadata_detail", -1);
   getDataAsync(survey_data_url)
     .then((schema_response) => {
       document.querySelector("#survey_metadata").innerHTML = "";
@@ -458,13 +468,13 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
               const fieldName = metadataField["name"];
               const defaultValue = metadataField["default"];
 
-              return `<div class="field-container">${getLabelFor(fieldName)}${(() => {
+              return `<div class="ons-field ons-field--inline">${getLabelFor(fieldName)}${(() => {
                 if (metadataField["type"] === "boolean") {
                   return getInputField(fieldName, "checkbox");
                 } else if (metadataField["type"] === "uuid") {
                   return (
-                    `<span class="field-container__span">${getInputField(fieldName, "text", uuidv4())}` +
-                    `<img class="field-container__img" onclick="uuid('${fieldName}')" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg==">` +
+                    `<span>${getInputField(fieldName, "text", uuidv4())}` +
+                    `<img onclick="uuid('${fieldName}')" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjUxMnB4IiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48Zz48cGF0aCBkPSJNMjU2LDM4NC4xYy03MC43LDAtMTI4LTU3LjMtMTI4LTEyOC4xYzAtNzAuOCw1Ny4zLTEyOC4xLDEyOC0xMjguMVY4NGw5Niw2NGwtOTYsNTUuN3YtNTUuOCAgIGMtNTkuNiwwLTEwOC4xLDQ4LjUtMTA4LjEsMTA4LjFjMCw1OS42LDQ4LjUsMTA4LjEsMTA4LjEsMTA4LjFTMzY0LjEsMzE2LDM2NC4xLDI1NkgzODRDMzg0LDMyNywzMjYuNywzODQuMSwyNTYsMzg0LjF6Ii8+PC9nPjwvc3ZnPg==">` +
                     `</span>`
                   );
                 } else if (
@@ -481,7 +491,7 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
                     "updateSDSDropdown()",
                   );
                 } else if (fieldName === "sds_dataset_id") {
-                  return `<select id="${fieldName}" name="${fieldName}" class="qa-${fieldName}" onchange="loadSupplementaryDataInfo()"></select>`;
+                  return `<select id="${fieldName}" name="${fieldName}" class="ons-input ons-input--select ons-input--w-20" onchange="loadSupplementaryDataInfo()"></select>`;
                 } else {
                   return getInputField(fieldName, "text", defaultValue);
                 }
@@ -493,7 +503,7 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
         document.querySelector("#survey_metadata").innerHTML =
           "No metadata required for this survey";
       }
-      showSubmitFlushButtons(true);
+      enableSubmitFlushButtons(true);
     })
     .catch((_) => {
       document.querySelector("#survey_metadata").innerHTML =
@@ -520,7 +530,7 @@ function loadSupplementaryDataInfo() {
 
   const sdsMetadataSection = document.querySelector("#supplementary_data");
   const sdsMetadataField = (key) =>
-    `<div class="field-container">${getLabelFor(key)}${getInputField(key, "text", selectedDataset[key], true)}</div>`;
+    `<div class="ons-field ons-field--inline">${getLabelFor(key)}${getInputField(key, "text", selectedDataset[key], true)}</div>`;
 
   if (sdsMetadataSection.contains(document.querySelector("#sds_dataset_id"))) {
     sdsMetadataSection.innerHTML += sdsDatasetMetadataKeys
@@ -584,9 +594,11 @@ function retrieveResponseId() {
   let responseIdButton = document.querySelector("#response-id-btn");
 
   if (responseId) {
-    responseIdButton.classList.remove("btn--hidden");
+    responseIdButton.classList.remove("ons-btn--disabled");
+    responseIdButton.disabled = false;
   } else {
-    responseIdButton.classList.add("btn--hidden");
+    responseIdButton.classList.add("ons-btn--disabled");
+    responseIdButton.disabled = true;
   }
 }
 
@@ -621,12 +633,28 @@ function populateDropDownWithValue(selector, value) {
   }
 }
 
+function setTabIndex(metadataDetail, value) {
+  document.getElementById(metadataDetail).tabIndex = value;
+}
+
+function initialiseTabIndex() {
+  const details = [
+    "cir_metadata_detail",
+    "survey_type_metadata_detail",
+    "sds_metadata_detail",
+  ];
+  for (i = 0; i < details.length; i++) {
+    document.getElementById(details[i]).tabIndex = -1;
+  }
+}
+
 function onLoad() {
   uuid("collection_exercise_sid");
   uuid("case_id");
   numericId();
   setResponseExpiry();
   retrieveResponseId();
+  initialiseTabIndex();
 
   if ((schemaName = localStorage.getItem("schema_name"))) {
     populateDropDownWithValue("#schema_name", schemaName);
