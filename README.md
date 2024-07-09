@@ -91,6 +91,10 @@ https://golangci-lint.run/welcome/install/#local-installation to see additional 
 | `make lint-go`          | Lints all Golang files using an external tool           |
 | `make lint`             | Lints all files listed above                            |
 
+
+### Design System
+To update the design system version, you need to update the version within the CDN link, they are present in both template files ([layout](templates/layout.html:11) and [launch](templates/launch.html:381)) 
+
 ### Notes
 * There are no unit tests yet
 * JWT spec based on http://ons-schema-definitions.readthedocs.io/en/latest/jwt_profile.html
