@@ -376,7 +376,6 @@ async function loadSDSDatasetMetadata(survey_id, period_id) {
 function handleNoSupplementaryData() {
   showMetadataAccordion("sds", false);
   setTabIndex("sds_metadata_detail", -1);
-  enableSubmitFlushButtons(false);
 }
 
 function showCIRMetdata(cirInstrumentId, cirSchema) {
