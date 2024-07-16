@@ -399,7 +399,9 @@ function updateSDSDropdown() {
   const surveyId = schemaSurveyId;
   const periodId = document.getElementById("period_id")?.value;
 
-  const supplementaryDataSection = document.querySelector("#supplementary_data");
+  const supplementaryDataSection = document.querySelector(
+    "#supplementary_data",
+  );
   const sdsDatasetIdElement = document.querySelector("#sds_dataset_id");
   loadSDSDatasetMetadata(surveyId, periodId)
     .then((sds_metadata_response) => {
