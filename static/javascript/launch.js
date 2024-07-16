@@ -399,12 +399,12 @@ function updateSDSDropdown() {
   const surveyId = schemaSurveyId;
   const periodId = document.getElementById("period_id")?.value;
 
-  const supplementaryDataSection = document.querySelector("#sds_id");
+  const supplementaryDataSection = document.querySelector("#supplementary_data");
   const sdsDatasetIdElement = document.querySelector("#sds_dataset_id");
   loadSDSDatasetMetadata(surveyId, periodId)
     .then((sds_metadata_response) => {
       if (sds_metadata_response?.length) {
-        document.querySelector("#sds_id").innerHTML = "";
+        document.querySelector("#supplementary_data").innerHTML = "";
         supplementaryDataSets = sds_metadata_response;
         showMetadataAccordion("sds", true);
         setTabIndex("sds_metadata_detail", 0);
@@ -525,9 +525,9 @@ function loadSupplementaryDataInfo() {
     "sds_dataset_version",
   ];
 
-  const sdsMetadataSection = document.querySelector("#sds_data");
+  const sdsMetadataSection = document.querySelector("#supplementary_data");
   const sdsMetadataField = (key) =>
-    `<div class="ons-field ons-field--inline sds_data">${getLabelFor(key)}${getInputField(key, "text", selectedDataset[key], true)}</div>`;
+    `<div class="ons-field ons-field--inline" data-sds-metadata-key>${getLabelFor(key)}${getInputField(key, "text", selectedDataset[key], true)}</div>`;
 
   clearSDSMetadata();
   if (sdsMetadataSection.contains(document.querySelector("#sds_dataset_id"))) {
@@ -542,11 +542,11 @@ function loadSupplementaryDataInfo() {
 }
 
 function clearSDSMetadata() {
-  let dataset = document.querySelectorAll("#sds_data > div");
-  let div_array = [...dataset];
-  for (let i = 0; i < div_array.length; i++) {
-    if (div_array[i].classList.contains("sds-data")) {
-      div_array[i].remove();
+  let sds_values = document.querySelectorAll("#supplementary_data > div");
+  let sds_data = [...sds_values];
+  for (let i = 0; i < sds_data.length; i++) {
+    if (sds_data[i].hasAttribute("data-sds-metadata-key")) {
+      sds_data[i].remove();
     }
   }
 }
