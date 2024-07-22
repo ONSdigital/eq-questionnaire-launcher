@@ -322,7 +322,7 @@ function loadMetadataForRemoteSchema() {
     schemaName = cirSchema.getAttribute("data-form-type");
     let language = cirSchema.getAttribute("data-language");
 
-    showCIRMetdata(cirInstrumentId, cirSchema);
+    showCIRMetadata(cirInstrumentId, cirSchema);
 
     // cir schemas are for a specific language, so populate and disable choosing it
     populateDropDownWithValue("#language_code", language);
@@ -352,6 +352,8 @@ async function getDataAsync(queryParam) {
       if (this.readyState === 4) {
         if (this.status === 200) {
           resolve(JSON.parse(this.responseText));
+        } else if (this.status === 500) {
+          return
         } else {
           alert(`Request failed. ${this.responseText}`);
           reject(`Request failed. ${this.responseText}`);
@@ -398,7 +400,7 @@ function handleNoSupplementaryData() {
   setTabIndex("sds_metadata_detail", -1);
 }
 
-function showCIRMetdata(cirInstrumentId, cirSchema) {
+function showCIRMetadata(cirInstrumentId, cirSchema) {
   showMetadataAccordion("cir", true);
   let ciMetadata = {
     id: cirInstrumentId,
