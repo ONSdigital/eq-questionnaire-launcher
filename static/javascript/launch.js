@@ -474,7 +474,6 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
   getDataAsync(survey_data_url)
     .then((schema_response) => {
       document.querySelector("#survey_metadata").innerHTML = "";
-      document.querySelector("#survey_metadata").innerHTML = "";
 
       // We always need survey_id from top-level schema metadata for SDS retrieval
       schemaSurveyId = schema_response.survey_id;
