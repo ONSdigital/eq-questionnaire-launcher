@@ -142,7 +142,7 @@ let supplementaryDataSets = null;
 let schemaSurveyId = null;
 
 const supplementaryDataSection = document.querySelector("#supplementary_data");
-const loadMetadataButton = document.querySelector("#load-meatadata-btn");
+const loadMetadataButton = document.querySelector("#load-metadata-btn");
 const remoteSchemaSurveyType = document.querySelector(
   "#remote-schema-survey-type",
 );
