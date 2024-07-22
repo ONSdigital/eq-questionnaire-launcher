@@ -81,7 +81,7 @@
             ].join("");
           }
           for (var t = [], i = 0; i < 256; ++i)
-            t[i] = (i + 256).toString(16).substr(1);
+            t[i] = (i + 256).toString(16).substring(1);
           n.exports = o;
         },
         {},
@@ -90,8 +90,7 @@
         function (e, n, r) {
           var o =
             ("undefined" != typeof crypto &&
-              crypto.getRandomValues &&
-              crypto.getRandomValues.bind(crypto)) ||
+              crypto.getRandomValues?.bind(crypto)) ||
             ("undefined" != typeof msCrypto &&
               "function" == typeof window.msCrypto.getRandomValues &&
               msCrypto.getRandomValues.bind(msCrypto));
