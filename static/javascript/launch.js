@@ -352,8 +352,6 @@ async function getDataAsync(queryParam) {
       if (this.readyState === 4) {
         if (this.status === 200) {
           resolve(JSON.parse(this.responseText));
-        } else if (this.status === 500) {
-          return
         } else {
           alert(`Request failed. ${this.responseText}`);
           reject(`Request failed. ${this.responseText}`);
