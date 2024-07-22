@@ -250,9 +250,9 @@ function includeSurveyMetadataFields(schema_name, survey_type) {
 
   document.querySelector("#survey_metadata_fields").innerHTML =
     `<div class="ons-field ons-field--inline">
-                    <label class="ons-label" for="form_type">form_type</label>
-                    <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="ons-input ons-input--text ons-input-type__input">
-                </div>`;
+      <label class="ons-label" for="form_type">form_type</label>
+      <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="ons-input ons-input--text ons-input-type__input">
+    </div>`;
   setTabIndex("survey_type_metadata_detail", 0);
   showMetadataAccordion("sds", true);
 }
