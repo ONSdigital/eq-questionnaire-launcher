@@ -198,6 +198,7 @@ function setLaunchType(launchType) {
   const schemaName = document.querySelector("#schema_name");
   const schemaUrl = document.querySelector("#remote-schema-url");
   const cirSchemas = document.querySelector("#cir-schemas");
+  console.log(schemaName);
 
   if (["cir", "remote", "url"].includes(launchType)) {
     if (schemaName.selectedIndex) {
@@ -479,7 +480,6 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
       schemaSurveyId = schema_response.survey_id;
 
       if (schema_response.metadata.length > 0) {
-        console.log(schema_response.metadata)
         document.querySelector("#survey_metadata").innerHTML =
           schema_response.metadata
             .map((metadataField) => {
