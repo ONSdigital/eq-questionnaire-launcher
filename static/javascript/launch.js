@@ -142,6 +142,10 @@ let supplementaryDataSets = null;
 // We always need survey_id from top-level schema metadata for SDS retrieval
 let schemaSurveyId = null;
 
+const supplementaryDataSection = document.querySelector(
+    "#supplementary_data",
+);
+
 function clearSurveyMetadataFields() {
   document
     .querySelector("#survey-type-metadata-accordion")
@@ -398,10 +402,6 @@ function showCIRMetdata(cirInstrumentId, cirSchema) {
 function updateSDSDropdown() {
   const surveyId = schemaSurveyId;
   const periodId = document.getElementById("period_id")?.value;
-
-  const supplementaryDataSection = document.querySelector(
-    "#supplementary_data",
-  );
   const sdsDatasetIdElement = document.querySelector("#sds_dataset_id");
   loadSDSDatasetMetadata(surveyId, periodId)
     .then((sds_metadata_response) => {
@@ -527,31 +527,16 @@ function loadSupplementaryDataInfo() {
     "sds_dataset_version",
   ];
 
-  const sdsMetadataSection = document.querySelector("#supplementary_data");
   const sdsMetadataField = (key) =>
     `<div class="ons-field ons-field--inline" data-sds-metadata-key>${getLabelFor(key)}${getInputField(key, "text", selectedDataset[key], true)}</div>`;
 
-  clearSDSMetadata();
-  if (sdsMetadataSection.contains(document.querySelector("#sds_dataset_id"))) {
-    sdsMetadataSection.innerHTML += sdsDatasetMetadataKeys
+  const supplementaryDataFields = document.createRange().createContextualFragment(sdsDatasetMetadataKeys
       .map(sdsMetadataField)
-      .join("");
-  } else {
-    sdsMetadataSection.innerHTML = sdsDatasetMetadataKeys
-      .map(sdsMetadataField)
-      .join("");
-  }
+      .join(""));
+  supplementaryDataSection.querySelectorAll(".ons-field[data-sds-metadata-key]").forEach(sds_value => sds_value.remove());
+  supplementaryDataSection.appendChild(supplementaryDataFields);
 }
 
-function clearSDSMetadata() {
-  let sds_values = document.querySelectorAll("#supplementary_data > div");
-  let sds_data = [...sds_values];
-  for (let i = 0; i < sds_data.length; i++) {
-    if (sds_data[i].hasAttribute("data-sds-metadata-key")) {
-      sds_data[i].remove();
-    }
-  }
-}
 
 function uuid(el_id) {
   document.querySelector(`#${el_id}`).value = uuidv4();
