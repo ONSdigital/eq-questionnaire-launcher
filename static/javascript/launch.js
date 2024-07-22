@@ -142,9 +142,7 @@ let supplementaryDataSets = null;
 // We always need survey_id from top-level schema metadata for SDS retrieval
 let schemaSurveyId = null;
 
-const supplementaryDataSection = document.querySelector(
-    "#supplementary_data",
-);
+const supplementaryDataSection = document.querySelector("#supplementary_data");
 
 function clearSurveyMetadataFields() {
   document
@@ -530,13 +528,16 @@ function loadSupplementaryDataInfo() {
   const sdsMetadataField = (key) =>
     `<div class="ons-field ons-field--inline" data-sds-metadata-key>${getLabelFor(key)}${getInputField(key, "text", selectedDataset[key], true)}</div>`;
 
-  const supplementaryDataFields = document.createRange().createContextualFragment(sdsDatasetMetadataKeys
-      .map(sdsMetadataField)
-      .join(""));
-  supplementaryDataSection.querySelectorAll(".ons-field[data-sds-metadata-key]").forEach(sds_value => sds_value.remove());
+  const supplementaryDataFields = document
+    .createRange()
+    .createContextualFragment(
+      sdsDatasetMetadataKeys.map(sdsMetadataField).join(""),
+    );
+  supplementaryDataSection
+    .querySelectorAll(".ons-field[data-sds-metadata-key]")
+    .forEach((sds_value) => sds_value.remove());
   supplementaryDataSection.appendChild(supplementaryDataFields);
 }
-
 
 function uuid(el_id) {
   document.querySelector(`#${el_id}`).value = uuidv4();
