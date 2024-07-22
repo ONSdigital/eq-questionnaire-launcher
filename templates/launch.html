@@ -53,8 +53,8 @@
                         </select>
                     </div>
                     <div class="ons-field ons-field--inline">
-                        <label class="ons-label" for="schema-url">Schema URL</label>
-                        <input id="schema-url"
+                        <label class="ons-label" for="remote-schema-url">Schema URL</label>
+                        <input id="remote-schema-url"
                                name="schema_url"
                                type="text"
                                class="ons-input ons-input--text ons-input-type__input ons-input--w-20"
@@ -82,7 +82,8 @@
                     <div class="ons-u-mt-s">
                         <button id="load-meatadata-btn"
                                 type="button"
-                                class="ons-btn ons-btn--small"
+                                class="ons-btn ons-btn--small ons-btn--disabled"
+                                disabled
                                 onclick="loadMetadataForRemoteSchema()">
                             <span class="ons-btn__inner"><span class="ons-btn__text">Load Metadata</span></span>
                         </button>
