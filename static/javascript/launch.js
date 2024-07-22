@@ -143,9 +143,14 @@ let schemaSurveyId = null;
 
 const supplementaryDataSection = document.querySelector("#supplementary_data");
 const loadMetadataButton = document.querySelector("#load-meatadata-btn");
-const remoteSchemaSurveyType = document.querySelector("#remote-schema-survey-type");
+const remoteSchemaSurveyType = document.querySelector(
+  "#remote-schema-survey-type",
+);
 
-const launchFlushButtons = [document.querySelector("#launch-btn"), document.querySelector("#flush-btn")];
+const launchFlushButtons = [
+  document.querySelector("#launch-btn"),
+  document.querySelector("#flush-btn"),
+];
 let surveyType;
 let cirSchema;
 let schemaUrl;
@@ -682,6 +687,6 @@ function onLoad() {
     if ((schemaUrl = localStorage.getItem("schema_url"))) {
       document.querySelector("#remote-schema-url").value = schemaUrl;
     }
-    validateRemoteSection()
+    validateRemoteSection();
   }
 }
