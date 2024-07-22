@@ -212,17 +212,17 @@ function showMetadataAccordion(type, show) {
   }
 }
 
-function enableButtons(button) {
-  for (let i = 0; i < button.length; i++) {
-    button[i].classList.remove("ons-btn--disabled");
-    button[i].disabled = false;
+function enableButtons(buttons) {
+  for (const button of buttons) {
+    button.classList.remove("ons-btn--disabled");
+    button.disabled = false;
   }
 }
 
-function disableButtons(button) {
-  for (let i = 0; i < button.length; i++) {
-    button[i].classList.add("ons-btn--disabled");
-    button[i].disabled = true;
+function disableButtons(buttons) {
+  for (const button of buttons) {
+    button.classList.add("ons-btn--disabled");
+    button.disabled = true;
   }
 }
 
