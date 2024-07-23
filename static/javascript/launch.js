@@ -142,22 +142,6 @@ let supplementaryDataSets = null;
 let schemaSurveyId = null;
 
 const supplementaryDataSection = document.querySelector("#supplementary_data");
-<<<<<<< HEAD
-=======
-const loadMetadataButton = document.querySelector("#load-metadata-btn");
-const remoteSchemaSurveyType = document.querySelector(
-  "#remote-schema-survey-type",
-);
-
-const launchFlushButtons = [
-  document.querySelector("#launch-btn"),
-  document.querySelector("#flush-btn"),
-];
-
-let surveyType;
-let cirSchema;
-let schemaUrl;
->>>>>>> 614b3b3 (fix typo)
 
 function clearSurveyMetadataFields() {
   document
@@ -509,7 +493,7 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
               })()}</div>`;
             })
             .join("");
-        updateSDSDropdown();
+          updateSDSDropdown();
       } else {
         document.querySelector("#survey_metadata").innerHTML =
           "No metadata required for this survey";
