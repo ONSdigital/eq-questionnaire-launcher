@@ -516,7 +516,7 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
               })()}</div>`;
             })
             .join("");
-          updateSDSDropdown();
+        updateSDSDropdown();
       } else {
         document.querySelector("#survey_metadata").innerHTML =
           "No metadata required for this survey";
