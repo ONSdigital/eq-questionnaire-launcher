@@ -516,11 +516,7 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
               })()}</div>`;
             })
             .join("");
-        if (
-          !window.location.href.includes("test-launcher.eq.gcp.onsdigital.uk")
-        ) {
           updateSDSDropdown();
-        }
       } else {
         document.querySelector("#survey_metadata").innerHTML =
           "No metadata required for this survey";
