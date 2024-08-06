@@ -116,9 +116,9 @@ func getSurveyDataHandler(w http.ResponseWriter, r *http.Request) {
 func getSupplementaryDataHandler(w http.ResponseWriter, r *http.Request) {
 	surveyId := r.URL.Query().Get("survey_id")
 	periodId := r.URL.Query().Get("period_id")
-	sdsUnavailable := settings.Get("SDS_UNAVAILABLE_IN_ENV")
+	sdsEnabled := settings.Get("SDS_ENABLED_IN_ENV")
 
-	if sdsUnavailable == "" {
+	if sdsEnabled == "true" {
 		datasets, err := surveys.GetSupplementaryDataSets(surveyId, periodId)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("GetSupplementaryDataSets err: %v", err), 500)
