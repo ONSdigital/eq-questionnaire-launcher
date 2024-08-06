@@ -418,10 +418,6 @@ function showCIRMetadata(cirInstrumentId, cirSchema) {
 function updateSDSDropdown() {
   const surveyId = schemaSurveyId;
   const periodId = document.getElementById("period_id")?.value;
-
-  const supplementaryDataSection = document.querySelector(
-    "#supplementary_data",
-  );
   const sdsDatasetIdElement = document.querySelector("#sds_dataset_id");
   loadSDSDatasetMetadata(surveyId, periodId)
     .then((sds_metadata_response) => {
@@ -546,19 +542,18 @@ function loadSupplementaryDataInfo() {
     "sds_dataset_version",
   ];
 
-  const sdsMetadataSection = document.querySelector("#supplementary_data");
   const sdsMetadataField = (key) =>
-    `<div class="ons-field ons-field--inline">${getLabelFor(key)}${getInputField(key, "text", selectedDataset[key], true)}</div>`;
+    `<div class="ons-field ons-field--inline" data-sds-metadata-key>${getLabelFor(key)}${getInputField(key, "text", selectedDataset[key], true)}</div>`;
 
-  if (sdsMetadataSection.contains(document.querySelector("#sds_dataset_id"))) {
-    sdsMetadataSection.innerHTML += sdsDatasetMetadataKeys
-      .map(sdsMetadataField)
-      .join("");
-  } else {
-    sdsMetadataSection.innerHTML = sdsDatasetMetadataKeys
-      .map(sdsMetadataField)
-      .join("");
-  }
+  const supplementaryDataFields = document
+    .createRange()
+    .createContextualFragment(
+      sdsDatasetMetadataKeys.map(sdsMetadataField).join(""),
+    );
+  supplementaryDataSection
+    .querySelectorAll(".ons-field[data-sds-metadata-key]")
+    .forEach((sds_value) => sds_value.remove());
+  supplementaryDataSection.appendChild(supplementaryDataFields);
 }
 
 function uuid(el_id) {
