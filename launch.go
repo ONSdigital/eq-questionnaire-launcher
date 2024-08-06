@@ -116,19 +116,25 @@ func getSurveyDataHandler(w http.ResponseWriter, r *http.Request) {
 func getSupplementaryDataHandler(w http.ResponseWriter, r *http.Request) {
 	surveyId := r.URL.Query().Get("survey_id")
 	periodId := r.URL.Query().Get("period_id")
+	sdsEnabled := settings.Get("SDS_ENABLED_IN_ENV")
 
-	datasets, err := surveys.GetSupplementaryDataSets(surveyId, periodId)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("GetSupplementaryDataSets err: %v", err), 500)
+	if sdsEnabled == "true" {
+		datasets, err := surveys.GetSupplementaryDataSets(surveyId, periodId)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("GetSupplementaryDataSets err: %v", err), 500)
+			return
+		}
+		datasetJSON, _ := json.Marshal(datasets)
+
+		_, writeError := w.Write([]byte(datasetJSON))
+		if writeError != nil {
+			http.Error(w, fmt.Sprintf("Write failed to write data as part of an HTTP reply: %v", writeError), 500)
+			return
+		}
+	} else {
 		return
 	}
-	datasetJSON, _ := json.Marshal(datasets)
 
-	_, writeError := w.Write([]byte(datasetJSON))
-	if writeError != nil {
-		http.Error(w, fmt.Sprintf("Write failed to write data as part of an HTTP reply: %v", writeError), 500)
-		return
-	}
 }
 
 func getAccountServiceURL(r *http.Request) string {
