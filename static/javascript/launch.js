@@ -81,7 +81,7 @@
             ].join("");
           }
           for (var t = [], i = 0; i < 256; ++i)
-            t[i] = (i + 256).toString(16).substr(1);
+            t[i] = (i + 256).toString(16).substring(1);
           n.exports = o;
         },
         {},
@@ -90,8 +90,7 @@
         function (e, n, r) {
           var o =
             ("undefined" != typeof crypto &&
-              crypto.getRandomValues &&
-              crypto.getRandomValues.bind(crypto)) ||
+              crypto.getRandomValues?.bind(crypto)) ||
             ("undefined" != typeof msCrypto &&
               "function" == typeof window.msCrypto.getRandomValues &&
               msCrypto.getRandomValues.bind(msCrypto));
@@ -273,9 +272,9 @@ function includeSurveyMetadataFields(schema_name, survey_type) {
 
   document.querySelector("#survey_metadata_fields").innerHTML =
     `<div class="ons-field ons-field--inline">
-                    <label class="ons-label" for="form_type">form_type</label>
-                    <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="ons-input ons-input--text ons-input-type__input">
-                </div>`;
+      <label class="ons-label" for="form_type">form_type</label>
+      <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="ons-input ons-input--text ons-input-type__input">
+    </div>`;
   setTabIndex("survey_type_metadata_detail", 0);
   showMetadataAccordion("sds", true);
 }
@@ -474,7 +473,6 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
   setTabIndex("sds_metadata_detail", -1);
   getDataAsync(survey_data_url)
     .then((schema_response) => {
-      document.querySelector("#survey_metadata").innerHTML = "";
       document.querySelector("#survey_metadata").innerHTML = "";
 
       // We always need survey_id from top-level schema metadata for SDS retrieval
