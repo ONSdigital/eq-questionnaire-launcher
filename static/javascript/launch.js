@@ -212,9 +212,12 @@ function setLaunchType(launchType) {
     if (launchType === "cir") {
       schemaUrl.value = "";
       localStorage.removeItem("schema_url");
+      validateRemoteSection();
     } else if (launchType === "url") {
       cirSchemas.selectedIndex = 0;
+      cirSchema = null
       localStorage.removeItem("cir_schema");
+      validateRemoteSection();
     }
   }
   if (launchType === "name") {
