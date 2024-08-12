@@ -242,16 +242,16 @@ function showMetadataAccordion(type, show) {
 }
 
 function enableButtons(buttons) {
-  for (let i = 0; i < buttons.length; i++) {
-    buttons[i].classList.remove("ons-btn--disabled");
-    buttons[i].disabled = false;
+  for (const button of buttons) {
+    button.classList.remove("ons-btn--disabled");
+    button.disabled = false;
   }
 }
 
 function disableButtons(buttons) {
-  for (let i = 0; i < buttons.length; i++) {
-    buttons[i].classList.add("ons-btn--disabled");
-    buttons[i].disabled = true;
+  for (const button of buttons) {
+    button.classList.add("ons-btn--disabled");
+    button.disabled = true;
   }
 }
 
