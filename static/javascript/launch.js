@@ -199,7 +199,6 @@ function setLaunchType(launchType) {
   const schemaName = document.querySelector("#schema_name");
   const schemaUrl = document.querySelector("#remote-schema-url");
   const cirSchemas = document.querySelector("#cir-schemas");
-  console.log(schemaName);
 
   if (["cir", "remote", "url"].includes(launchType)) {
     if (schemaName.selectedIndex) {
