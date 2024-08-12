@@ -2,7 +2,7 @@
 
 This project was copied from https://github.com/ONSdigital/go-launch-a-survey and should be used for v3 of runner.
 
-## Building and Running
+### Building and Running
 Install Go and ensure that your `GOPATH` env variable is set (usually it's `~/go`).
 
 ```
@@ -15,7 +15,7 @@ go run launch.go (Does both the build and run cmd above)
 
 Open http://localhost:8000/
 
-## Docker
+### Docker
 The dockerfile is a multistage dockerfile which can be built using:
 
 ```
@@ -42,7 +42,7 @@ You can also run a Survey Register for launcher to load Schemas from
 docker run -it -p 8080:8080 onsdigital/eq-survey-register:simple-rest-api
 ```
 
-## Run Quick-Launch
+### Run Quick-Launch
 If the schema specifies a `schema_name` field, that will be used as the schema_name claim. If not, the filename from the URL (before `.`) will be used.
 
 Run Questionnaire Launcher
@@ -60,7 +60,7 @@ Documentation on the `v2` structure can be found [here](https://github.com/ONSdi
 e.g."http://localhost:8000/quick-launch?schema_url=http://localhost:7777/1_0001.json&version=v1"
 ```
 
-## Commands for Formatting & Linting
+### Commands for Formatting & Linting
 Ensure you are using the correct version of node using:
 ``` shell
 nvm install
@@ -92,18 +92,18 @@ https://golangci-lint.run/welcome/install/#local-installation to see additional 
 | `make lint`             | Lints all files listed above                            |
 
 
-## Design System
+### Design System
 To update the design system version, you need to update the version within the CDN link, they are present in both template files ([layout](templates/layout.html:11) and [launch](templates/launch.html:381))
 
-## Notes
+### Notes
 * There are no unit tests yet
 * JWT spec based on http://ons-schema-definitions.readthedocs.io/en/latest/jwt_profile.html
 
-## Settings
+### Settings
 
 | Environment Variable           | Meaning                                                                 | Default                                                                |
 |--------------------------------|-------------------------------------------------------------------------|------------------------------------------------------------------------|
-| GO_LAUNCH_A_SURVEY_LISTEN_HOST | Host address to listen on                                               | 0.0.0.0                                                                |
+| GO_LAUNCH_A_SURVEY_LISTEN_HOST | Host address  to listen on                                              | 0.0.0.0                                                                |
 | GO_LAUNCH_A_SURVEY_LISTEN_PORT | Host port to listen on                                                  | 8000                                                                   |
 | SURVEY_RUNNER_URL              | URL of Questionnaire Runner to re-direct to when launching a survey     | http://localhost:5000                                                  |
 | SURVEY_REGISTER_URL            | URL of eq-survey-register to load schema list from                      | http://localhost:8080                                                  |
