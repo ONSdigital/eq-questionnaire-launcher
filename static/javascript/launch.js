@@ -239,14 +239,14 @@ function showMetadataAccordion(type, show) {
 }
 
 function enableButtons(buttons) {
-  for (let i = 0; i < button.length; i++) {
+  for (let i = 0; i < buttons.length; i++) {
     buttons[i].classList.remove("ons-btn--disabled");
     buttons[i].disabled = false;
   }
 }
 
 function disableButtons(buttons) {
-  for (let i = 0; i < button.length; i++) {
+  for (let i = 0; i < buttons.length; i++) {
     buttons[i].classList.add("ons-btn--disabled");
     buttons[i].disabled = true;
   }
