@@ -215,7 +215,7 @@ function setLaunchType(launchType) {
       validateRemoteSection();
     } else if (launchType === "url") {
       cirSchemas.selectedIndex = 0;
-      cirSchema = null
+      cirSchema = null;
       localStorage.removeItem("cir_schema");
       validateRemoteSection();
     }
