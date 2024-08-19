@@ -366,8 +366,10 @@ function getInputField(
   return `<input ${readOnly} id="${fieldName}" name="${fieldName}" type="${type}" ${value} class="ons-input ons-input--text ons-input--w-20" onchange="${onChangeCallback}">`;
 }
 
+let sdsEnabled = (process.env.SDS_ENABLED_IN_ENV === "true")
+
 async function loadSDSDatasetMetadata(survey_id, period_id) {
-  if (survey_id && period_id && process.env.SDS_ENABLED_IN_ENV === "true") {
+  if (survey_id && period_id && sdsEnabled === true) {
     const sds_dataset_metadata_url = `/supplementary-data?survey_id=${survey_id}&period_id=${period_id}`;
     return await getDataAsync(sds_dataset_metadata_url);
   }
