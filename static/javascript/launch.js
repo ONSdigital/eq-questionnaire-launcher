@@ -196,7 +196,7 @@ function setCirSchema(event) {
 
 function setLaunchType(launchType) {
   const schemaName = document.querySelector("#schema_name");
-  const schemaUrl = document.querySelector("#remote-schema-url");
+  const remoteSchemaUrl = document.querySelector("#remote-schema-url");
   const cirSchemas = document.querySelector("#cir-schemas");
   console.log(schemaName);
 
@@ -209,7 +209,7 @@ function setLaunchType(launchType) {
     }
 
     if (launchType === "cir") {
-      schemaUrl.value = "";
+      remoteSchemaUrl.value = "";
       localStorage.removeItem("schema_url");
       validateRemoteSection();
     } else if (launchType === "url") {
@@ -220,9 +220,12 @@ function setLaunchType(launchType) {
     }
   }
   if (launchType === "name") {
-    schemaUrl.value = "";
+    remoteSchemaUrl.value = "";
     cirSchemas.selectedIndex = 0;
     remoteSchemaSurveyType.selectedIndex = 0;
+    cirSchema = null;
+    surveyType = null;
+    schemaUrl = null;
     localStorage.removeItem("schema_url");
     localStorage.removeItem("cir_schema");
     localStorage.removeItem("survey_type");
