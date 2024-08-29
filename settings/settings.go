@@ -29,7 +29,7 @@ func init() {
 	setSetting("OIDC_TOKEN_BACKEND", "local")
 	setSetting("SDS_OAUTH2_CLIENT_ID", "")
 	setSetting("CIR_OAUTH2_CLIENT_ID", "")
-	setSetting("SDS_ENABLED_IN_ENV", "true")
+	setSetting("SDS_ENABLED_IN_ENV", "false")
 }
 
 // Get returns the value for the specified named setting
