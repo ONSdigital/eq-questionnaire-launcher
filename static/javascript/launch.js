@@ -167,9 +167,9 @@ function clearSurveyMetadataFields() {
 
 function validateRemoteSection() {
   if (surveyType && (cirSchema || schemaUrl)) {
-    enableDisableButtons([loadMetadataButton], true);
+    enableButtons([loadMetadataButton]);
   } else {
-    enableDisableButtons([loadMetadataButton], false);
+    disableButtons([loadMetadataButton]);
   }
 }
 
@@ -203,7 +203,7 @@ function setLaunchType(launchType) {
   if (["cir", "remote", "url"].includes(launchType)) {
     if (schemaName.selectedIndex) {
       clearSurveyMetadataFields();
-      enableDisableButtons(launchFlushButtons, false);
+      disableButtons(launchFlushButtons);
       schemaName.selectedIndex = 0;
       localStorage.removeItem("schema_name");
     }
@@ -230,7 +230,7 @@ function setLaunchType(launchType) {
     localStorage.removeItem("cir_schema");
     localStorage.removeItem("survey_type");
     document.querySelector("#language_code").disabled = false;
-    enableDisableButtons([loadMetadataButton], false);
+    disableButtons([loadMetadataButton]);
   }
 }
 
@@ -254,14 +254,6 @@ function disableButtons(buttons) {
   for (const button of buttons) {
     button.classList.add("ons-btn--disabled");
     button.disabled = true;
-  }
-}
-
-function enableDisableButtons(buttons, enable) {
-  if (enable) {
-    enableButtons(buttons);
-  } else {
-    disableButtons(buttons);
   }
 }
 
@@ -337,7 +329,7 @@ function loadMetadataForRemoteSchema() {
 
   loadSurveyMetadata(schemaName, surveyType);
   loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId);
-  enableDisableButtons(launchFlushButtons, true);
+  enableButtons(launchFlushButtons);
 }
 
 function loadSurveyMetadata(schema_name, survey_type) {
@@ -432,7 +424,7 @@ function updateSDSDropdown() {
         supplementaryDataSets = sds_metadata_response;
         showMetadataAccordion("sds", true);
         setTabIndex("sds_metadata_detail", 0);
-        enableDisableButtons(launchFlushButtons, true);
+        enableButtons(launchFlushButtons);
 
         if (
           !document
@@ -523,7 +515,7 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
         document.querySelector("#survey_metadata").innerHTML =
           "No metadata required for this survey";
       }
-      enableDisableButtons(launchFlushButtons, true);
+      enableButtons(launchFlushButtons);
     })
     .catch((_) => {
       document.querySelector("#survey_metadata").innerHTML =
