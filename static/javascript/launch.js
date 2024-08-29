@@ -165,7 +165,7 @@ function clearSurveyMetadataFields() {
   showMetadataAccordion("sds", false);
 }
 
-function enableDisableLoadMetadataButton() {
+function toggleLoadMetadataButton() {
   if (surveyType && (cirSchema || schemaUrl)) {
     enableButtons([loadMetadataButton]);
   } else {
@@ -177,21 +177,21 @@ function setSurveyType(event) {
   surveyType = remoteSchemaSurveyType.value;
   localStorage.setItem("survey_type", surveyType);
   setLaunchType("remote");
-  enableDisableLoadMetadataButton();
+  toggleLoadMetadataButton();
 }
 
 function setSchemaUrl(event) {
   schemaUrl = document.querySelector("#remote-schema-url").value;
   localStorage.setItem("schema_url", schemaUrl);
   setLaunchType("url");
-  enableDisableLoadMetadataButton();
+  toggleLoadMetadataButton();
 }
 
 function setCirSchema(event) {
   cirSchema = document.querySelector("#cir-schemas").value;
   localStorage.setItem("cir_schema", cirSchema);
   setLaunchType("cir");
-  enableDisableLoadMetadataButton();
+  toggleLoadMetadataButton();
 }
 
 function setLaunchType(launchType) {
@@ -211,12 +211,12 @@ function setLaunchType(launchType) {
     if (launchType === "cir") {
       remoteSchemaUrl.value = "";
       localStorage.removeItem("schema_url");
-      enableDisableLoadMetadataButton();
+      toggleLoadMetadataButton();
     } else if (launchType === "url") {
       cirSchemas.selectedIndex = 0;
       cirSchema = null;
       localStorage.removeItem("cir_schema");
-      enableDisableLoadMetadataButton();
+      toggleLoadMetadataButton();
     }
   }
   if (launchType === "name") {
@@ -680,6 +680,6 @@ function onLoad() {
     if ((schemaUrl = localStorage.getItem("schema_url"))) {
       document.querySelector("#remote-schema-url").value = schemaUrl;
     }
-    enableDisableLoadMetadataButton();
+    toggleLoadMetadataButton();
   }
 }
