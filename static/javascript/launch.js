@@ -147,7 +147,7 @@ const remoteSchemaSurveyType = document.querySelector(
   "#remote-schema-survey-type",
 );
 const launchButton = document.querySelector("#launch-btn");
-const flushButton =  document.querySelector("#flush-btn");
+const flushButton = document.querySelector("#flush-btn");
 
 let surveyType;
 let cirSchema;
