@@ -146,11 +146,8 @@ const loadMetadataButton = document.querySelector("#load-metadata-btn");
 const remoteSchemaSurveyType = document.querySelector(
   "#remote-schema-survey-type",
 );
-
-const launchFlushButtons = [
-  document.querySelector("#launch-btn"),
-  document.querySelector("#flush-btn"),
-];
+const launchButton = document.querySelector("#launch-btn");
+const flushButton =  document.querySelector("#flush-btn");
 
 let surveyType;
 let cirSchema;
@@ -203,7 +200,7 @@ function setLaunchType(launchType) {
   if (["cir", "remote", "url"].includes(launchType)) {
     if (schemaName.selectedIndex) {
       clearSurveyMetadataFields();
-      disableButtons(launchFlushButtons);
+      disableButtons([launchButton, flushButton]);
       schemaName.selectedIndex = 0;
       localStorage.removeItem("schema_name");
     }
@@ -329,7 +326,7 @@ function loadMetadataForRemoteSchema() {
 
   loadSurveyMetadata(schemaName, surveyType);
   loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId);
-  enableButtons(launchFlushButtons);
+  enableButtons([launchButton, flushButton]);
 }
 
 function loadSurveyMetadata(schema_name, survey_type) {
@@ -424,7 +421,7 @@ function updateSDSDropdown() {
         supplementaryDataSets = sds_metadata_response;
         showMetadataAccordion("sds", true);
         setTabIndex("sds_metadata_detail", 0);
-        enableButtons(launchFlushButtons);
+        enableButtons([launchButton, flushButton]);
 
         if (
           !document
@@ -515,7 +512,7 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
         document.querySelector("#survey_metadata").innerHTML =
           "No metadata required for this survey";
       }
-      enableButtons(launchFlushButtons);
+      enableButtons([launchButton, flushButton]);
     })
     .catch((_) => {
       document.querySelector("#survey_metadata").innerHTML =
