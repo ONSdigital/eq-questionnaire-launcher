@@ -384,7 +384,7 @@ function getInputField(
 
 async function loadSDSDatasetMetadata(surveyId, periodId, sdsEnabled) {
   if (surveyId && periodId && sdsEnabled) {
-    const sds_dataset_metadata_url = `/supplementary-data?survey_id=${survey_id}&period_id=${period_id}`;
+    const sds_dataset_metadata_url = `/supplementary-data?survey_id=${surveyId}&period_id=${periodId}`;
     return await getDataAsync(sds_dataset_metadata_url);
   }
   return null;
