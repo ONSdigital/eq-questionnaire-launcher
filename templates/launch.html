@@ -392,7 +392,7 @@
         </div>
     </form>
     <script src="https://cdn.ons.gov.uk/sdc/design-system/70.0.7/scripts/main.js"></script>
-    <script>const sdsEnabled = {{ .SdsEnabled }} === "true"</script>
+    <script>const sdsEnabled = "{{ .SdsEnabled }}" === "true"</script>
     <script src="../static/javascript/launch.js"></script>
 </body>
 {{ end }}
