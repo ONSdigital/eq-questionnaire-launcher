@@ -61,6 +61,7 @@ type page struct {
 	CirSchemas              []surveys.CIMetadata
 	AccountServiceURL       string
 	AccountServiceLogOutURL string
+	SdsEnabled              string
 }
 
 func getStatusPage(w http.ResponseWriter, r *http.Request) {
@@ -77,6 +78,7 @@ func getLaunchHandler(w http.ResponseWriter, r *http.Request) {
 		CirSchemas:              surveys.GetAvailableSchemasFromCIR(),
 		AccountServiceURL:       getAccountServiceURL(r),
 		AccountServiceLogOutURL: getAccountServiceURL(r),
+		SdsEnabled:              settings.Get("SDS_ENABLED_IN_ENV"),
 	}
 	serveTemplate("launch.html", p, w, r)
 }
@@ -116,6 +118,11 @@ func getSurveyDataHandler(w http.ResponseWriter, r *http.Request) {
 func getSupplementaryDataHandler(w http.ResponseWriter, r *http.Request) {
 	surveyId := r.URL.Query().Get("survey_id")
 	periodId := r.URL.Query().Get("period_id")
+	sdsEnabled := settings.Get("SDS_ENABLED_IN_ENV")
+
+	if sdsEnabled != "true" {
+		return
+	}
 
 	datasets, err := surveys.GetSupplementaryDataSets(surveyId, periodId)
 	if err != nil {
