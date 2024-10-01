@@ -195,7 +195,9 @@ function setLaunchType(launchType) {
   const schemaName = document.querySelector("#schema_name");
   const remoteSchemaUrl = document.querySelector("#remote-schema-url");
   const cirSchemas = document.querySelector("#cir-schemas");
-  console.log(schemaName);
+  const remoteSchemaSurveyType = document.querySelector(
+    "#remote-schema-survey-type",
+  );
 
   if (["cir", "remote", "url"].includes(launchType)) {
     if (schemaName.selectedIndex) {
@@ -380,9 +382,9 @@ function getInputField(
   return `<input ${readOnly} id="${fieldName}" name="${fieldName}" type="${type}" ${value} class="ons-input ons-input--text ons-input--w-20" onchange="${onChangeCallback}">`;
 }
 
-async function loadSDSDatasetMetadata(survey_id, period_id) {
-  if (survey_id && period_id) {
-    const sds_dataset_metadata_url = `/supplementary-data?survey_id=${survey_id}&period_id=${period_id}`;
+async function loadSDSDatasetMetadata(surveyId, periodId, sdsEnabled) {
+  if (surveyId && periodId && sdsEnabled) {
+    const sds_dataset_metadata_url = `/supplementary-data?survey_id=${surveyId}&period_id=${periodId}`;
     return await getDataAsync(sds_dataset_metadata_url);
   }
   return null;
@@ -410,11 +412,11 @@ function showCIRMetadata(cirInstrumentId, cirSchema) {
   setTabIndex("cir_metadata_detail", 0);
 }
 
-function updateSDSDropdown() {
+function updateSDSDropdown(sdsEnabled) {
   const surveyId = schemaSurveyId;
   const periodId = document.getElementById("period_id")?.value;
   const sdsDatasetIdElement = document.querySelector("#sds_dataset_id");
-  loadSDSDatasetMetadata(surveyId, periodId)
+  loadSDSDatasetMetadata(surveyId, periodId, sdsEnabled)
     .then((sds_metadata_response) => {
       if (sds_metadata_response?.length) {
         document.querySelector("#supplementary_data").innerHTML = "";
@@ -497,7 +499,7 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
                       ? schema_response.survey_id
                       : defaultValue,
                     false,
-                    "updateSDSDropdown()",
+                    "updateSDSDropdown(sdsEnabled)",
                   );
                 } else if (fieldName === "sds_dataset_id") {
                   return `<select id="${fieldName}" name="${fieldName}" class="ons-input ons-input--select ons-input--w-20" onchange="loadSupplementaryDataInfo()"></select>`;
@@ -507,7 +509,7 @@ function loadSchemaMetadata(schemaName, schemaUrl, cirInstrumentId) {
               })()}</div>`;
             })
             .join("");
-        updateSDSDropdown();
+        updateSDSDropdown(sdsEnabled);
       } else {
         document.querySelector("#survey_metadata").innerHTML =
           "No metadata required for this survey";
