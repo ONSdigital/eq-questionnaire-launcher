@@ -1,4 +1,13 @@
 // uuidv4: from https://github.com/kelektiv/node-uuid
+function escapeHtml(unsafe) {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 !(function (e) {
   if ("object" == typeof exports && "undefined" != typeof module)
     module.exports = e();
@@ -264,11 +273,18 @@ function includeSurveyMetadataFields(schema_name, survey_type) {
   document.querySelector(".survey_heading").innerHTML =
     `${survey_type} Survey Metadata`;
 
-  document.querySelector("#survey_metadata_fields").innerHTML =
-    `<div class="ons-field ons-field--inline">
-      <label class="ons-label" for="form_type">form_type</label>
-      <input id="form_type" name="form_type" type="text" value="${formTypeValue}" class="ons-input ons-input--text ons-input-type__input">
-    </div>`;
+  const surveyMetadataFields = document.querySelector(
+    "#survey_metadata_fields",
+  );
+  const div = document.createElement("div");
+  div.className = "ons-field ons-field--inline";
+  div.innerHTML = `
+    <label class="ons-label" for="form_type">form_type</label> 
+    <input id="form_type" name="form_type" type="text" class="ons-input ons-input--text ons-input-type__input">
+    `;
+  div.querySelector("input").value = formTypeValue;
+  surveyMetadataFields.textContent = "";
+  surveyMetadataFields.appendChild(div);
   setTabIndex("survey_type_metadata_detail", 0);
   showMetadataAccordion("sds", true);
 }
