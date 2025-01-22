@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     permissions:
-      contents: 'read'
+      contents: read
     runs-on: ubuntu-22.04
     steps:
       - name: Install Go
@@ -31,7 +31,8 @@ jobs:
         run: CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo
   lint:
     permissions:
-      contents: 'read'
+      contents: read
+      actions: write
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -68,8 +69,8 @@ jobs:
         run: make lint-static
   docker-push:
     permissions:
-      contents: 'read'
-      id-token: 'write'
+      contents: read
+      id-token: write
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
