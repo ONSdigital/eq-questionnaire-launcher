@@ -272,19 +272,19 @@ function includeSurveyMetadataFields(schema_name, survey_type) {
     .classList.remove("ons-u-vh");
   document.querySelector(".survey_heading").innerHTML =
     `${survey_type} Survey Metadata`;
-    
+
   const surveyMetadataFields = document.querySelector(
-      "#survey_metadata_fields",
-    );
-    const div = document.createElement("div");
-    div.className = "ons-field ons-field--inline";
-    div.innerHTML = `
+    "#survey_metadata_fields",
+  );
+  const div = document.createElement("div");
+  div.className = "ons-field ons-field--inline";
+  div.innerHTML = `
     <label class="ons-label" for="form_type">form_type</label> 
     <input id="form_type" name="form_type" type="text" class="ons-input ons-input--text ons-input-type__input">
     `;
   div.querySelector("input").value = formTypeValue;
-    surveyMetadataFields.textContent = '';
-    surveyMetadataFields.appendChild(div);
+  surveyMetadataFields.textContent = "";
+  surveyMetadataFields.appendChild(div);
   setTabIndex("survey_type_metadata_detail", 0);
   showMetadataAccordion("sds", true);
 }
