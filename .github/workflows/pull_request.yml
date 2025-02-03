@@ -32,7 +32,6 @@ jobs:
   lint:
     permissions:
       contents: read
-      actions: write
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
