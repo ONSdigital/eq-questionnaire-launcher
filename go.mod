@@ -1,6 +1,6 @@
 module github.com/ONSdigital/eq-questionnaire-launcher
 
-go 1.21
+go 1.23.0
 
 require (
 	github.com/AreaHQ/jsonhal v0.0.0-20160928112100-715ffaec982b
@@ -8,7 +8,7 @@ require (
 	github.com/gorilla/mux v1.8.1
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	golang.org/x/oauth2 v0.17.0
-	golang.org/x/text v0.14.0
+	golang.org/x/text v0.23.0
 	google.golang.org/api v0.167.0
 	gopkg.in/square/go-jose.v2 v2.6.0
 )
@@ -28,9 +28,9 @@ require (
 	go.opentelemetry.io/otel v1.24.0 // indirect
 	go.opentelemetry.io/otel/metric v1.24.0 // indirect
 	go.opentelemetry.io/otel/trace v1.24.0 // indirect
-	golang.org/x/crypto v0.21.0 // indirect
-	golang.org/x/net v0.23.0 // indirect
-	golang.org/x/sys v0.18.0 // indirect
+	golang.org/x/crypto v0.36.0 // indirect
+	golang.org/x/net v0.38.0 // indirect
+	golang.org/x/sys v0.31.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240221002015-b0ce06bbee7c // indirect
 	google.golang.org/grpc v1.62.0 // indirect
