@@ -332,7 +332,7 @@ function loadMetadataForRemoteSchema() {
     document.querySelector("#language_code").disabled = false;
   } else {
     let cirSchema = cirSchemaDropdown.options[cirSchemaDropdown.selectedIndex];
-    schemaName = cirSchema.getAttribute("data-form-type");
+    schemaName = cirSchema.getAttribute("data-schema-name");
     let language = cirSchema.getAttribute("data-language");
 
     showCIRMetadata(cirInstrumentId, cirSchema);
@@ -414,10 +414,10 @@ function handleNoSupplementaryData() {
 function showCIRMetadata(cirInstrumentId, cirSchema) {
   showMetadataAccordion("cir", true);
   let ciMetadata = {
-    id: cirInstrumentId,
+    guid: cirInstrumentId,
     ci_version: cirSchema.getAttribute("data-version"),
     title: cirSchema.getAttribute("data-title"),
-    description: cirSchema.getAttribute("data-description"),
+    validator_version: cirSchema.getAttribute("data-validator-version"),
   };
   document.querySelector("#cir_metadata").innerHTML = Object.keys(ciMetadata)
     .map(
