@@ -70,6 +70,7 @@
                             {{ range $cirSchema := .CirSchemas }}
                             <option value="{{ $cirSchema.GUID }}"
                                     data-schema-name="{{ $cirSchema.SchemaName }}"
+                                    data-form-type="{{ $cirSchema.ClassifierValue }}"
                                     data-version="{{ $cirSchema.CIVersion }}"
                                     data-language="{{ $cirSchema.Language }}"
                                     data-title="{{ $cirSchema.Title }}"
