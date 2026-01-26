@@ -189,6 +189,7 @@ func getAvailableSchemasFromRunner() []LauncherSchema {
 	log.Printf("Formatted, %s", url)
 
 	resp, err := clients.GetHTTPClient().Get(url)
+	log.Printf("error decoding sakura response: %v", err)
 
 	if err != nil {
 		log.Printf("Connected to: %s without error", url)
@@ -202,6 +203,8 @@ func getAvailableSchemasFromRunner() []LauncherSchema {
 	}
 
 	responseBody, err := io.ReadAll(resp.Body)
+	log.Printf("Error (if any): %v", err)
+	log.Printf("Response body: %q", responseBody)
 	resp.Body.Close()
 	if err != nil {
 		log.Print(err)
