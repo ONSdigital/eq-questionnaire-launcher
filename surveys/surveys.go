@@ -204,6 +204,7 @@ func getAvailableSchemasFromRunner() []LauncherSchema {
 	responseBody, err := io.ReadAll(resp.Body)
 	resp.Body.Close()
 	if err != nil {
+		log.Print(err)
 		return []LauncherSchema{}
 	}
 
@@ -219,6 +220,8 @@ func getAvailableSchemasFromRunner() []LauncherSchema {
 			schemaList = append(schemaList, LauncherSchemaFromFilename(schemaName, surveyType))
 		}
 	}
+
+	log.Print(schemaList)
 
 	return schemaList
 }
