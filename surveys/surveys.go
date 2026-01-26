@@ -189,6 +189,7 @@ func getAvailableSchemasFromRunner() []LauncherSchema {
 	resp, err := clients.GetHTTPClient().Get(url)
 
 	if err != nil {
+		log.Printf("Connected to: %s without error", url)
 		return []LauncherSchema{}
 	}
 
