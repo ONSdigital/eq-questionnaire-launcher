@@ -193,6 +193,8 @@ func getAvailableSchemasFromRunner() []LauncherSchema {
 	}
 
 	if resp.StatusCode != 200 {
+		log.Printf("Errored when trying to access: %s", url)
+		log.Printf("Error: %s", err)
 		return []LauncherSchema{}
 	}
 
