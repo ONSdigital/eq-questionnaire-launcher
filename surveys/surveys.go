@@ -189,10 +189,10 @@ func getAvailableSchemasFromRunner() []LauncherSchema {
 	log.Printf("Formatted, %s", url)
 
 	resp, err := clients.GetHTTPClient().Get(url)
-	log.Printf("error decoding sakura response: %v", err)
+	log.Printf("Error decoding response: %v", err)
 
 	if err != nil {
-		log.Printf("Connected to: %s without error", url)
+		log.Printf("Error: %s", url)
 		return []LauncherSchema{}
 	}
 
