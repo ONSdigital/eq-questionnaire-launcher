@@ -183,8 +183,10 @@ func getAvailableSchemasFromRunner() []LauncherSchema {
 	hostURL := settings.Get("SURVEY_RUNNER_SCHEMA_URL")
 
 	log.Printf("Survey Runner Schema URL: %s", hostURL)
+	log.Printf("Attempting to format")
 
 	url := fmt.Sprintf("%s/schemas", hostURL)
+	log.Printf("Formatted, %s", url)
 
 	resp, err := clients.GetHTTPClient().Get(url)
 
