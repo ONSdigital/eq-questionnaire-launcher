@@ -183,31 +183,27 @@ func getAvailableSchemasFromRunner() []LauncherSchema {
 	hostURL := settings.Get("SURVEY_RUNNER_SCHEMA_URL")
 
 	log.Printf("Survey Runner Schema URL: %s", hostURL)
-	log.Printf("Attempting to format")
 
 	url := fmt.Sprintf("%s/schemas", hostURL)
-	log.Printf("Formatted, %s", url)
 
 	resp, err := clients.GetHTTPClient().Get(url)
-	log.Printf("Error decoding response: %v", err)
 
 	if err != nil {
-		log.Printf("Error: %s", url)
+		log.Printf("Error when getting response: %v", err)
+		log.Printf("Url: %s", url)
 		return []LauncherSchema{}
 	}
 
 	if resp.StatusCode != 200 {
-		log.Printf("Errored when trying to access: %s", url)
-		log.Printf("Error: %s", err)
+		log.Printf("Non-200 response status code when trying to access: %s", url)
 		return []LauncherSchema{}
 	}
 
 	responseBody, err := io.ReadAll(resp.Body)
-	log.Printf("Error (if any): %v", err)
 	log.Printf("Response body: %q", responseBody)
 	resp.Body.Close()
 	if err != nil {
-		log.Print(err)
+		log.Printf("Error: %v", err)
 		return []LauncherSchema{}
 	}
 
