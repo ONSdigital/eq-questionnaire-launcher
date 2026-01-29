@@ -34,7 +34,7 @@ type CIMetadata struct {
 	PublishedAt      string `json:"published_at"`
 	SurveyID         string `json:"survey_id"`
 	Title            string `json:"title"`
-	SchemaName       string `json:"schema_name"`
+	SchemaName       string `json:"dev_schema_name"`
 	SDSSchema        string `json:"sds_schema"`
 }
 
