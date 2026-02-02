@@ -68,13 +68,14 @@
                                 onchange="setCirSchema(this);">
                             <option selected disabled>Select Schema</option>
                             {{ range $cirSchema := .CirSchemas }}
-                            <option value="{{ $cirSchema.ID }}"
-                                    data-form-type="{{ $cirSchema.FormType }}"
+                            <option value="{{ $cirSchema.GUID }}"
+                                    data-schema-name="{{ $cirSchema.SchemaName }}"
+                                    data-form-type="{{ $cirSchema.ClassifierValue }}"
                                     data-version="{{ $cirSchema.CIVersion }}"
                                     data-language="{{ $cirSchema.Language }}"
                                     data-title="{{ $cirSchema.Title }}"
-                                    data-description="{{ $cirSchema.Description }}">
-                                {{ $cirSchema.FormType }} ({{ $cirSchema.Language }})
+                                    data-validator-version="{{ $cirSchema.ValidatorVersion }}">
+                                {{ $cirSchema.SchemaName }} ({{ $cirSchema.Language }})
                             </option>
                             {{ end }}
                         </select>

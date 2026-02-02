@@ -24,18 +24,18 @@ type LauncherSchema struct {
 }
 
 type CIMetadata struct {
-	CIVersion     int    `json:"ci_version"`
-	DataVersion   string `json:"data_version"`
-	FormType      string `json:"form_type"`
-	ID            string `json:"id"`
-	Language      string `json:"language"`
-	PublishedAt   string `json:"published_at"`
-	SchemaVersion string `json:"schema_version"`
-	Status        string `json:"status"`
-	SurveyID      string `json:"survey_id"`
-	Title         string `json:"title"`
-	Description   string `json:"description"`
-	SDSSchema     string `json:"sds_schema"`
+	CIVersion        int    `json:"ci_version"`
+	DataVersion      string `json:"data_version"`
+	ValidatorVersion string `json:"validator_version"`
+	ClassifierType   string `json:"classifier_type"`
+	ClassifierValue  string `json:"classifier_value"`
+	GUID             string `json:"guid"`
+	Language         string `json:"language"`
+	PublishedAt      string `json:"published_at"`
+	SurveyID         string `json:"survey_id"`
+	Title            string `json:"title"`
+	SchemaName       string `json:"dev_schema_name"`
+	SDSSchema        string `json:"sds_schema"`
 }
 
 type DatasetMetadata struct {
@@ -171,8 +171,7 @@ func GetAvailableSchemasFromCIR() []CIMetadata {
 		return ciMetadataList
 	}
 	// Easier to navigate schemas in alphabetical order
-	sort.Slice(ciMetadataList, func(i, j int) bool { return ciMetadataList[i].FormType < ciMetadataList[j].FormType })
-
+	sort.Slice(ciMetadataList, func(i, j int) bool { return ciMetadataList[i].SchemaName < ciMetadataList[j].SchemaName })
 	return ciMetadataList
 }
 
