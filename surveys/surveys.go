@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"sort"
+	"strings"
 
 	"github.com/AreaHQ/jsonhal"
 	"github.com/ONSdigital/eq-questionnaire-launcher/clients"
@@ -170,8 +171,27 @@ func GetAvailableSchemasFromCIR() []CIMetadata {
 		log.Print(err)
 		return ciMetadataList
 	}
-	// Easier to navigate schemas in order (survey id)
+
+	// Sort all schemas by survey_id to ensure test schemas are grouped together and appear after business schemas
+	// Supplementary data test schemas being exception as their id is "123" not "999"
 	sort.Slice(ciMetadataList, func(i, j int) bool { return ciMetadataList[i].SurveyID < ciMetadataList[j].SurveyID })
+	slice := 0
+	for i := range ciMetadataList {
+		if strings.Contains(ciMetadataList[i].Title, "Test") && ciMetadataList[i].SurveyID != "123" {
+			slice = i
+			break
+		}
+	}
+
+	// Split the list into test and business schemas
+	ciMetadataListSlice := ciMetadataList[0:slice]
+	ciTestMetadataListSlice := ciMetadataList[slice:]
+
+	// Sort test schemas alphabetically
+	sort.Slice(ciTestMetadataListSlice, func(i, j int) bool { return ciTestMetadataListSlice[i].Title < ciTestMetadataListSlice[j].Title })
+
+	// Finally join the list back together with business schemas appearing before test schemas
+	ciMetadataList = append(ciMetadataListSlice, ciTestMetadataListSlice...)
 	return ciMetadataList
 }
 
