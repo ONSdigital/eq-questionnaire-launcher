@@ -76,7 +76,7 @@
                                     data-title="{{ $cirSchema.Title }}"
                                     data-validator-version="{{ $cirSchema.ValidatorVersion }}">
                                 {{ if HasPrefix $cirSchema.Title "Test" }}
-                                    schema_title: {{ $cirSchema.Title}}
+                                    schema_title: {{ $cirSchema.Title }}
                                 {{ else }}
                                     survey_id: {{ $cirSchema.SurveyID }} form_type: {{ $cirSchema.ClassifierValue }} ci_version: {{ $cirSchema.CIVersion }}
                                 {{ end }}
