@@ -4,15 +4,16 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
+	"log"
+	"sort"
+
 	"github.com/AreaHQ/jsonhal"
 	"github.com/ONSdigital/eq-questionnaire-launcher/clients"
 	"github.com/ONSdigital/eq-questionnaire-launcher/oidc"
 	"github.com/ONSdigital/eq-questionnaire-launcher/settings"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
-	"io"
-	"log"
-	"sort"
 )
 
 // LauncherSchema is a representation of a schema in the Launcher
@@ -34,7 +35,6 @@ type CIMetadata struct {
 	PublishedAt      string `json:"published_at"`
 	SurveyID         string `json:"survey_id"`
 	Title            string `json:"title"`
-	SchemaName       string `json:"dev_schema_name"`
 	SDSSchema        string `json:"sds_schema"`
 }
 
@@ -170,8 +170,8 @@ func GetAvailableSchemasFromCIR() []CIMetadata {
 		log.Print(err)
 		return ciMetadataList
 	}
-	// Easier to navigate schemas in alphabetical order
-	sort.Slice(ciMetadataList, func(i, j int) bool { return ciMetadataList[i].SchemaName < ciMetadataList[j].SchemaName })
+	// Easier to navigate schemas in order (survey id)
+	sort.Slice(ciMetadataList, func(i, j int) bool { return ciMetadataList[i].SurveyID < ciMetadataList[j].SurveyID })
 	return ciMetadataList
 }
 
