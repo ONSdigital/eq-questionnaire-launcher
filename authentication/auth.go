@@ -584,7 +584,7 @@ func getSchema(launcherSchema surveys.LauncherSchema) (QuestionnaireSchema, stri
 		hostURL := settings.Get("CIR_API_BASE_URL")
 
 		log.Println("Collection Instrument ID: ", launcherSchema.CIRInstrumentID)
-		url = fmt.Sprintf("%s/v2/retrieve_collection_instrument?guid=%s", hostURL, launcherSchema.CIRInstrumentID)
+		url = fmt.Sprintf("%s/collection-instruments/schema?guid=%s", hostURL, launcherSchema.CIRInstrumentID)
 
 		_, err := oidc.ConfigureClientAuthentication(client, "CIR_OAUTH2_CLIENT_ID")
 		if err != nil {
