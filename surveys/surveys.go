@@ -263,7 +263,7 @@ func GetSupplementaryDataSets(surveyId string, periodId string) ([]DatasetMetada
 	}
 
 	log.Printf("SDS API Base URL: %s", hostURL)
-	url := fmt.Sprintf("%s/v1/dataset_metadata?survey_id=%s&period_id=%s", hostURL, surveyId, periodId)
+	url := fmt.Sprintf("%s/datasets/metadata?survey_id=%s&period_id=%s", hostURL, surveyId, periodId)
 	log.Printf("Getting SDS metadata: %s", url)
 	resp, err := client.Get(url)
 
