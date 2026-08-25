@@ -25,7 +25,7 @@ docker build -t eq-questionnaire-launcher:latest .
 You can also build for a specific platform using Docker’s extended build tool - buildx:
 
 ```
-docker buildx build --platform linux/amd64 -t eq-questionnaire-launcher:latest
+docker buildx build --platform linux/amd64 -t eq-questionnaire-launcher:latest .
 ```
 Or for multiple platforms:
 
