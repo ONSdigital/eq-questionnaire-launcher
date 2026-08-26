@@ -22,6 +22,17 @@ The dockerfile is a multistage dockerfile which can be built using:
 docker build -t eq-questionnaire-launcher:latest .
 ```
 
+You can also build for a specific platform using Docker’s extended build tool - buildx:
+
+```
+docker buildx build --platform linux/amd64 -t eq-questionnaire-launcher:latest .
+```
+Or for multiple platforms:
+
+```
+docker buildx build --platform linux/amd64,linux/arm64 -t eq-questionnaire-launcher:latest .
+```
+
 You can then run the image using `SURVEY_RUNNER_SCHEMA_URL` to point it at an instance of survey runner.
 
 ```
