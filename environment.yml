@@ -1,0 +1,9 @@
+name: eq-launcher
+channels:
+  - conda-forge
+dependencies:
+  - python=3.14.6
+  - nodejs=22.13.0   # closest available patch to .nvmrc's v22.15.0
+  - poetry=2.4.2
+  - go=1.21
+  - golangci-lint

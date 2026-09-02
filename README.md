@@ -16,6 +16,28 @@ go run launch.go (Does both the build and run cmd above)
 Open http://localhost:8000/
 
 ## Docker
+Install Podman for your system as the container runtime, and make sure the Podman machine is
+started every time you want to use container images:
+
+```shell
+podman machine start
+```
+
+Podman is API-compatible with Docker, so provide a `docker` command that points at it (the
+`docker build`/`docker buildx`/`docker run` commands below rely on this):
+
+```shell
+mkdir -p ~/.local/bin
+ln -s "$(which podman)" ~/.local/bin/docker
+hash -r
+```
+
+`~/.local/bin` must be on your `PATH`. Verify:
+
+```shell
+docker --version
+```
+
 The dockerfile is a multistage dockerfile which can be built using:
 
 ```
@@ -23,6 +45,10 @@ docker build -t eq-questionnaire-launcher:latest .
 ```
 
 You can also build for a specific platform using Docker’s extended build tool - buildx:
+
+> Note: `podman` supports multi-platform builds via `podman build --platform`, but does not
+> ship a `buildx` subcommand. If `docker buildx build` fails through the symlink, use
+> `podman build --platform ...` directly instead of the commands below.
 
 ```
 docker buildx build --platform linux/amd64 -t eq-questionnaire-launcher:latest .
@@ -72,24 +98,54 @@ e.g."http://localhost:8000/quick-launch?schema_url=http://localhost:7777/1_0001.
 ```
 
 ## Commands for Formatting & Linting
-Ensure you are using the correct version of node using:
-``` shell
-nvm install
-nvm use
+
+### Conda environment
+
+Python, Node.js, Poetry, Go and golangci-lint are managed via the committed `environment.yml`,
+matching `.python-version` and `.nvmrc` as closely as conda-forge availability allows:
+
+```shell
+conda env create -f environment.yml
+conda activate eq-launcher
 ```
-To install ESLint and Prettier for formatting and linting of static files use:
+
+> Note: conda-forge does not publish every Node patch release.
+> Where the exact `.nvmrc` version is unavailable, pin the closest available patch
+> below it and note the substitution in `environment.yml`.
+
+If `.python-version` or `.nvmrc` change, update `environment.yml` to match and run:
+
+```shell
+conda env update -f environment.yml --prune
+```
+
+### Poetry
+
+Poetry must install into the conda environment rather than creating its own virtualenv. Set this
+on the environment so no configuration file is left in the repository:
+
+```shell
+conda env config vars set POETRY_VIRTUALENVS_CREATE=false
+conda deactivate && conda activate eq-launcher
+```
+
+Confirm it took effect: this must print `false`:
+
+```shell
+echo $POETRY_VIRTUALENVS_CREATE
+```
+
+With the environment active, install ESLint and Prettier for formatting and linting of static files:
 ``` shell
 npm install
 ```
-Firstly, ensure you have Python & Poetry installed and then install djLint for formatting and linting template files using:
+Install djLint for formatting and linting template files using:
 ```shell
 poetry install
 ```
 
- **Note**: Before being able to run `lint-go`,
-you will need to install the external tool `golangci-lint`. The command to install the tool is
-`brew install golangci-lint` and to upgrade it use `brew upgrade golangci-lint`. Visit
-https://golangci-lint.run/welcome/install/#local-installation to see additional ways to install the tool.
+Before being able to run `lint-go`, ensure `golangci-lint` is available (installed via the conda
+environment above; upgrade with `conda env update -f environment.yml --prune`).
 
 | Command                 | Task                                                    |
 |-------------------------|---------------------------------------------------------|
