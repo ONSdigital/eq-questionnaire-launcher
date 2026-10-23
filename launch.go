@@ -175,11 +175,11 @@ func redirectURL(w http.ResponseWriter, r *http.Request) {
 	log.Println("Request: " + r.PostForm.Encode())
 
 	if flushAction != "" {
-		http.Redirect(w, r, hostURL+"/flush?token="+token, 307)
+		http.Redirect(w, r, hostURL+"/flush?token="+token, http.StatusTemporaryRedirect)
 	} else if launchVersion != "" {
-		http.Redirect(w, r, hostURL+"/session?token="+token, 301)
+		http.Redirect(w, r, hostURL+"/session?token="+token, http.StatusMovedPermanently)
 	} else {
-		http.Error(w, "Invalid Action", 500)
+		http.Error(w, "Invalid Action", http.StatusInternalServerError)
 	}
 }
 
@@ -208,14 +208,14 @@ func quickLauncherHandler(w http.ResponseWriter, r *http.Request) {
 	token, err = authentication.GenerateTokenFromDefaultsV2(schemaURL, accountServiceURL, urlValues)
 
 	if err != "" {
-		http.Error(w, err, 400)
+		http.Error(w, err, http.StatusBadRequest)
 		return
 	}
 
 	if schemaURL != "" {
-		http.Redirect(w, r, hostURL+"/session?token="+token, 302)
+		http.Redirect(w, r, hostURL+"/session?token="+token, http.StatusFound)
 	} else {
-		http.Error(w, "Not Found", 404)
+		http.Error(w, "Not Found", http.StatusNotFound)
 	}
 }
 

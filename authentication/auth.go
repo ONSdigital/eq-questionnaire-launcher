@@ -222,7 +222,9 @@ func launcherSchemaFromURL(url string) (launcherSchema surveys.LauncherSchema, e
 	}
 
 	responseBody, err := io.ReadAll(resp.Body)
-	resp.Body.Close()
+	if closeErr := resp.Body.Close(); closeErr != nil {
+		log.Print(closeErr)
+	}
 	if err != nil {
 		panic(err)
 	}
@@ -282,7 +284,9 @@ func validateSchema(payload []byte) (error string) {
 	}
 
 	responseBody, err := io.ReadAll(resp.Body)
-	resp.Body.Close()
+	if closeErr := resp.Body.Close(); closeErr != nil {
+		log.Print(closeErr)
+	}
 	if err != nil {
 		return err.Error()
 	}
@@ -613,7 +617,9 @@ func getSchema(launcherSchema surveys.LauncherSchema) (QuestionnaireSchema, stri
 	}
 
 	responseBody, err := io.ReadAll(resp.Body)
-	resp.Body.Close()
+	if closeErr := resp.Body.Close(); closeErr != nil {
+		log.Print(closeErr)
+	}
 	if err != nil {
 		log.Print(err)
 		return schema, fmt.Sprintf("Failed to load Schema from %s", url)
