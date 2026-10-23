@@ -109,7 +109,9 @@ func getAvailableSchemasFromRegister() []LauncherSchema {
 		}
 
 		responseBody, err := io.ReadAll(resp.Body)
-		resp.Body.Close()
+		if closeErr := resp.Body.Close(); closeErr != nil {
+			log.Print(closeErr)
+		}
 		if err != nil {
 			return schemaList
 		}
@@ -161,7 +163,9 @@ func GetAvailableSchemasFromCIR() []CIMetadata {
 	}
 
 	responseBody, err := io.ReadAll(resp.Body)
-	resp.Body.Close()
+	if closeErr := resp.Body.Close(); closeErr != nil {
+		log.Print(closeErr)
+	}
 	if err != nil {
 		log.Print(err)
 		return ciMetadataList
@@ -216,7 +220,9 @@ func getAvailableSchemasFromRunner() []LauncherSchema {
 	}
 
 	responseBody, err := io.ReadAll(resp.Body)
-	resp.Body.Close()
+	if closeErr := resp.Body.Close(); closeErr != nil {
+		log.Print(closeErr)
+	}
 	if err != nil {
 		return []LauncherSchema{}
 	}
@@ -274,7 +280,11 @@ func GetSupplementaryDataSets(surveyId string, periodId string) ([]DatasetMetada
 		return datasetList, nil
 	}
 	responseBody, err := io.ReadAll(resp.Body)
-	defer resp.Body.Close()
+	defer func() {
+		if closeErr := resp.Body.Close(); closeErr != nil {
+			log.Print(closeErr)
+		}
+	}()
 	if err != nil {
 		return datasetList, errors.New("unable to read response body of supplementary data")
 	}
