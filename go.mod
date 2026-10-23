@@ -1,8 +1,6 @@
 module github.com/ONSdigital/eq-questionnaire-launcher
 
-go 1.27
-
-toolchain go1.27.3
+go 1.27.3
 
 require (
 	github.com/AreaHQ/jsonhal v0.0.0-20160928112100-715ffaec982b
