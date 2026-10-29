@@ -6,7 +6,6 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
-	"github.com/ONSdigital/eq-questionnaire-launcher/oidc"
 	"io"
 	"math/rand"
 	"net/http"
@@ -14,13 +13,15 @@ import (
 	"os"
 	"time"
 
+	"github.com/ONSdigital/eq-questionnaire-launcher/oidc"
+
 	"github.com/ONSdigital/eq-questionnaire-launcher/clients"
 	"github.com/ONSdigital/eq-questionnaire-launcher/settings"
 	"github.com/ONSdigital/eq-questionnaire-launcher/surveys"
+	"github.com/go-jose/go-jose/v4"
+	"github.com/go-jose/go-jose/v4/json"
+	"github.com/go-jose/go-jose/v4/jwt"
 	"github.com/gofrs/uuid"
-	"gopkg.in/square/go-jose.v2"
-	"gopkg.in/square/go-jose.v2/json"
-	"gopkg.in/square/go-jose.v2/jwt"
 
 	"bytes"
 	"log"
@@ -221,7 +222,9 @@ func launcherSchemaFromURL(url string) (launcherSchema surveys.LauncherSchema, e
 	}
 
 	responseBody, err := io.ReadAll(resp.Body)
-	resp.Body.Close()
+	if closeErr := resp.Body.Close(); closeErr != nil {
+		log.Print(closeErr)
+	}
 	if err != nil {
 		panic(err)
 	}
@@ -281,7 +284,9 @@ func validateSchema(payload []byte) (error string) {
 	}
 
 	responseBody, err := io.ReadAll(resp.Body)
-	resp.Body.Close()
+	if closeErr := resp.Body.Close(); closeErr != nil {
+		log.Print(closeErr)
+	}
 	if err != nil {
 		return err.Error()
 	}
@@ -355,7 +360,7 @@ func generateTokenFromClaims(cl map[string]interface{}) (string, *TokenError) {
 		return "", &TokenError{Desc: "Error creating JWT signer", From: err}
 	}
 
-	token, err := jwt.SignedAndEncrypted(signer, encryptor).Claims(cl).CompactSerialize()
+	token, err := jwt.SignedAndEncrypted(signer, encryptor).Claims(cl).Serialize()
 
 	if err != nil {
 		return "", &TokenError{Desc: "Error signing and encrypting JWT", From: err}
@@ -612,7 +617,9 @@ func getSchema(launcherSchema surveys.LauncherSchema) (QuestionnaireSchema, stri
 	}
 
 	responseBody, err := io.ReadAll(resp.Body)
-	resp.Body.Close()
+	if closeErr := resp.Body.Close(); closeErr != nil {
+		log.Print(closeErr)
+	}
 	if err != nil {
 		log.Print(err)
 		return schema, fmt.Sprintf("Failed to load Schema from %s", url)
